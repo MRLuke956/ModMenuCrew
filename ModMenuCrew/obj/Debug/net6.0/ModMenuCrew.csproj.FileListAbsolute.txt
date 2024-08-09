@@ -1,0 +1,10 @@
+C:\Users\LUKE\source\repos\ModMenuCrew\ModMenuCrew\bin\Debug\net6.0\ModMenuCrew.deps.json
+C:\Users\LUKE\source\repos\ModMenuCrew\ModMenuCrew\bin\Debug\net6.0\ModMenuCrew.dll
+C:\Users\LUKE\source\repos\ModMenuCrew\ModMenuCrew\obj\Debug\net6.0\ModMenuCrew.csproj.AssemblyReference.cache
+C:\Users\LUKE\source\repos\ModMenuCrew\ModMenuCrew\obj\Debug\net6.0\ModMenuCrew.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\LUKE\source\repos\ModMenuCrew\ModMenuCrew\obj\Debug\net6.0\ModMenuCrew.AssemblyInfoInputs.cache
+C:\Users\LUKE\source\repos\ModMenuCrew\ModMenuCrew\obj\Debug\net6.0\ModMenuCrew.AssemblyInfo.cs
+C:\Users\LUKE\source\repos\ModMenuCrew\ModMenuCrew\obj\Debug\net6.0\ModMenuCrew.csproj.CoreCompileInputs.cache
+C:\Users\LUKE\source\repos\ModMenuCrew\ModMenuCrew\obj\Debug\net6.0\ModMenuCrew.dll
+C:\Users\LUKE\source\repos\ModMenuCrew\ModMenuCrew\obj\Debug\net6.0\refint\ModMenuCrew.dll
+C:\Users\LUKE\source\repos\ModMenuCrew\ModMenuCrew\obj\Debug\net6.0\ref\ModMenuCrew.dll

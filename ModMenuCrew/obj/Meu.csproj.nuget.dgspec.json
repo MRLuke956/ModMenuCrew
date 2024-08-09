@@ -1,0 +1,92 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\LUKE\\source\\repos\\ModMenuCrew\\ModMenuCrew\\Meu.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\LUKE\\source\\repos\\ModMenuCrew\\ModMenuCrew\\Meu.csproj": {
+      "version": "1.0.0-dev",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\LUKE\\source\\repos\\ModMenuCrew\\ModMenuCrew\\Meu.csproj",
+        "projectName": "Meu",
+        "projectPath": "C:\\Users\\LUKE\\source\\repos\\ModMenuCrew\\ModMenuCrew\\Meu.csproj",
+        "packagesPath": "C:\\Users\\LUKE\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\LUKE\\source\\repos\\ModMenuCrew\\ModMenuCrew\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\LUKE\\source\\repos\\ModMenuCrew\\NuGet.Config",
+          "C:\\Users\\LUKE\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://nuget.samboy.dev/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "AmongUs.GameLibs.Steam": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2023.7.11, )"
+            },
+            "BepInEx.AutoPlugin": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.1.0, )"
+            },
+            "BepInEx.IL2CPP.MSBuild": {
+              "include": "Compile, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.0.1, )"
+            },
+            "BepInEx.Unity.IL2CPP": {
+              "include": "Compile, Build, ContentFiles, Analyzers, BuildTransitive",
+              "target": "Package",
+              "version": "[6.0.0-be.674, )"
+            },
+            "Reactor": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files (x86)\\dotnet\\sdk\\6.0.416\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
