@@ -2,13 +2,13 @@
   "version": 3,
   "targets": {
     "net6.0": {
-      "AmongUs.GameLibs.Steam/2023.7.11": {
+      "AmongUs.GameLibs.Steam/2024.10.29": {
         "type": "package",
         "build": {
           "build/AmongUs.GameLibs.Steam.props": {}
         }
       },
-      "AsmResolver/5.1.0": {
+      "AsmResolver/6.0.0-beta.1": {
         "type": "package",
         "compile": {
           "lib/net6.0/AsmResolver.dll": {
@@ -16,16 +16,15 @@
           }
         },
         "runtime": {
-          "lib/net6.0/_._": {
+          "lib/net6.0/AsmResolver.dll": {
             "related": ".xml"
           }
         }
       },
-      "AsmResolver.DotNet/5.1.0": {
+      "AsmResolver.DotNet/6.0.0-beta.1": {
         "type": "package",
         "dependencies": {
-          "AsmResolver.PE": "5.1.0",
-          "System.Text.Json": "6.0.7"
+          "AsmResolver.PE": "6.0.0-beta.1"
         },
         "compile": {
           "lib/net6.0/AsmResolver.DotNet.dll": {
@@ -33,15 +32,15 @@
           }
         },
         "runtime": {
-          "lib/net6.0/_._": {
+          "lib/net6.0/AsmResolver.DotNet.dll": {
             "related": ".xml"
           }
         }
       },
-      "AsmResolver.PE/5.1.0": {
+      "AsmResolver.PE/6.0.0-beta.1": {
         "type": "package",
         "dependencies": {
-          "AsmResolver.PE.File": "5.1.0"
+          "AsmResolver.PE.File": "6.0.0-beta.1"
         },
         "compile": {
           "lib/net6.0/AsmResolver.PE.dll": {
@@ -49,15 +48,15 @@
           }
         },
         "runtime": {
-          "lib/net6.0/_._": {
+          "lib/net6.0/AsmResolver.PE.dll": {
             "related": ".xml"
           }
         }
       },
-      "AsmResolver.PE.File/5.1.0": {
+      "AsmResolver.PE.File/6.0.0-beta.1": {
         "type": "package",
         "dependencies": {
-          "AsmResolver": "5.1.0"
+          "AsmResolver": "6.0.0-beta.1"
         },
         "compile": {
           "lib/net6.0/AsmResolver.PE.File.dll": {
@@ -65,28 +64,96 @@
           }
         },
         "runtime": {
-          "lib/net6.0/_._": {
+          "lib/net6.0/AsmResolver.PE.File.dll": {
             "related": ".xml"
           }
         }
       },
-      "AssetRipper.VersionUtilities/1.3.1": {
-        "type": "package",
-        "compile": {
-          "lib/net6.0/AssetRipper.VersionUtilities.dll": {}
-        },
-        "runtime": {
-          "lib/net6.0/_._": {}
-        }
-      },
-      "BepInEx.AutoPlugin/1.1.0": {
-        "type": "package"
-      },
-      "BepInEx.Core/6.0.0-be.674": {
+      "AssetRipper.CIL/1.1.0": {
         "type": "package",
         "dependencies": {
-          "HarmonyX": "2.10.1",
-          "MonoMod.Utils": "22.5.1.1",
+          "AsmResolver.DotNet": "6.0.0-beta.1"
+        },
+        "compile": {
+          "lib/net6.0/AssetRipper.CIL.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/AssetRipper.CIL.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "AssetRipper.Gee.External.Capstone/2.3.2": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/Gee.External.Capstone.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Gee.External.Capstone.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/linux-arm/native/libcapstone.so": {
+            "assetType": "native",
+            "rid": "linux-arm"
+          },
+          "runtimes/linux-arm64/native/libcapstone.so": {
+            "assetType": "native",
+            "rid": "linux-arm64"
+          },
+          "runtimes/linux-x64/native/libcapstone.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/linux-x86/native/libcapstone.so": {
+            "assetType": "native",
+            "rid": "linux-x86"
+          },
+          "runtimes/osx-arm64/native/libcapstone.dylib": {
+            "assetType": "native",
+            "rid": "osx-arm64"
+          },
+          "runtimes/osx-x64/native/libcapstone.dylib": {
+            "assetType": "native",
+            "rid": "osx-x64"
+          },
+          "runtimes/win-arm64/native/capstone.dll": {
+            "assetType": "native",
+            "rid": "win-arm64"
+          },
+          "runtimes/win-x64/native/capstone.dll": {
+            "assetType": "native",
+            "rid": "win-x64"
+          },
+          "runtimes/win-x86/native/capstone.dll": {
+            "assetType": "native",
+            "rid": "win-x86"
+          }
+        }
+      },
+      "AssetRipper.Primitives/3.1.3": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/AssetRipper.Primitives.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/AssetRipper.Primitives.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "BepInEx.Core/6.0.0-be.725": {
+        "type": "package",
+        "dependencies": {
+          "HarmonyX": "2.10.2",
+          "MonoMod.Utils": "22.7.31.1",
           "SemanticVersioning": "2.0.2"
         },
         "compile": {
@@ -100,23 +167,17 @@
           }
         }
       },
-      "BepInEx.IL2CPP.MSBuild/2.0.1": {
+      "BepInEx.IL2CPP.MSBuild/2.1.0-rc.1": {
         "type": "package",
-        "compile": {
-          "lib/netstandard2.1/BepInEx.IL2CPP.MSBuild.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.1/_._": {}
-        },
         "build": {
           "build/BepInEx.IL2CPP.MSBuild.props": {}
         }
       },
-      "BepInEx.Unity.Common/6.0.0-be.674": {
+      "BepInEx.Unity.Common/6.0.0-be.725": {
         "type": "package",
         "dependencies": {
-          "AssetRipper.VersionUtilities": "1.2.1",
-          "MonoMod.Utils": "22.5.1.1"
+          "AssetRipper.Primitives": "3.1.3",
+          "MonoMod.Utils": "22.7.31.1"
         },
         "compile": {
           "lib/netstandard2.0/BepInEx.Unity.Common.dll": {
@@ -129,18 +190,18 @@
           }
         }
       },
-      "BepInEx.Unity.IL2CPP/6.0.0-be.674": {
+      "BepInEx.Unity.IL2CPP/6.0.0-be.725": {
         "type": "package",
         "dependencies": {
-          "BepInEx.Core": "6.0.0-be.674",
-          "BepInEx.Unity.Common": "6.0.0-be.674",
-          "HarmonyX": "2.10.1",
-          "Iced": "1.18.0",
-          "Il2CppInterop.Generator": "1.4.6-ci.389",
-          "Il2CppInterop.HarmonySupport": "1.4.6-ci.389",
-          "Il2CppInterop.Runtime": "1.4.6-ci.389",
-          "MonoMod.RuntimeDetour": "22.5.1.1",
-          "Samboy063.Cpp2IL.Core": "2022.1.0-development.866"
+          "BepInEx.Core": "6.0.0-be.725",
+          "BepInEx.Unity.Common": "6.0.0-be.725",
+          "HarmonyX": "2.10.2",
+          "Iced": "1.21.0",
+          "Il2CppInterop.Generator": "1.4.6-ci.426",
+          "Il2CppInterop.HarmonySupport": "1.4.6-ci.426",
+          "Il2CppInterop.Runtime": "1.4.6-ci.426",
+          "MonoMod.RuntimeDetour": "22.7.31.1",
+          "Samboy063.Cpp2IL.Core": "2022.1.0-pre-release.18"
         },
         "compile": {
           "lib/net6.0/BepInEx.Unity.IL2CPP.dll": {
@@ -153,16 +214,16 @@
           }
         }
       },
-      "Disarm/2022.1.0-master.26": {
+      "Disarm/2022.1.0-master.34": {
         "type": "package",
         "compile": {
           "lib/net6.0/Disarm.dll": {}
         },
         "runtime": {
-          "lib/net6.0/_._": {}
+          "lib/net6.0/Disarm.dll": {}
         }
       },
-      "HarmonyX/2.10.1": {
+      "HarmonyX/2.10.2": {
         "type": "package",
         "dependencies": {
           "MonoMod.RuntimeDetour": "22.3.23.4",
@@ -179,7 +240,7 @@
           }
         }
       },
-      "Iced/1.18.0": {
+      "Iced/1.21.0": {
         "type": "package",
         "compile": {
           "lib/netstandard2.1/Iced.dll": {
@@ -187,12 +248,12 @@
           }
         },
         "runtime": {
-          "lib/netstandard2.1/_._": {
+          "lib/netstandard2.1/Iced.dll": {
             "related": ".xml"
           }
         }
       },
-      "Il2CppInterop.Common/1.4.6-ci.389": {
+      "Il2CppInterop.Common/1.4.6-ci.426": {
         "type": "package",
         "dependencies": {
           "Iced": "1.17.0",
@@ -210,10 +271,10 @@
           }
         }
       },
-      "Il2CppInterop.Generator/1.4.6-ci.389": {
+      "Il2CppInterop.Generator/1.4.6-ci.426": {
         "type": "package",
         "dependencies": {
-          "Il2CppInterop.Common": "1.4.6-ci.389",
+          "Il2CppInterop.Common": "1.4.6-ci.426",
           "Mono.Cecil": "0.11.3"
         },
         "compile": {
@@ -227,11 +288,11 @@
           }
         }
       },
-      "Il2CppInterop.HarmonySupport/1.4.6-ci.389": {
+      "Il2CppInterop.HarmonySupport/1.4.6-ci.426": {
         "type": "package",
         "dependencies": {
           "HarmonyX": "2.10.0",
-          "Il2CppInterop.Runtime": "1.4.6-ci.389"
+          "Il2CppInterop.Runtime": "1.4.6-ci.426"
         },
         "compile": {
           "lib/net6.0/Il2CppInterop.HarmonySupport.dll": {
@@ -244,11 +305,11 @@
           }
         }
       },
-      "Il2CppInterop.Runtime/1.4.6-ci.389": {
+      "Il2CppInterop.Runtime/1.4.6-ci.426": {
         "type": "package",
         "dependencies": {
           "Iced": "1.17.0",
-          "Il2CppInterop.Common": "1.4.6-ci.389"
+          "Il2CppInterop.Common": "1.4.6-ci.426"
         },
         "compile": {
           "lib/net6.0/Il2CppInterop.Runtime.dll": {
@@ -258,25 +319,6 @@
         "runtime": {
           "lib/net6.0/_._": {
             "related": ".xml"
-          }
-        }
-      },
-      "js6pak.Gee.External.Capstone/2.1.0": {
-        "type": "package",
-        "compile": {
-          "lib/netstandard2.0/Gee.External.Capstone.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/netstandard2.0/_._": {
-            "related": ".xml"
-          }
-        },
-        "runtimeTargets": {
-          "runtimes/osx-x64/native/_._": {
-            "assetType": "native",
-            "rid": "osx-x64"
           }
         }
       },
@@ -336,11 +378,11 @@
           }
         }
       },
-      "MonoMod.RuntimeDetour/22.5.1.1": {
+      "MonoMod.RuntimeDetour/22.7.31.1": {
         "type": "package",
         "dependencies": {
           "Mono.Cecil": "0.11.4",
-          "MonoMod.Utils": "22.5.1.1",
+          "MonoMod.Utils": "22.7.31.1",
           "System.Collections.NonGeneric": "4.3.0",
           "System.ComponentModel.TypeConverter": "4.3.0",
           "System.IO.FileSystem.Primitives": "4.3.0",
@@ -359,7 +401,7 @@
           }
         }
       },
-      "MonoMod.Utils/22.5.1.1": {
+      "MonoMod.Utils/22.7.31.1": {
         "type": "package",
         "dependencies": {
           "Mono.Cecil": "0.11.4",
@@ -381,10 +423,10 @@
           }
         }
       },
-      "Reactor/2.2.0": {
+      "Reactor/2.3.1": {
         "type": "package",
         "dependencies": {
-          "BepInEx.Unity.IL2CPP": "6.0.0-be.670"
+          "BepInEx.Unity.IL2CPP": "6.0.0-be.679"
         },
         "compile": {
           "lib/net6.0/Reactor.dll": {
@@ -555,43 +597,44 @@
           }
         }
       },
-      "Samboy063.Cpp2IL.Core/2022.1.0-development.866": {
+      "Samboy063.Cpp2IL.Core/2022.1.0-pre-release.18": {
         "type": "package",
         "dependencies": {
-          "AsmResolver.DotNet": "5.1.0",
-          "Disarm": "2022.1.0-master.26",
-          "Iced": "1.18.0",
-          "Samboy063.LibCpp2IL": "2022.1.0-development.866",
-          "StableNameDotNet": "0.1.0-development.866",
-          "js6pak.Gee.External.Capstone": "2.1.0"
+          "AsmResolver.DotNet": "6.0.0-beta.1",
+          "AssetRipper.CIL": "1.1.0",
+          "AssetRipper.Gee.External.Capstone": "2.3.2",
+          "Disarm": "2022.1.0-master.34",
+          "Iced": "1.21.0",
+          "Samboy063.LibCpp2IL": "2022.1.0-pre-release.18",
+          "StableNameDotNet": "0.1.0-pre-release.15"
         },
         "compile": {
           "lib/net6.0/Cpp2IL.Core.dll": {}
         },
         "runtime": {
-          "lib/net6.0/_._": {}
+          "lib/net6.0/Cpp2IL.Core.dll": {}
         }
       },
-      "Samboy063.LibCpp2IL/2022.1.0-development.866": {
+      "Samboy063.LibCpp2IL/2022.1.0-pre-release.18": {
         "type": "package",
         "dependencies": {
-          "AssetRipper.VersionUtilities": "1.3.1",
-          "Samboy063.WasmDisassembler": "2022.1.0-development.866"
+          "AssetRipper.Primitives": "3.1.2",
+          "Samboy063.WasmDisassembler": "2022.1.0-pre-release.15"
         },
         "compile": {
           "lib/net6.0/LibCpp2IL.dll": {}
         },
         "runtime": {
-          "lib/net6.0/_._": {}
+          "lib/net6.0/LibCpp2IL.dll": {}
         }
       },
-      "Samboy063.WasmDisassembler/2022.1.0-development.866": {
+      "Samboy063.WasmDisassembler/2022.1.0-pre-release.15": {
         "type": "package",
         "compile": {
           "lib/net6.0/WasmDisassembler.dll": {}
         },
         "runtime": {
-          "lib/net6.0/_._": {}
+          "lib/net6.0/WasmDisassembler.dll": {}
         }
       },
       "SemanticVersioning/2.0.2": {
@@ -603,13 +646,13 @@
           "lib/netstandard2.0/_._": {}
         }
       },
-      "StableNameDotNet/0.1.0-development.866": {
+      "StableNameDotNet/0.1.0-pre-release.15": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/StableNameDotNet.dll": {}
         },
         "runtime": {
-          "lib/netstandard2.0/_._": {}
+          "lib/netstandard2.0/StableNameDotNet.dll": {}
         }
       },
       "System.Collections/4.3.0": {
@@ -1064,22 +1107,6 @@
           }
         }
       },
-      "System.Runtime.CompilerServices.Unsafe/6.0.0": {
-        "type": "package",
-        "compile": {
-          "lib/net6.0/System.Runtime.CompilerServices.Unsafe.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net6.0/_._": {
-            "related": ".xml"
-          }
-        },
-        "build": {
-          "buildTransitive/netcoreapp3.1/_._": {}
-        }
-      },
       "System.Runtime.Extensions/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -1347,51 +1374,6 @@
           }
         }
       },
-      "System.Text.Encodings.Web/6.0.0": {
-        "type": "package",
-        "dependencies": {
-          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
-        },
-        "compile": {
-          "lib/net6.0/System.Text.Encodings.Web.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net6.0/_._": {
-            "related": ".xml"
-          }
-        },
-        "build": {
-          "buildTransitive/netcoreapp3.1/_._": {}
-        },
-        "runtimeTargets": {
-          "runtimes/browser/lib/net6.0/_._": {
-            "assetType": "runtime",
-            "rid": "browser"
-          }
-        }
-      },
-      "System.Text.Json/6.0.7": {
-        "type": "package",
-        "dependencies": {
-          "System.Runtime.CompilerServices.Unsafe": "6.0.0",
-          "System.Text.Encodings.Web": "6.0.0"
-        },
-        "compile": {
-          "lib/net6.0/System.Text.Json.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net6.0/_._": {
-            "related": ".xml"
-          }
-        },
-        "build": {
-          "buildTransitive/netcoreapp3.1/System.Text.Json.targets": {}
-        }
-      },
       "System.Threading/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -1423,13 +1405,13 @@
     }
   },
   "libraries": {
-    "AmongUs.GameLibs.Steam/2023.7.11": {
-      "sha512": "e5zbU+4AYnp1zAQDizO5GRIh1kemkgCa8rFVAcr9bxeupkBu5dwwdHxArWv/pUybIJTZfOPjkOnicZ2qKWLX7g==",
+    "AmongUs.GameLibs.Steam/2024.10.29": {
+      "sha512": "znuLMD9DRMTp7RMfIz3hts5KUljioPZ1TiuodgyFrH3mDEcOLZtn1sA08AU9pUzsgQA9hzikrrzP+sJIsPqZ9g==",
       "type": "package",
-      "path": "amongus.gamelibs.steam/2023.7.11",
+      "path": "amongus.gamelibs.steam/2024.10.29",
       "files": [
         ".nupkg.metadata",
-        "amongus.gamelibs.steam.2023.7.11.nupkg.sha512",
+        "amongus.gamelibs.steam.2024.10.29.nupkg.sha512",
         "amongus.gamelibs.steam.nuspec",
         "build/AddressablesPlayAssetDelivery.dll",
         "build/AmongUs.GameLibs.Steam.props",
@@ -1437,6 +1419,7 @@
         "build/AppleAuth.dll",
         "build/Assembly-CSharp-firstpass.dll",
         "build/Assembly-CSharp.dll",
+        "build/CsvHelper.dll",
         "build/Hazel.dll",
         "build/Mono.Security.dll",
         "build/Newtonsoft.Json.dll",
@@ -1466,8 +1449,8 @@
         "build/System.dll",
         "build/Unity.Addressables.dll",
         "build/Unity.Analytics.DataPrivacy.dll",
+        "build/Unity.ProBuilder.dll",
         "build/Unity.ResourceManager.dll",
-        "build/Unity.Services.Analytics.dll",
         "build/Unity.Services.Core.Configuration.dll",
         "build/Unity.Services.Core.Device.dll",
         "build/Unity.Services.Core.Environments.Internal.dll",
@@ -1520,115 +1503,184 @@
         "build/mscorlib.dll"
       ]
     },
-    "AsmResolver/5.1.0": {
-      "sha512": "7PjujQzgQ3wjzqZYT4CY8SV6zx7FY6swIwj3Yk4QLolLqo9sBPb7FLF3W30QFvCsCkNfiVWXlSbeZKs4xGgQOQ==",
+    "AsmResolver/6.0.0-beta.1": {
+      "sha512": "M5btCR/rmrx32jZsoN6CLQ/VQk8lN8hvPb6lgojua7pjNoo7StAl92koMC8qz4vzZyH2CNqxLSDoswRvyyK/vA==",
       "type": "package",
-      "path": "asmresolver/5.1.0",
+      "path": "asmresolver/6.0.0-beta.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "asmresolver.5.1.0.nupkg.sha512",
+        "asmresolver.6.0.0-beta.1.nupkg.sha512",
         "asmresolver.nuspec",
+        "lib/net35/AsmResolver.dll",
+        "lib/net35/AsmResolver.xml",
         "lib/net6.0/AsmResolver.dll",
         "lib/net6.0/AsmResolver.xml",
+        "lib/net8.0/AsmResolver.dll",
+        "lib/net8.0/AsmResolver.xml",
         "lib/netcoreapp3.1/AsmResolver.dll",
         "lib/netcoreapp3.1/AsmResolver.xml",
         "lib/netstandard2.0/AsmResolver.dll",
-        "lib/netstandard2.0/AsmResolver.xml"
+        "lib/netstandard2.0/AsmResolver.xml",
+        "lib/netstandard2.1/AsmResolver.dll",
+        "lib/netstandard2.1/AsmResolver.xml"
       ]
     },
-    "AsmResolver.DotNet/5.1.0": {
-      "sha512": "oKrBU94OaSrbbTwydvpLRFalYxozrNXGkl13nIkm823ZFQtPNYOiOMJb5DQLvkCJlWyis7q865tg803T5zg9IA==",
+    "AsmResolver.DotNet/6.0.0-beta.1": {
+      "sha512": "PTq8nNQvhgTxF1iARCknffCsu7Iq9B0kN7TVC8iMaU7uEYog3xvVqH/0+TreY8GW74/+MqhZt/yEFsvS4oAduQ==",
       "type": "package",
-      "path": "asmresolver.dotnet/5.1.0",
+      "path": "asmresolver.dotnet/6.0.0-beta.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "asmresolver.dotnet.5.1.0.nupkg.sha512",
+        "asmresolver.dotnet.6.0.0-beta.1.nupkg.sha512",
         "asmresolver.dotnet.nuspec",
+        "lib/net35/AsmResolver.DotNet.dll",
+        "lib/net35/AsmResolver.DotNet.xml",
         "lib/net6.0/AsmResolver.DotNet.dll",
         "lib/net6.0/AsmResolver.DotNet.xml",
+        "lib/net8.0/AsmResolver.DotNet.dll",
+        "lib/net8.0/AsmResolver.DotNet.xml",
         "lib/netcoreapp3.1/AsmResolver.DotNet.dll",
         "lib/netcoreapp3.1/AsmResolver.DotNet.xml",
         "lib/netstandard2.0/AsmResolver.DotNet.dll",
-        "lib/netstandard2.0/AsmResolver.DotNet.xml"
+        "lib/netstandard2.0/AsmResolver.DotNet.xml",
+        "lib/netstandard2.1/AsmResolver.DotNet.dll",
+        "lib/netstandard2.1/AsmResolver.DotNet.xml"
       ]
     },
-    "AsmResolver.PE/5.1.0": {
-      "sha512": "XD3iAgLSInJIODKUUlpHWXf8MR9H1SFMb1lsmabb4GxxxnDQRPjMxjglv2NOCjQQuNB2Oh0bvjHE7ewf82UqyQ==",
+    "AsmResolver.PE/6.0.0-beta.1": {
+      "sha512": "KadLvx/zzFCJyF+E4jG6jPE1d0iJquzL6+hm8GBivBAs6nwHC8s6g4c857QwQCzXMWza6Vz5Q+3hFiNuOfKaWQ==",
       "type": "package",
-      "path": "asmresolver.pe/5.1.0",
+      "path": "asmresolver.pe/6.0.0-beta.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "asmresolver.pe.5.1.0.nupkg.sha512",
+        "asmresolver.pe.6.0.0-beta.1.nupkg.sha512",
         "asmresolver.pe.nuspec",
+        "lib/net35/AsmResolver.PE.dll",
+        "lib/net35/AsmResolver.PE.xml",
         "lib/net6.0/AsmResolver.PE.dll",
         "lib/net6.0/AsmResolver.PE.xml",
+        "lib/net8.0/AsmResolver.PE.dll",
+        "lib/net8.0/AsmResolver.PE.xml",
         "lib/netcoreapp3.1/AsmResolver.PE.dll",
         "lib/netcoreapp3.1/AsmResolver.PE.xml",
         "lib/netstandard2.0/AsmResolver.PE.dll",
-        "lib/netstandard2.0/AsmResolver.PE.xml"
+        "lib/netstandard2.0/AsmResolver.PE.xml",
+        "lib/netstandard2.1/AsmResolver.PE.dll",
+        "lib/netstandard2.1/AsmResolver.PE.xml"
       ]
     },
-    "AsmResolver.PE.File/5.1.0": {
-      "sha512": "YituBYe0Fh471sXQMfu+f4tWKX/JZvRwrX6g/SVsr4XkUIUzYi/aGT3/QvjHoYx19fE1KYOB6zBKqPkkOK7HPw==",
+    "AsmResolver.PE.File/6.0.0-beta.1": {
+      "sha512": "+lusB9UMHevI5aQsu73NQ1ctPMLFvyHAsEf8vjaJ/py+kX1DkU0JkbERtBRmaf58/hBZ7cyrE7gFnjoo7Bbg7A==",
       "type": "package",
-      "path": "asmresolver.pe.file/5.1.0",
+      "path": "asmresolver.pe.file/6.0.0-beta.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "asmresolver.pe.file.5.1.0.nupkg.sha512",
+        "asmresolver.pe.file.6.0.0-beta.1.nupkg.sha512",
         "asmresolver.pe.file.nuspec",
+        "lib/net35/AsmResolver.PE.File.dll",
+        "lib/net35/AsmResolver.PE.File.xml",
         "lib/net6.0/AsmResolver.PE.File.dll",
         "lib/net6.0/AsmResolver.PE.File.xml",
+        "lib/net8.0/AsmResolver.PE.File.dll",
+        "lib/net8.0/AsmResolver.PE.File.xml",
         "lib/netcoreapp3.1/AsmResolver.PE.File.dll",
         "lib/netcoreapp3.1/AsmResolver.PE.File.xml",
         "lib/netstandard2.0/AsmResolver.PE.File.dll",
-        "lib/netstandard2.0/AsmResolver.PE.File.xml"
+        "lib/netstandard2.0/AsmResolver.PE.File.xml",
+        "lib/netstandard2.1/AsmResolver.PE.File.dll",
+        "lib/netstandard2.1/AsmResolver.PE.File.xml"
       ]
     },
-    "AssetRipper.VersionUtilities/1.3.1": {
-      "sha512": "/1D18NOpqm7rS7+qVUbAReVMNWwgDuYpsnf0RkX1Aah/I0a0irqldoFJ+Kku7YdbSm0zqD+Z6iYUGKoP3GwTNQ==",
+    "AssetRipper.CIL/1.1.0": {
+      "sha512": "nSz1cBjgVeKv+esfDtyQGC1mY9b4C4NFStytdoa9DMozDC8uth6930kAsuWZEivj9GqWSqENnaQUGnl23WpmnQ==",
       "type": "package",
-      "path": "assetripper.versionutilities/1.3.1",
+      "path": "assetripper.cil/1.1.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "assetripper.versionutilities.1.3.1.nupkg.sha512",
-        "assetripper.versionutilities.nuspec",
-        "lib/net35/AssetRipper.VersionUtilities.dll",
-        "lib/net35/VersionUtilities.xml",
-        "lib/net40/AssetRipper.VersionUtilities.dll",
-        "lib/net40/VersionUtilities.xml",
-        "lib/net5.0/AssetRipper.VersionUtilities.dll",
-        "lib/net5.0/VersionUtilities.xml",
-        "lib/net6.0/AssetRipper.VersionUtilities.dll",
-        "lib/net6.0/VersionUtilities.xml",
-        "lib/net7.0/AssetRipper.VersionUtilities.dll",
-        "lib/net7.0/VersionUtilities.xml",
-        "lib/netstandard2.0/AssetRipper.VersionUtilities.dll",
-        "lib/netstandard2.0/VersionUtilities.xml"
+        "README.md",
+        "assetripper.cil.1.1.0.nupkg.sha512",
+        "assetripper.cil.nuspec",
+        "lib/net6.0/AssetRipper.CIL.dll",
+        "lib/net6.0/AssetRipper.CIL.xml",
+        "lib/net7.0/AssetRipper.CIL.dll",
+        "lib/net7.0/AssetRipper.CIL.xml",
+        "lib/net8.0/AssetRipper.CIL.dll",
+        "lib/net8.0/AssetRipper.CIL.xml",
+        "lib/netstandard2.0/AssetRipper.CIL.dll",
+        "lib/netstandard2.0/AssetRipper.CIL.xml"
       ]
     },
-    "BepInEx.AutoPlugin/1.1.0": {
-      "sha512": "/7Nmc1EA9lYlGBiyz6qPAaHvlcJHEjFZ1RFpGX+8EBj3GrgoX5kbpnZusuSHoOlLx0l+CnzKuQNE54B8UaGPyw==",
+    "AssetRipper.Gee.External.Capstone/2.3.2": {
+      "sha512": "wOr5PQPL/2ZfD7+ebt6cpRbUhSzSY5nlHGHjjzuQRiU5zkQlqQNwWDLX0M3smrm5IkaDvONkmDjFMKTlZJmyuQ==",
       "type": "package",
-      "path": "bepinex.autoplugin/1.1.0",
+      "path": "assetripper.gee.external.capstone/2.3.2",
       "files": [
         ".nupkg.metadata",
-        "analyzers/dotnet/cs/BepInEx.AutoPlugin.dll",
-        "bepinex.autoplugin.1.1.0.nupkg.sha512",
-        "bepinex.autoplugin.nuspec"
+        ".signature.p7s",
+        "assetripper.gee.external.capstone.2.3.2.nupkg.sha512",
+        "assetripper.gee.external.capstone.nuspec",
+        "lib/net5.0/Gee.External.Capstone.dll",
+        "lib/net5.0/Gee.External.Capstone.xml",
+        "lib/net6.0/Gee.External.Capstone.dll",
+        "lib/net6.0/Gee.External.Capstone.xml",
+        "lib/net7.0/Gee.External.Capstone.dll",
+        "lib/net7.0/Gee.External.Capstone.xml",
+        "lib/net8.0/Gee.External.Capstone.dll",
+        "lib/net8.0/Gee.External.Capstone.xml",
+        "lib/netstandard2.0/Gee.External.Capstone.dll",
+        "lib/netstandard2.0/Gee.External.Capstone.xml",
+        "lib/netstandard2.1/Gee.External.Capstone.dll",
+        "lib/netstandard2.1/Gee.External.Capstone.xml",
+        "runtimes/linux-arm/native/libcapstone.so",
+        "runtimes/linux-arm64/native/libcapstone.so",
+        "runtimes/linux-x64/native/libcapstone.so",
+        "runtimes/linux-x86/native/libcapstone.so",
+        "runtimes/osx-arm64/native/libcapstone.dylib",
+        "runtimes/osx-x64/native/libcapstone.dylib",
+        "runtimes/win-arm64/native/capstone.dll",
+        "runtimes/win-x64/native/capstone.dll",
+        "runtimes/win-x86/native/capstone.dll"
       ]
     },
-    "BepInEx.Core/6.0.0-be.674": {
-      "sha512": "onhAmi1nB36fVyQ25TRkWfDcYHBmw9pKxx758ut2hWou2gJpRpY2Dxc+GZrXCidPGy65mCi393zIU+07ShHTZw==",
+    "AssetRipper.Primitives/3.1.3": {
+      "sha512": "djZbN/+EXmI+Oia9Pm0LyjZVCPLf60TPSL5rGb7mBEYM5F4CN3nPFXvl2yA5LanPZoHS1Yq7PghGUmkP7Pv9RQ==",
       "type": "package",
-      "path": "bepinex.core/6.0.0-be.674",
+      "path": "assetripper.primitives/3.1.3",
       "files": [
         ".nupkg.metadata",
-        "bepinex.core.6.0.0-be.674.nupkg.sha512",
+        ".signature.p7s",
+        "assetripper.primitives.3.1.3.nupkg.sha512",
+        "assetripper.primitives.nuspec",
+        "lib/net35/AssetRipper.Primitives.dll",
+        "lib/net35/AssetRipper.Primitives.xml",
+        "lib/net40/AssetRipper.Primitives.dll",
+        "lib/net40/AssetRipper.Primitives.xml",
+        "lib/net461/AssetRipper.Primitives.dll",
+        "lib/net461/AssetRipper.Primitives.xml",
+        "lib/net5.0/AssetRipper.Primitives.dll",
+        "lib/net5.0/AssetRipper.Primitives.xml",
+        "lib/net6.0/AssetRipper.Primitives.dll",
+        "lib/net6.0/AssetRipper.Primitives.xml",
+        "lib/net7.0/AssetRipper.Primitives.dll",
+        "lib/net7.0/AssetRipper.Primitives.xml",
+        "lib/net8.0/AssetRipper.Primitives.dll",
+        "lib/net8.0/AssetRipper.Primitives.xml",
+        "lib/netstandard2.0/AssetRipper.Primitives.dll",
+        "lib/netstandard2.0/AssetRipper.Primitives.xml"
+      ]
+    },
+    "BepInEx.Core/6.0.0-be.725": {
+      "sha512": "xBqYH8OtmEfwe7ZRvQDkJF4cPRgyoykcYRXcuszeVWI+0e/7IYZ316wT3HhRU/GLQE6FijuMFGag73jTxMmoxA==",
+      "type": "package",
+      "path": "bepinex.core/6.0.0-be.725",
+      "files": [
+        ".nupkg.metadata",
+        "bepinex.core.6.0.0-be.725.nupkg.sha512",
         "bepinex.core.nuspec",
         "lib/net35/BepInEx.Core.dll",
         "lib/net35/BepInEx.Core.xml",
@@ -1637,27 +1689,31 @@
         "logo.png"
       ]
     },
-    "BepInEx.IL2CPP.MSBuild/2.0.1": {
-      "sha512": "hUZjCV0t8dkw/Z/zq4Zl405QP7frBk/LVfMdUmUz+7XOhGd7lYPKrR48A5vbGl2QeHudMxlkXzAr9WM3Duq2SQ==",
+    "BepInEx.IL2CPP.MSBuild/2.1.0-rc.1": {
+      "sha512": "WI/7TbJwWl5P4B6UXGtKI1VMe6fA6h3fcbp3ZjJKqOBQ5MJfDMmeVB4fb+RW1tUQdxnlSWV3Ul62PHFyTqp4PA==",
       "type": "package",
-      "path": "bepinex.il2cpp.msbuild/2.0.1",
+      "path": "bepinex.il2cpp.msbuild/2.1.0-rc.1",
       "files": [
         ".nupkg.metadata",
-        "bepinex.il2cpp.msbuild.2.0.1.nupkg.sha512",
+        "bepinex.il2cpp.msbuild.2.1.0-rc.1.nupkg.sha512",
         "bepinex.il2cpp.msbuild.nuspec",
         "build/BepInEx.IL2CPP.MSBuild.props",
-        "lib/net472/BepInEx.IL2CPP.MSBuild.dll",
-        "lib/netstandard2.1/BepInEx.IL2CPP.MSBuild.dll",
-        "logo.png"
+        "logo.png",
+        "tasks/net472/BepInEx.IL2CPP.MSBuild.Runner.dll",
+        "tasks/net472/BepInEx.IL2CPP.MSBuild.Shared.dll",
+        "tasks/net472/BepInEx.IL2CPP.MSBuild.dll",
+        "tasks/netstandard2.1/BepInEx.IL2CPP.MSBuild.Runner.dll",
+        "tasks/netstandard2.1/BepInEx.IL2CPP.MSBuild.Shared.dll",
+        "tasks/netstandard2.1/BepInEx.IL2CPP.MSBuild.dll"
       ]
     },
-    "BepInEx.Unity.Common/6.0.0-be.674": {
-      "sha512": "CApjIS89Pl7sKsnxOXANWBq3ALrdAQzn/neK6E6sydjYQiiVKwC6Wo65c1wHdcctSylGhh+e59WuxVSlGuJW9w==",
+    "BepInEx.Unity.Common/6.0.0-be.725": {
+      "sha512": "2onnkxl2Ai88JwhxXXZld6bKjICwhLav/msfK9tIVJObCcxJkvWWGGXmUD+KquQtKjNj4hrExWwZa+zPnbUsTA==",
       "type": "package",
-      "path": "bepinex.unity.common/6.0.0-be.674",
+      "path": "bepinex.unity.common/6.0.0-be.725",
       "files": [
         ".nupkg.metadata",
-        "bepinex.unity.common.6.0.0-be.674.nupkg.sha512",
+        "bepinex.unity.common.6.0.0-be.725.nupkg.sha512",
         "bepinex.unity.common.nuspec",
         "lib/net35/BepInEx.Unity.Common.dll",
         "lib/net35/BepInEx.Unity.Common.xml",
@@ -1666,40 +1722,41 @@
         "logo.png"
       ]
     },
-    "BepInEx.Unity.IL2CPP/6.0.0-be.674": {
-      "sha512": "y6b5w0L5jDE8h67swHN3cDJ+FV+MzVcwrVqr9ssO37L9Laj87zYUtQVRTXwi5G/QFqeUQcUqi04gsYYR9yue3Q==",
+    "BepInEx.Unity.IL2CPP/6.0.0-be.725": {
+      "sha512": "lb6atWrBnVnQVOlaLBF3irZlbnA8gI46Jw/YlLBaeGra14W0q4aPVjUO5ODaBFzq/U0e7iAxzUNzesp3WPJ/tA==",
       "type": "package",
-      "path": "bepinex.unity.il2cpp/6.0.0-be.674",
+      "path": "bepinex.unity.il2cpp/6.0.0-be.725",
       "files": [
         ".nupkg.metadata",
-        "bepinex.unity.il2cpp.6.0.0-be.674.nupkg.sha512",
+        "bepinex.unity.il2cpp.6.0.0-be.725.nupkg.sha512",
         "bepinex.unity.il2cpp.nuspec",
         "lib/net6.0/BepInEx.Unity.IL2CPP.dll",
         "lib/net6.0/BepInEx.Unity.IL2CPP.xml",
         "logo.png"
       ]
     },
-    "Disarm/2022.1.0-master.26": {
-      "sha512": "YnZEbRGr0nG+N3G8WbRQ4Lkg8dTD3oso9iJlCVBmyhEyhLyqs+drBs1kWQbQqFPnb9mi/RJ++R9bPb+L3HF03Q==",
+    "Disarm/2022.1.0-master.34": {
+      "sha512": "sxzTci5eSdl+sFoaGsMZIp7X/eB5ZzplM3CppvD1CWoiZ8rSa43XGLC19G5e8n6mjutNBfN9yL+RER5PCspHFg==",
       "type": "package",
-      "path": "disarm/2022.1.0-master.26",
+      "path": "disarm/2022.1.0-master.34",
       "files": [
         ".nupkg.metadata",
-        "disarm.2022.1.0-master.26.nupkg.sha512",
+        ".signature.p7s",
+        "disarm.2022.1.0-master.34.nupkg.sha512",
         "disarm.nuspec",
         "lib/net6.0/Disarm.dll",
         "lib/netstandard2.0/Disarm.dll"
       ]
     },
-    "HarmonyX/2.10.1": {
-      "sha512": "9LodMC9Y0u1TW96eKJoWrFJFpmzbgojEO38/Q+e7c1mFPhmHt8xcR8qhI06iF1rf0Dnsk+hqENFVSgbtwl/bEw==",
+    "HarmonyX/2.10.2": {
+      "sha512": "/5WwkxXX8mPsRuigQt957rJGx1f0dDQxk+bvk4yYITKFjXas9Em+O71zEP8X0ym8OFQQ2XH/2SxS4NC7vEC+Xg==",
       "type": "package",
-      "path": "harmonyx/2.10.1",
+      "path": "harmonyx/2.10.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE",
-        "harmonyx.2.10.1.nupkg.sha512",
+        "harmonyx.2.10.2.nupkg.sha512",
         "harmonyx.nuspec",
         "lib/net35/0Harmony.dll",
         "lib/net35/0Harmony.xml",
@@ -1710,15 +1767,15 @@
         "logo_mini.png"
       ]
     },
-    "Iced/1.18.0": {
-      "sha512": "G60lZOvbvqttA+SBSv/yY6/wUboXKJlkffhSNR9iOrx0M5gpcK1TRr6xrFR+qAhqIAhvrsPF1jkn9fYb4lEufQ==",
+    "Iced/1.21.0": {
+      "sha512": "dv5+81Q1TBQvVMSOOOmRcjJmvWcX3BZPZsIq31+RLc5cNft0IHAyNlkdb7ZarOWG913PyBoFDsDXoCIlKmLclg==",
       "type": "package",
-      "path": "iced/1.18.0",
+      "path": "iced/1.21.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.txt",
-        "iced.1.18.0.nupkg.sha512",
+        "iced.1.21.0.nupkg.sha512",
         "iced.nuspec",
         "lib/net45/Iced.dll",
         "lib/net45/Iced.xml",
@@ -1729,28 +1786,28 @@
         "logo.png"
       ]
     },
-    "Il2CppInterop.Common/1.4.6-ci.389": {
-      "sha512": "KTyf2f66Q2mS9a6xhvoPWwD0VzRIoskPMVQehaVMo1dx4Di1FPFsKqukQ+ob6wgP5Rbnx53kiH0PY+IRSb35XA==",
+    "Il2CppInterop.Common/1.4.6-ci.426": {
+      "sha512": "pI0kU0qqJKMP6z9eFz4+WJtGIwklfPxW2yWEY9vKnrN9bbYMusK3v5uFWV8al7S/HPSATV5jNWH1hyTvP7kglA==",
       "type": "package",
-      "path": "il2cppinterop.common/1.4.6-ci.389",
+      "path": "il2cppinterop.common/1.4.6-ci.426",
       "files": [
         ".nupkg.metadata",
         "README.md",
-        "il2cppinterop.common.1.4.6-ci.389.nupkg.sha512",
+        "il2cppinterop.common.1.4.6-ci.426.nupkg.sha512",
         "il2cppinterop.common.nuspec",
         "lib/netstandard2.0/Il2CppInterop.Common.dll",
         "lib/netstandard2.0/Il2CppInterop.Common.xml",
         "logo_icon.png"
       ]
     },
-    "Il2CppInterop.Generator/1.4.6-ci.389": {
-      "sha512": "XJX4sn/RzAEBNIZZXuyDcLZrFx5tCoahujDu5aKWjApiMj/nTRQAxZn17daIIvd9aHqLaAfiWWth5QDLIt2bKw==",
+    "Il2CppInterop.Generator/1.4.6-ci.426": {
+      "sha512": "kecdx/vbNl0RtfzfYW592jU8PMyq1JbzpvoJSvqwO+tV6icp9SljXy6yG8bT/wt0gaPj9mFUNDTe2Wu6M6XGZQ==",
       "type": "package",
-      "path": "il2cppinterop.generator/1.4.6-ci.389",
+      "path": "il2cppinterop.generator/1.4.6-ci.426",
       "files": [
         ".nupkg.metadata",
         "README.md",
-        "il2cppinterop.generator.1.4.6-ci.389.nupkg.sha512",
+        "il2cppinterop.generator.1.4.6-ci.426.nupkg.sha512",
         "il2cppinterop.generator.nuspec",
         "lib/net472/Il2CppInterop.Generator.dll",
         "lib/net472/Il2CppInterop.Generator.xml",
@@ -1759,57 +1816,32 @@
         "logo_icon.png"
       ]
     },
-    "Il2CppInterop.HarmonySupport/1.4.6-ci.389": {
-      "sha512": "Xd2zK6sLqwA0ReyUy83SWKcALwY99fq6vVL5gFOMN5Ct8OOVhtNIws0ysCWsfx1GL0RJiRYfR4pza/MmWRz4PQ==",
+    "Il2CppInterop.HarmonySupport/1.4.6-ci.426": {
+      "sha512": "rd2T5o6SybIc12hmX3HktTF5n27hFb0w4mNSExq7h1YsmrNlt7x+Ac1MBnnB0JwPLIg7w8LjnKjoIX6Gf626ng==",
       "type": "package",
-      "path": "il2cppinterop.harmonysupport/1.4.6-ci.389",
+      "path": "il2cppinterop.harmonysupport/1.4.6-ci.426",
       "files": [
         ".nupkg.metadata",
         "README.md",
-        "il2cppinterop.harmonysupport.1.4.6-ci.389.nupkg.sha512",
+        "il2cppinterop.harmonysupport.1.4.6-ci.426.nupkg.sha512",
         "il2cppinterop.harmonysupport.nuspec",
         "lib/net6.0/Il2CppInterop.HarmonySupport.dll",
         "lib/net6.0/Il2CppInterop.HarmonySupport.xml",
         "logo_icon.png"
       ]
     },
-    "Il2CppInterop.Runtime/1.4.6-ci.389": {
-      "sha512": "nzYjuVzDG/O8+AQ8ax3WVHf+ZVsQKrVtp/yvuW8XoEPLdkbgryIrMo75dvN+tPqxOU3o2MPt9MZ9j25P5aVJMw==",
+    "Il2CppInterop.Runtime/1.4.6-ci.426": {
+      "sha512": "0O0oI7gOqJixrsjvh1firhuGYK3Yr0uDLp6Q+t5CfcTMmeEX8Plk3pqAP9ZYyilBvh7uW0gv4Golqz08L1GXug==",
       "type": "package",
-      "path": "il2cppinterop.runtime/1.4.6-ci.389",
+      "path": "il2cppinterop.runtime/1.4.6-ci.426",
       "files": [
         ".nupkg.metadata",
         "README.md",
-        "il2cppinterop.runtime.1.4.6-ci.389.nupkg.sha512",
+        "il2cppinterop.runtime.1.4.6-ci.426.nupkg.sha512",
         "il2cppinterop.runtime.nuspec",
         "lib/net6.0/Il2CppInterop.Runtime.dll",
         "lib/net6.0/Il2CppInterop.Runtime.xml",
         "logo_icon.png"
-      ]
-    },
-    "js6pak.Gee.External.Capstone/2.1.0": {
-      "sha512": "YYpq7NM50bSSVUDjXyV/eiITk6syXqItPjKBOb3jEWS6RFsk0DNhpWMPW6b3hKDmArARuWDU6S2pVu1IeVrvIA==",
-      "type": "package",
-      "path": "js6pak.gee.external.capstone/2.1.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "js6pak.gee.external.capstone.2.1.0.nupkg.sha512",
-        "js6pak.gee.external.capstone.nuspec",
-        "lib/net40/Gee.External.Capstone.dll",
-        "lib/net40/Gee.External.Capstone.xml",
-        "lib/net45/Gee.External.Capstone.dll",
-        "lib/net45/Gee.External.Capstone.xml",
-        "lib/netstandard2.0/Gee.External.Capstone.dll",
-        "lib/netstandard2.0/Gee.External.Capstone.xml",
-        "runtimes/linux-arm/native/libcapstone.so",
-        "runtimes/linux-arm64/native/libcapstone.so",
-        "runtimes/linux-x64/native/libcapstone.so",
-        "runtimes/linux-x86/native/libcapstone.so",
-        "runtimes/osx-arm64/native/libcapstone.dylib",
-        "runtimes/osx-x64/native/libcapstone.dylib",
-        "runtimes/win-x64/native/capstone.dll",
-        "runtimes/win-x86/native/capstone.dll"
       ]
     },
     "Microsoft.Extensions.Logging.Abstractions/6.0.1": {
@@ -1921,10 +1953,10 @@
         "mono.cecil.nuspec"
       ]
     },
-    "MonoMod.RuntimeDetour/22.5.1.1": {
-      "sha512": "WG5zLRuAr8KJEnIkKTuIG1OJCrGIT3pjvnAD43E0FDchHf3Dp985MF/8tmIQvAzCZV87JNs6QKeGGqmwDmpXpw==",
+    "MonoMod.RuntimeDetour/22.7.31.1": {
+      "sha512": "nxVJTvQbWAujaogt5XX3eAy7d22t66Z88aWg9sirPLO9rR/6yNCHAyZpgxXrOsIobZVW0IEZPqNMOBhgke25/w==",
       "type": "package",
-      "path": "monomod.runtimedetour/22.5.1.1",
+      "path": "monomod.runtimedetour/22.7.31.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1936,14 +1968,14 @@
         "lib/net5.0/MonoMod.RuntimeDetour.xml",
         "lib/netstandard2.0/MonoMod.RuntimeDetour.dll",
         "lib/netstandard2.0/MonoMod.RuntimeDetour.xml",
-        "monomod.runtimedetour.22.5.1.1.nupkg.sha512",
+        "monomod.runtimedetour.22.7.31.1.nupkg.sha512",
         "monomod.runtimedetour.nuspec"
       ]
     },
-    "MonoMod.Utils/22.5.1.1": {
-      "sha512": "vBObO1atXxhi2C4AuC53y87Bqeogi9xIrD1Ym3YWr5uxc8Nrm8SrsFeD1i3x04R999+XQ3FdeHrbXScyWYEHqQ==",
+    "MonoMod.Utils/22.7.31.1": {
+      "sha512": "nI0E1oadXS1iMbfwfCzYF08C1jRQR9cnnHv66a4BSPd4sGu2p6g4BmctCWsdAB6oGKkSJUhcfHfxcfTsDyB94Q==",
       "type": "package",
-      "path": "monomod.utils/22.5.1.1",
+      "path": "monomod.utils/22.7.31.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1955,21 +1987,21 @@
         "lib/net5.0/MonoMod.Utils.xml",
         "lib/netstandard2.0/MonoMod.Utils.dll",
         "lib/netstandard2.0/MonoMod.Utils.xml",
-        "monomod.utils.22.5.1.1.nupkg.sha512",
+        "monomod.utils.22.7.31.1.nupkg.sha512",
         "monomod.utils.nuspec"
       ]
     },
-    "Reactor/2.2.0": {
-      "sha512": "foMHya01tmr//3tw+kO7FmY1ojnR0m+ShMU6sxogbnWeO85lmX3QM8aSIsYeAhtJSThf6Ben6iTM4O0KgVcmqw==",
+    "Reactor/2.3.1": {
+      "sha512": "CsFs84aM3PA6+74TzHEAUayXOosYBJEJKf1Ebs3CpL10RMLrj+WRAWrpgFoNd9qS+pIzQflW76Q5Pgg/aOQ40w==",
       "type": "package",
-      "path": "reactor/2.2.0",
+      "path": "reactor/2.3.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "icon.png",
         "lib/net6.0/Reactor.dll",
         "lib/net6.0/Reactor.xml",
-        "reactor.2.2.0.nupkg.sha512",
+        "reactor.2.3.1.nupkg.sha512",
         "reactor.nuspec"
       ]
     },
@@ -2183,42 +2215,48 @@
         "runtimes/ubuntu.16.10-x64/native/System.Security.Cryptography.Native.OpenSsl.so"
       ]
     },
-    "Samboy063.Cpp2IL.Core/2022.1.0-development.866": {
-      "sha512": "QPMuix/3jRngWBdNSLhAbm9BHYf95Ln1Ph1eCK/cDZdVibxFDFP3a6Yczyx1p7GbN7bRQwrhs2skPJSS/z3m2w==",
+    "Samboy063.Cpp2IL.Core/2022.1.0-pre-release.18": {
+      "sha512": "eX9d1IK05jWaEaeuMAE0L5WYHT7thtxz+aWLL/CAaCzZ0TzRPD+WFTjJ0KQO0YWBVO300CX3GwmPmf7TNO+wUg==",
       "type": "package",
-      "path": "samboy063.cpp2il.core/2022.1.0-development.866",
+      "path": "samboy063.cpp2il.core/2022.1.0-pre-release.18",
       "files": [
         ".nupkg.metadata",
+        ".signature.p7s",
         "lib/net6.0/Cpp2IL.Core.dll",
         "lib/net7.0/Cpp2IL.Core.dll",
+        "lib/net8.0/Cpp2IL.Core.dll",
         "lib/netstandard2.0/Cpp2IL.Core.dll",
-        "samboy063.cpp2il.core.2022.1.0-development.866.nupkg.sha512",
+        "samboy063.cpp2il.core.2022.1.0-pre-release.18.nupkg.sha512",
         "samboy063.cpp2il.core.nuspec"
       ]
     },
-    "Samboy063.LibCpp2IL/2022.1.0-development.866": {
-      "sha512": "EcJSWTfQko8SQozozoUT+aQJVWC8wj8C0YUiPBF4rNRId19yTKp2IXcXnI747v+8/aal222QR6WHfoBK2WlVLg==",
+    "Samboy063.LibCpp2IL/2022.1.0-pre-release.18": {
+      "sha512": "9zJdTAeErpwJpYDHYwwI0MAC1OyBEfC1ce7dpAOYRUUYCfeaKVWxnSCcyaoY6HDzIoxPkhbfllbwOe49ZmUYuQ==",
       "type": "package",
-      "path": "samboy063.libcpp2il/2022.1.0-development.866",
+      "path": "samboy063.libcpp2il/2022.1.0-pre-release.18",
       "files": [
         ".nupkg.metadata",
+        ".signature.p7s",
         "lib/net6.0/LibCpp2IL.dll",
         "lib/net7.0/LibCpp2IL.dll",
+        "lib/net8.0/LibCpp2IL.dll",
         "lib/netstandard2.0/LibCpp2IL.dll",
-        "samboy063.libcpp2il.2022.1.0-development.866.nupkg.sha512",
+        "samboy063.libcpp2il.2022.1.0-pre-release.18.nupkg.sha512",
         "samboy063.libcpp2il.nuspec"
       ]
     },
-    "Samboy063.WasmDisassembler/2022.1.0-development.866": {
-      "sha512": "2QK8F3eISkLcoW/Nt7wtxyQh31EXAqEMBVXXjEnuxyvXpBXxOIGpjmE3pWhGwxQwDCbe4zBsLF1zUiqq3/pXRA==",
+    "Samboy063.WasmDisassembler/2022.1.0-pre-release.15": {
+      "sha512": "e6qw81SHS+fS7iZ3qfqZBavVarYbkPElNgDCANF6dNFTYq5+hc80am+4FqQDl+ZVNS47bZDZobxIzHhmriCXGg==",
       "type": "package",
-      "path": "samboy063.wasmdisassembler/2022.1.0-development.866",
+      "path": "samboy063.wasmdisassembler/2022.1.0-pre-release.15",
       "files": [
         ".nupkg.metadata",
+        ".signature.p7s",
         "lib/net6.0/WasmDisassembler.dll",
         "lib/net7.0/WasmDisassembler.dll",
+        "lib/net8.0/WasmDisassembler.dll",
         "lib/netstandard2.0/WasmDisassembler.dll",
-        "samboy063.wasmdisassembler.2022.1.0-development.866.nupkg.sha512",
+        "samboy063.wasmdisassembler.2022.1.0-pre-release.15.nupkg.sha512",
         "samboy063.wasmdisassembler.nuspec"
       ]
     },
@@ -2237,14 +2275,15 @@
         "semanticversioning.nuspec"
       ]
     },
-    "StableNameDotNet/0.1.0-development.866": {
-      "sha512": "DJb8x4dV3ucDgM12sU28HxCdeqY/JudJbeJG6mgXWDJzpFZw2Jd7JF1pKFRNLzh/0gpo8bCGLQS9gOWZmBjdtg==",
+    "StableNameDotNet/0.1.0-pre-release.15": {
+      "sha512": "aIkEOo8V76vE+9CppHpTFLGXalBw6TAl4/tb6vadmS+gHJMshTVehzQv9cJXy4xZDdANV1uGMRaUFZERcDA2xQ==",
       "type": "package",
-      "path": "stablenamedotnet/0.1.0-development.866",
+      "path": "stablenamedotnet/0.1.0-pre-release.15",
       "files": [
         ".nupkg.metadata",
+        ".signature.p7s",
         "lib/netstandard2.0/StableNameDotNet.dll",
-        "stablenamedotnet.0.1.0-development.866.nupkg.sha512",
+        "stablenamedotnet.0.1.0-pre-release.15.nupkg.sha512",
         "stablenamedotnet.nuspec"
       ]
     },
@@ -3877,31 +3916,6 @@
         "system.runtime.nuspec"
       ]
     },
-    "System.Runtime.CompilerServices.Unsafe/6.0.0": {
-      "sha512": "/iUeP3tq1S0XdNNoMz5C9twLSrM/TH+qElHkXWaPvuNOt+99G75NrV0OS2EqHx5wMN7popYjpc8oTjC1y16DLg==",
-      "type": "package",
-      "path": "system.runtime.compilerservices.unsafe/6.0.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "buildTransitive/netcoreapp2.0/System.Runtime.CompilerServices.Unsafe.targets",
-        "buildTransitive/netcoreapp3.1/_._",
-        "lib/net461/System.Runtime.CompilerServices.Unsafe.dll",
-        "lib/net461/System.Runtime.CompilerServices.Unsafe.xml",
-        "lib/net6.0/System.Runtime.CompilerServices.Unsafe.dll",
-        "lib/net6.0/System.Runtime.CompilerServices.Unsafe.xml",
-        "lib/netcoreapp3.1/System.Runtime.CompilerServices.Unsafe.dll",
-        "lib/netcoreapp3.1/System.Runtime.CompilerServices.Unsafe.xml",
-        "lib/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll",
-        "lib/netstandard2.0/System.Runtime.CompilerServices.Unsafe.xml",
-        "system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
-        "system.runtime.compilerservices.unsafe.nuspec",
-        "useSharedDesignerContext.txt"
-      ]
-    },
     "System.Runtime.Extensions/4.3.0": {
       "sha512": "guW0uK0fn5fcJJ1tJVXYd7/1h5F+pea1r7FLSOz/f8vPEqbR2ZAknuRDvTQ8PzAilDveOxNjSfr0CHfIQfFk8g==",
       "type": "package",
@@ -4482,87 +4496,6 @@
         "system.text.encoding.nuspec"
       ]
     },
-    "System.Text.Encodings.Web/6.0.0": {
-      "sha512": "Vg8eB5Tawm1IFqj4TVK1czJX89rhFxJo9ELqc/Eiq0eXy13RK00eubyU6TJE6y+GQXjyV5gSfiewDUZjQgSE0w==",
-      "type": "package",
-      "path": "system.text.encodings.web/6.0.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "buildTransitive/netcoreapp2.0/System.Text.Encodings.Web.targets",
-        "buildTransitive/netcoreapp3.1/_._",
-        "lib/net461/System.Text.Encodings.Web.dll",
-        "lib/net461/System.Text.Encodings.Web.xml",
-        "lib/net6.0/System.Text.Encodings.Web.dll",
-        "lib/net6.0/System.Text.Encodings.Web.xml",
-        "lib/netcoreapp3.1/System.Text.Encodings.Web.dll",
-        "lib/netcoreapp3.1/System.Text.Encodings.Web.xml",
-        "lib/netstandard2.0/System.Text.Encodings.Web.dll",
-        "lib/netstandard2.0/System.Text.Encodings.Web.xml",
-        "runtimes/browser/lib/net6.0/System.Text.Encodings.Web.dll",
-        "runtimes/browser/lib/net6.0/System.Text.Encodings.Web.xml",
-        "system.text.encodings.web.6.0.0.nupkg.sha512",
-        "system.text.encodings.web.nuspec",
-        "useSharedDesignerContext.txt"
-      ]
-    },
-    "System.Text.Json/6.0.7": {
-      "sha512": "/Tf/9XjprpHolbcDOrxsKVYy/mUG/FS7aGd9YUgBVEiHeQH4kAE0T1sMbde7q6B5xcrNUsJ5iW7D1RvHudQNqA==",
-      "type": "package",
-      "path": "system.text.json/6.0.7",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "analyzers/dotnet/roslyn3.11/cs/System.Text.Json.SourceGeneration.dll",
-        "analyzers/dotnet/roslyn3.11/cs/cs/System.Text.Json.SourceGeneration.resources.dll",
-        "analyzers/dotnet/roslyn3.11/cs/de/System.Text.Json.SourceGeneration.resources.dll",
-        "analyzers/dotnet/roslyn3.11/cs/es/System.Text.Json.SourceGeneration.resources.dll",
-        "analyzers/dotnet/roslyn3.11/cs/fr/System.Text.Json.SourceGeneration.resources.dll",
-        "analyzers/dotnet/roslyn3.11/cs/it/System.Text.Json.SourceGeneration.resources.dll",
-        "analyzers/dotnet/roslyn3.11/cs/ja/System.Text.Json.SourceGeneration.resources.dll",
-        "analyzers/dotnet/roslyn3.11/cs/ko/System.Text.Json.SourceGeneration.resources.dll",
-        "analyzers/dotnet/roslyn3.11/cs/pl/System.Text.Json.SourceGeneration.resources.dll",
-        "analyzers/dotnet/roslyn3.11/cs/pt-BR/System.Text.Json.SourceGeneration.resources.dll",
-        "analyzers/dotnet/roslyn3.11/cs/ru/System.Text.Json.SourceGeneration.resources.dll",
-        "analyzers/dotnet/roslyn3.11/cs/tr/System.Text.Json.SourceGeneration.resources.dll",
-        "analyzers/dotnet/roslyn3.11/cs/zh-Hans/System.Text.Json.SourceGeneration.resources.dll",
-        "analyzers/dotnet/roslyn3.11/cs/zh-Hant/System.Text.Json.SourceGeneration.resources.dll",
-        "analyzers/dotnet/roslyn4.0/cs/System.Text.Json.SourceGeneration.dll",
-        "analyzers/dotnet/roslyn4.0/cs/cs/System.Text.Json.SourceGeneration.resources.dll",
-        "analyzers/dotnet/roslyn4.0/cs/de/System.Text.Json.SourceGeneration.resources.dll",
-        "analyzers/dotnet/roslyn4.0/cs/es/System.Text.Json.SourceGeneration.resources.dll",
-        "analyzers/dotnet/roslyn4.0/cs/fr/System.Text.Json.SourceGeneration.resources.dll",
-        "analyzers/dotnet/roslyn4.0/cs/it/System.Text.Json.SourceGeneration.resources.dll",
-        "analyzers/dotnet/roslyn4.0/cs/ja/System.Text.Json.SourceGeneration.resources.dll",
-        "analyzers/dotnet/roslyn4.0/cs/ko/System.Text.Json.SourceGeneration.resources.dll",
-        "analyzers/dotnet/roslyn4.0/cs/pl/System.Text.Json.SourceGeneration.resources.dll",
-        "analyzers/dotnet/roslyn4.0/cs/pt-BR/System.Text.Json.SourceGeneration.resources.dll",
-        "analyzers/dotnet/roslyn4.0/cs/ru/System.Text.Json.SourceGeneration.resources.dll",
-        "analyzers/dotnet/roslyn4.0/cs/tr/System.Text.Json.SourceGeneration.resources.dll",
-        "analyzers/dotnet/roslyn4.0/cs/zh-Hans/System.Text.Json.SourceGeneration.resources.dll",
-        "analyzers/dotnet/roslyn4.0/cs/zh-Hant/System.Text.Json.SourceGeneration.resources.dll",
-        "buildTransitive/netcoreapp2.0/System.Text.Json.targets",
-        "buildTransitive/netcoreapp3.1/System.Text.Json.targets",
-        "buildTransitive/netstandard2.0/System.Text.Json.targets",
-        "lib/net461/System.Text.Json.dll",
-        "lib/net461/System.Text.Json.xml",
-        "lib/net6.0/System.Text.Json.dll",
-        "lib/net6.0/System.Text.Json.xml",
-        "lib/netcoreapp3.1/System.Text.Json.dll",
-        "lib/netcoreapp3.1/System.Text.Json.xml",
-        "lib/netstandard2.0/System.Text.Json.dll",
-        "lib/netstandard2.0/System.Text.Json.xml",
-        "system.text.json.6.0.7.nupkg.sha512",
-        "system.text.json.nuspec",
-        "useSharedDesignerContext.txt"
-      ]
-    },
     "System.Threading/4.3.0": {
       "sha512": "VkUS0kOBcUf3Wwm0TSbrevDDZ6BlM+b/HRiapRFWjM5O0NS0LviG0glKmFK+hhPDd1XFeSdU1GmlLhb2CoVpIw==",
       "type": "package",
@@ -4705,18 +4638,19 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
-      "AmongUs.GameLibs.Steam >= 2023.7.11",
-      "BepInEx.AutoPlugin >= 1.1.0",
-      "BepInEx.IL2CPP.MSBuild >= 2.0.1",
-      "BepInEx.Unity.IL2CPP >= 6.0.0-be.674",
-      "Reactor >= 2.2.0"
+      "AmongUs.GameLibs.Steam >= 2024.10.29",
+      "BepInEx.IL2CPP.MSBuild >= 2.1.0-rc.1",
+      "BepInEx.Unity.IL2CPP >= 6.0.0-be.725",
+      "Reactor >= 2.3.1",
+      "Samboy063.Cpp2IL.Core >= 2022.1.0-pre-release.18"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\LUKE\\.nuget\\packages\\": {}
+    "C:\\Users\\LUKE\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
-    "version": "1.0.0-dev",
+    "version": "2.0.0",
     "restore": {
       "projectUniqueName": "C:\\Users\\LUKE\\source\\repos\\ModMenuCrew\\ModMenuCrew\\ModMenuCrew.csproj",
       "projectName": "ModMenuCrew",
@@ -4724,9 +4658,13 @@
       "packagesPath": "C:\\Users\\LUKE\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\LUKE\\source\\repos\\ModMenuCrew\\ModMenuCrew\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
         "C:\\Users\\LUKE\\source\\repos\\ModMenuCrew\\NuGet.Config",
         "C:\\Users\\LUKE\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4735,6 +4673,7 @@
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {},
+        "https://nuget.bepinex.dev/v3/index.json": {},
         "https://nuget.samboy.dev/v3/index.json": {}
       },
       "frameworks": {
@@ -4747,6 +4686,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -4754,29 +4698,25 @@
         "targetAlias": "net6.0",
         "dependencies": {
           "AmongUs.GameLibs.Steam": {
-            "suppressParent": "All",
             "target": "Package",
-            "version": "[2023.7.11, )"
-          },
-          "BepInEx.AutoPlugin": {
-            "suppressParent": "All",
-            "target": "Package",
-            "version": "[1.1.0, )"
+            "version": "[2024.10.29, )"
           },
           "BepInEx.IL2CPP.MSBuild": {
-            "include": "Compile, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-            "suppressParent": "All",
             "target": "Package",
-            "version": "[2.0.1, )"
+            "version": "[2.1.0-rc.1, )"
           },
           "BepInEx.Unity.IL2CPP": {
             "include": "Compile, Build, ContentFiles, Analyzers, BuildTransitive",
             "target": "Package",
-            "version": "[6.0.0-be.674, )"
+            "version": "[6.0.0-be.725, )"
           },
           "Reactor": {
             "target": "Package",
-            "version": "[2.2.0, )"
+            "version": "[2.3.1, )"
+          },
+          "Samboy063.Cpp2IL.Core": {
+            "target": "Package",
+            "version": "[2022.1.0-pre-release.18, )"
           }
         },
         "imports": [
@@ -4795,7 +4735,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files (x86)\\dotnet\\sdk\\6.0.418\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files (x86)\\dotnet\\sdk\\6.0.428\\RuntimeIdentifierGraph.json"
       }
     }
   }

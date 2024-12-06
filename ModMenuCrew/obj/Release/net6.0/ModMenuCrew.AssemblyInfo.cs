@@ -11,14 +11,14 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("ModMenuCrew")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("Chipseq")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
-[assembly: System.Reflection.AssemblyDescriptionAttribute("Mod Menu Among Us By MRLukex")]
-[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0-dev")]
+[assembly: System.Reflection.AssemblyDescriptionAttribute("Mod Menu Among us")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("2.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("2.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("ModMenuCrew")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ModMenuCrew")]
-[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyVersionAttribute("2.0.0.0")]
 
 // Gerado pela classe WriteCodeFragment do MSBuild.
 
