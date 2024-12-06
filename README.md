@@ -29,7 +29,7 @@ A feature-rich mod menu for Among Us that enhances gameplay with various utiliti
 
 ## 🚀 Installation
 
-1. Download the latest release from the [Releases](https://github.com/yourusername/ModMenuCrew/releases) page
+1. Download the latest release from the [Releases](https://github.com/MRLuke956/ModMenuCrew/releases) page
 2. Extract the contents to your Among Us game directory
 3. Launch the game and press `RightShift` to access the menu
 
