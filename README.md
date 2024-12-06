@@ -9,7 +9,7 @@ A feature-rich mod menu for Among Us that enhances gameplay with various utiliti
 ## 🎮 Features
 
 ### Impostor Controls
-- **Toggle Menu**: Press `RightShift` to open/close the mod menu
+- **Toggle Menu**: Press `INSERT` to open/close the mod menu
 - **No Kill Cooldown**: Instantly reset kill cooldown
 - **Custom Kill Cooldown**: Adjust kill timer (0-60 seconds)
 - **Instant Kill All**: Eliminate all non-impostor players instantly
