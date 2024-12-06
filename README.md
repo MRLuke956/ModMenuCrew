@@ -1,26 +1,67 @@
-### **Mod Menu Debug para Among Us**
+# ModMenuCrew - Among Us Mod Menu
 
-Este mod adiciona um poderoso menu de debug e ferramentas de desenvolvedor diretamente no jogo Among Us.
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Game Version](https://img.shields.io/badge/Among%20Us-2024.11.26-red)
+![Mod Version](https://img.shields.io/badge/version-2.0.0-green)
 
-Ele foi construído utilizando o Reactor API e Harmony Patches para proporcionar total compatibilidade com a engine Unity e não interferir na jogabilidade normal._
+A feature-rich mod menu for Among Us that enhances gameplay with various utilities and cheats.
 
-### **Recursos**
-Janela flutuante de menu acionada pela tecla Insert
-Opções para desativar/forçar fim de jogo e convocar reuniões
-Mudança dinâmica de cores e scanner ilimitado
-Ativação/desativação de noclip para debug de movimentação
-Alteração para papel de impostor em tempo real
-Teletransporte para outros jogadores na partida
-Exibição de informações de todos os jogadores
-Desbloqueio automático de todos os cosméticos
-Permissão de banimento para qualquer jogador
-Diversas ferramentas visuais para debug
+## 🎮 Features
 
-### **Instalação**
-Baixe o arquivo .dll compilado e coloque na pasta BepInEx/plugins do Among Us
+### Impostor Controls
+- **Toggle Menu**: Press `RightShift` to open/close the mod menu
+- **No Kill Cooldown**: Instantly reset kill cooldown
+- **Custom Kill Cooldown**: Adjust kill timer (0-60 seconds)
+- **Instant Kill All**: Eliminate all non-impostor players instantly
+- **Force Impostor**: Force yourself to become an impostor
 
-### Uso
-Acesse o menu pressionando Insert em qualquer momento do jogo
+### Game Utilities
+- **Scanner Bypass**: Instantly complete MedBay scan
+- **Task Completion**: Complete all tasks instantly
+- **Meeting Controls**: Force end emergency meetings
+- **Teleportation**: Right-click to teleport to cursor position
+- **Speed Boost**: Customize player movement speed
 
-### Objetivo
-Fornece uma poderosa ferramenta de desenvolvedor para debug, testes e aprendizado sobre o jogo Among Us.
+### Ban Management
+- **Ban Controls**: Add or remove ban time
+- **Ban Status**: View current ban points and time until unban
+- **Reset Bans**: Remove all active bans
+
+## 🚀 Installation
+
+1. Download the latest release from the [Releases](https://github.com/yourusername/ModMenuCrew/releases) page
+2. Extract the contents to your Among Us game directory
+3. Launch the game and press `RightShift` to access the menu
+
+## ⚙️ Configuration
+
+The mod menu is highly customizable through the GUI interface. All settings are automatically saved and persist between game sessions.
+
+## 🛡️ Anti-Ban Features
+
+- Secure RPC handling
+- Timestamp validation
+- Anti-replay attack protection
+- Host validation checks
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## ⚠️ Disclaimer
+
+This mod is for educational purposes only. Use at your own risk. We are not responsible for any game bans or consequences resulting from its use.
+
+## 🏷️ Tags
+
+`among-us` `mod-menu` `game-hack` `cheat` `unity-mod` `csharp` `gaming` `impostor-mod` `among-us-mod` `game-modification`
+
+## About
+
+ModMenuCrew is an advanced Among Us modification that enhances the game with additional features and controls. Built with C# and Unity, it provides a seamless integration with the base game while offering powerful utilities for both impostors and crewmates.
+
+The mod focuses on providing a user-friendly interface while maintaining security through encrypted communications and anti-cheat detection measures. Whether you're looking to practice your impostor skills or experiment with game mechanics, ModMenuCrew offers a comprehensive suite of tools while prioritizing stability and safety.
