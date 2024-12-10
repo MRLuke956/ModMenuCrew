@@ -1,11 +1,11 @@
 # ModMenuCrew - Among Us Mod Menu
-![ModMenuCrewLogo](https://github.com/user-attachments/assets/c4d851c1-b295-4071-a968-ae80fc2ef63f)
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Game Version](https://img.shields.io/badge/Among%20Us-2024.11.26-red)
 ![Mod Version](https://img.shields.io/badge/version-2.0.0-green)
 
 A feature-rich mod menu for Among Us that enhances gameplay with various utilities and cheats.
+![ModMenuCrewLogo](https://raw.githubusercontent.com/MRLuke956/ModMenuCrew/refs/heads/main/ModMenuCrewLogo.png)
 
 ## 🎮 Features
 
