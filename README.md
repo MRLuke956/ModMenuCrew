@@ -176,7 +176,7 @@ If you are an IP holder and have concerns, please open an issue.
 <br/>
 
 ### Credits
-- Harmony, BepInEx, IL2CPP Interop — foundational tech
+- HarmonyX, BepInEx, IL2CPP Interop — foundational tech
 - Among Us developers — the canvas we build upon
 
 “Stay sus, but keep it classy.”
