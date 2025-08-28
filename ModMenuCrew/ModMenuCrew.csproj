@@ -13,7 +13,7 @@
 		<RootNamespace>ModMenuCrew</RootNamespace>
 		<AssemblyName>ModMenuCrew</AssemblyName>
 
-		<RestoreSources>$(RestoreSources);$(MSBuildThisFileDirectory)LocalPackages</RestoreSources>
+		
 	</PropertyGroup>
 
 	<ItemGroup>
