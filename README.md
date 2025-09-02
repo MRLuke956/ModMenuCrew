@@ -51,6 +51,7 @@ Make your lobbies unforgettable. Mod Menu Crew is a BepInEx IL2CPP mod for Among
 
 ## How to Use (In‑Game)
 - Open the mod menu (draggable window) and use these tabs/sections:
+- F1 open and close the menu
   - **Player Selection**: pick a player; use the Role dropdown to assign or switch; in lobby, use Pre‑Assign
   - **General Cheats**: quick actions (complete tasks, close meeting, reveal impostors), mass actions
   - **Role‑Specific Cheats**: toggles for Engineer/Shapeshifter/Scientist/Tracker perks
@@ -180,3 +181,4 @@ If you are an IP holder and have concerns, please open an issue.
 - Among Us developers — the canvas we build upon
 
 “Stay sus, but keep it classy.”
+
