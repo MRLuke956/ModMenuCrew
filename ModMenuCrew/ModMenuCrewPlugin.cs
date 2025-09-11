@@ -34,7 +34,7 @@ namespace ModMenuCrew
     public class ModMenuCrewPlugin : BasePlugin
     {
         public const string Id = "com.crewmod.oficial";
-        public const string ModVersion = "5.3.0";
+        public const string ModVersion = "5.3.1";
 
         public DebuggerComponent Component { get; private set; } = null!;
         public static ModMenuCrewPlugin Instance { get; private set; }

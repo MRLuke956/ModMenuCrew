@@ -17,7 +17,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AmongUs.GameLibs.Steam" Version="2025.4.15" />
+		<PackageReference Include="AmongUs.GameLibs.Steam" Version="2025.9.9" />
 		<PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.735" Private="false" ExcludeAssets="runtime;native" />
 		<PackageReference Include="BepInEx.IL2CPP.MSBuild" Version="2.1.0-rc.1" />
 	</ItemGroup>
@@ -27,7 +27,7 @@
 		<PluginDir Condition="'$(PluginDir)' == ''">C:\Program Files (x86)\Steam\steamapps\common\Among Us\BepInEx\plugins</PluginDir>
 	</PropertyGroup>
 
-	<Target Name="DeployMod" AfterTargets="Build">
+	<Target Name="DeployMod" AfterTargets="Build" Condition="'$(CopyToPluginDir)' == 'true'">
 		<Message Text="Copying $(AssemblyName).dll to $(PluginDir)..." Importance="high" />
 		<MakeDir Directories="$(PluginDir)" Condition=" '$(PluginDir)' != '' and !Exists('$(PluginDir)')" />
 		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PluginDir)" UseHardlinksIfPossible="true" SkipUnchangedFiles="true" />
