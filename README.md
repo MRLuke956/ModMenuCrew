@@ -131,7 +131,7 @@ Design favors clear separation: UI invokes capability services (`GameCheats`, `R
 No. Only specific guarded actions are skipped if altered. The rest keeps working.
 
 **Public lobbies?**
-No. Use in private/testing environments with consent.
+No. Use in private/testing environments with consent (XD).
 
 **How do I make the game less flashy?**
 Cosmetic effects are lightweight and cooled down. If desired, disable bias/adjust delays via code or contribute config toggles.
@@ -181,5 +181,6 @@ If you are an IP holder and have concerns, please open an issue.
 - Among Us developers — the canvas we build upon
 
 “Stay sus, but keep it classy.”
+
 
 
