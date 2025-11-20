@@ -140,12 +140,12 @@ Cosmetic effects are lightweight and cooled down. If desired, disable bias/adjus
 Use BepInEx 6 (IL2CPP), place the DLL under `BepInEx\plugins`, and use a supported Among Us version.
 
 **Supported game versions?**
-Tested on `2025.10.14` (aka `17.0.1`) (Steam). Newer versions may need updates.
+Tested on `2025.11.18` (aka `17.1.0`) (Steam). Newer versions may need updates.
 
 <br/>
 
 ## Compatibility Matrix
-- Among Us: 2025.10.14 (17.0.1) — OK
+- Among Us: 2025.11.18 (17.1.0) — OK
 - BepInEx: 6.0.0‑be.735 (IL2CPP) — Recommended/Tested ([Bleeding Edge builds](https://builds.bepinex.dev/projects/bepinex_be))
 
 
@@ -181,6 +181,7 @@ If you are an IP holder and have concerns, please open an issue.
 - Among Us developers — the canvas we build upon
 
 “Stay sus, but keep it classy.”
+
 
 
 
