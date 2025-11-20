@@ -6,24 +6,42 @@ namespace ModMenuCrew
 {
     public class DragWindow
     {
+        // --- Constantes ---
+        private const float MinWindowWidth = 200f;
+        private const float MinWindowHeight = 100f; // Inclui HeaderHeight
+        private const float MaxWindowHeight = 600f; // Inclui HeaderHeight
+        private const float ContentPadding = 4f; // Espaçamento reduzido (era 8f) para subir o conteúdo
+
+        // --- Estados e Dados ---
         private Rect _windowRect;
         private readonly Action _onGuiContent;
+        // MANTIDO conforme solicitado
         private bool _isDragging;
         private Vector2 _dragOffset;
-        private const float HeaderHeight = 20f;
-        private const float Padding = 16f; // 8px de margem em cima e 8px em baixo do conteúdo
-        // CornerRadius não é usado com os estilos atuais; removido para evitar warnings
         private bool _isMinimized;
         private bool _heightInitialized;
         private Vector2 _scrollPosition;
-        private float _minViewportHeight = 180f;
+        // MANTIDO conforme solicitado, com valores padrão e clamping
+        private float _minViewportHeight = 180f; // Altura mínima da área de conteúdo rolável (excluindo cabeçalho)
 
+        // --- Propriedades Públicas ---
         public bool Enabled { get; set; }
         public string Title { get; set; }
 
+        // --- Cache de Retângulos (Opcional, para evitar alocações em OnGUI se necessário) ---
+        private Rect _cachedHeaderRect;
+        private Rect _cachedContentRect;
+        private Rect _cachedButtonArea;
+
         public DragWindow(Rect initialRect, string title, Action onGuiContent)
         {
-            _windowRect = initialRect;
+            // Aplica clamping inicial para garantir valores válidos
+            _windowRect = new Rect(
+                initialRect.x,
+                initialRect.y,
+                Mathf.Max(initialRect.width, MinWindowWidth),
+                Mathf.Clamp(initialRect.height, MinWindowHeight, MaxWindowHeight)
+            );
             Title = title;
             _onGuiContent = onGuiContent ?? (() => { });
         }
@@ -31,30 +49,46 @@ namespace ModMenuCrew
         public void OnGUI()
         {
             if (!Enabled) return;
+
+            // Garante que os estilos estejam inicializados
             GuiStyles.EnsureInitialized();
 
-            // Inicializa altura padrão compacta
+            // Inicializa altura padrão se necessário
             if (!_heightInitialized)
             {
                 float defaultHeight = Mathf.Min(Screen.height * 0.5f, 360f);
-                if (_windowRect.height <= 0f) _windowRect.height = defaultHeight;
+                _windowRect.height = Mathf.Clamp(defaultHeight, MinWindowHeight, MaxWindowHeight);
                 _heightInitialized = true;
             }
 
-            // (Revertido) Sem clamp dinâmico de tamanho – voltar ao comportamento original
+            // Aplica clamping de tamanho a cada frame
+            _windowRect.width = Mathf.Max(_windowRect.width, MinWindowWidth);
+            _windowRect.height = Mathf.Clamp(_windowRect.height, MinWindowHeight, MaxWindowHeight);
 
-            // 1. Fundo com estilo customizado
+            // 1. Fundo da janela
             GUI.Box(_windowRect, GUIContent.none, GuiStyles.WindowStyle);
 
-            // 2. Desenhamos o cabeçalho
-            var headerRect = new Rect(_windowRect.x, _windowRect.y, _windowRect.width, HeaderHeight);
-            GUI.Box(headerRect, GUIContent.none, GuiStyles.HeaderBackgroundStyle);
+            // 2. Cabeçalho
+            float headerHeight = GuiStyles.TitleBarButtonStyle.fixedHeight + 4; // Altura do botão + margem
+            _cachedHeaderRect = new Rect(_windowRect.x, _windowRect.y, _windowRect.width, headerHeight);
+            GUI.Box(_cachedHeaderRect, GUIContent.none, GuiStyles.HeaderBackgroundStyle);
 
-            // Botões de janela (minimizar e fechar)
-            var btnArea = new Rect(headerRect.x + 6, headerRect.y + 2, 46, HeaderHeight - 4);
-            GUILayout.BeginArea(btnArea);
+            // Botões de controle da janela (Minimizar, Fechar)
+            float buttonWidth = GuiStyles.TitleBarButtonStyle.fixedWidth;
+            float buttonHeight = GuiStyles.TitleBarButtonStyle.fixedHeight;
+            float buttonMargin = GuiStyles.TitleBarButtonStyle.margin.left + GuiStyles.TitleBarButtonStyle.margin.right;
+            float totalButtonWidth = (2 * buttonWidth) + (2 * buttonMargin); // Min e Close
+
+            _cachedButtonArea = new Rect(
+                _windowRect.x + _windowRect.width - totalButtonWidth - 4, // Pequena margem direita
+                _windowRect.y + 2, // Pequena margem superior
+                totalButtonWidth,
+                headerHeight - 4  // Altura menos margem superior/inferior
+            );
+
+            GUILayout.BeginArea(_cachedButtonArea);
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button(_isMinimized ? "▣" : "▬", GuiStyles.TitleBarButtonStyle))
+            if (GUILayout.Button(_isMinimized ? "▭" : "—", GuiStyles.TitleBarButtonStyle)) // Usando símbolos mais comuns
             {
                 _isMinimized = !_isMinimized;
             }
@@ -63,51 +97,62 @@ namespace ModMenuCrew
                 Enabled = false;
                 GUILayout.EndHorizontal();
                 GUILayout.EndArea();
-                return;
+                return; // Sai imediatamente após fechar
             }
             GUILayout.EndHorizontal();
             GUILayout.EndArea();
 
-            // Título centralizado
-            GUI.Label(headerRect, Title, GuiStyles.TitleLabelStyle);
-
-            // 3. Definimos a área para o nosso conteúdo
-            var contentAreaRect = new Rect(
-                _windowRect.x + 8,
-                _windowRect.y + HeaderHeight + 8,
-                _windowRect.width - 16,
-                _isMinimized ? 0 : _windowRect.height - HeaderHeight - Padding
+            // Título centralizado no cabeçalho
+            // Calcula retângulo para o título, excluindo a área dos botões
+            var titleRect = new Rect(
+                _cachedHeaderRect.x + 4, // Margem esquerda
+                _cachedHeaderRect.y,
+                _cachedButtonArea.x - _cachedHeaderRect.x - 4, // Largura até antes dos botões, com margem
+                _cachedHeaderRect.height
             );
+            GUI.Label(titleRect, Title, GuiStyles.TitleLabelStyle);
 
+            // 3. Conteúdo da janela (se não estiver minimizado)
             if (!_isMinimized)
             {
-                GUILayout.BeginArea(contentAreaRect);
-                try
-                {
-                    // Scroll aparece somente quando necessário; altura da janela não é forçada
-                    float maxViewport = Mathf.Min(Screen.height * 0.7f, 520f);
-                    float viewportHeight = Mathf.Clamp(_windowRect.height - HeaderHeight - Padding, _minViewportHeight, maxViewport - HeaderHeight - Padding);
-                    // Scroll sempre disponível, mas discreto; altura de viewport baseada na janela
-                    _scrollPosition = GUILayout.BeginScrollView(_scrollPosition, GUILayout.Height(viewportHeight));
-                    _onGuiContent();
-                    GUILayout.EndScrollView();
-                }
-                finally
-                {
-                    GUILayout.EndArea();
-                }
+                // Calcula a área do conteúdo
+                _cachedContentRect = new Rect(
+                    _windowRect.x + ContentPadding,
+                    _windowRect.y + headerHeight + ContentPadding,
+                    _windowRect.width - (2 * ContentPadding),
+                    _windowRect.height - headerHeight - (2 * ContentPadding)
+                );
+
+                GUILayout.BeginArea(_cachedContentRect);
+
+                // Inicia ScrollView com altura calculada
+                float maxViewportHeight = MaxWindowHeight - headerHeight - (2 * ContentPadding);
+                float currentViewportHeight = Mathf.Clamp(
+                    _windowRect.height - headerHeight - (2 * ContentPadding),
+                    _minViewportHeight, // Usa o valor configurável
+                    maxViewportHeight
+                );
+
+                _scrollPosition = GUILayout.BeginScrollView(_scrollPosition, false, true, GUILayout.Height(currentViewportHeight));
+                _onGuiContent?.Invoke(); // Invoca o conteúdo passado no construtor
+                GUILayout.EndScrollView();
+
+                GUILayout.EndArea();
             }
 
-            // 5. Lidamos com o arrasto da janela
-            HandleDragging(headerRect);
+            // 4. Lida com o arrasto
+            HandleDragging(_cachedHeaderRect);
+
+            // 5. Mantém a janela dentro da tela
             ClampToScreen();
         }
 
         public Rect GetRect() => _windowRect;
+
         public void SetSize(float width, float height)
         {
-            _windowRect.width = width;
-            _windowRect.height = height; // A altura será recalculada, mas isso define um valor inicial
+            _windowRect.width = Mathf.Max(width, MinWindowWidth);
+            _windowRect.height = Mathf.Clamp(height, MinWindowHeight, MaxWindowHeight);
         }
 
         public void SetPosition(float x, float y)
@@ -116,11 +161,14 @@ namespace ModMenuCrew
             _windowRect.y = y;
         }
 
+        // MANTIDO conforme solicitado
         public void SetViewportMinHeight(float minHeight)
         {
-            _minViewportHeight = Mathf.Clamp(minHeight, 60f, 600f);
+            // Aplica clamping ao valor recebido para manter consistência
+            _minViewportHeight = Mathf.Clamp(minHeight, 60f, 400f); // Exemplo de limites internos
         }
 
+        // MANTIDO conforme solicitado, com lógica ajustada para usar campos de classe
         private void HandleDragging(Rect dragArea)
         {
             Event e = Event.current;
@@ -150,7 +198,5 @@ namespace ModMenuCrew
             _windowRect.x = Mathf.Clamp(_windowRect.x, 0, Screen.width - _windowRect.width);
             _windowRect.y = Mathf.Clamp(_windowRect.y, 0, Screen.height - _windowRect.height);
         }
-
-        // Contorno removido para evitar chamadas não suportadas em IL2CPP (GUI.DrawTexture)
     }
 }

@@ -5,50 +5,94 @@ namespace ModMenuCrew.UI.Styles;
 
 public static class GuiStyles
 {
+    /// <summary>
+    /// Defini��es de cores para o tema visual do mod.
+    /// </summary>
     public static class Theme
     {
-        public static readonly Color BgDarkA = new Color(0.07f, 0.07f, 0.07f, 0.92f);
-        public static readonly Color BgDarkB = new Color(0.06f, 0.06f, 0.06f, 0.92f);
-        public static readonly Color HeaderTop = new Color(0.10f, 0.02f, 0.04f, 0.95f);
-        public static readonly Color HeaderBottom = new Color(0.06f, 0.01f, 0.03f, 0.95f);
-        public static readonly Color Accent = new Color(1f, 0f, 0.2f, 1f);
-        public static readonly Color AccentSoft = new Color(1f, 0.18f, 0.36f, 1f);
-        public static readonly Color AccentDim = new Color(0.65f, 0f, 0.13f, 1f);
-        public static readonly Color ButtonTop = new Color(0.11f, 0.11f, 0.12f, 0.95f);
-        public static readonly Color ButtonBottom = new Color(0.08f, 0.08f, 0.10f, 0.95f);
-        public static readonly Color ButtonHoverTop = new Color(0.13f, 0.13f, 0.16f, 0.95f);
-        public static readonly Color ButtonHoverBottom = new Color(0.10f, 0.10f, 0.13f, 0.95f);
-        public static readonly Color ButtonActiveTop = new Color(0.12f, 0.02f, 0.05f, 0.95f);
-        public static readonly Color ButtonActiveBottom = new Color(0.09f, 0.02f, 0.04f, 0.95f);
-        public static readonly Color TextPrimary = new Color(0.96f, 0.96f, 0.98f, 1f);
-        public static readonly Color TextMuted = new Color(0.78f, 0.78f, 0.82f, 1f);
-        public static readonly Color Error = new Color(1f, 0.15f, 0.15f, 1f);
+        // Cores de Fundo
+        public static readonly Color BgDarkA = new Color(0.07f, 0.07f, 0.07f, 0.92f); // Fundo principal mais escuro
+        public static readonly Color BgDarkB = new Color(0.06f, 0.06f, 0.06f, 0.92f); // Fundo principal mais claro
+        public static readonly Color BgSection = new Color(0.05f, 0.05f, 0.06f, 0.85f); // Fundo para se��es
+
+        // Cores de Cabe�alho
+        public static readonly Color HeaderTop = new Color(0.10f, 0.02f, 0.04f, 0.95f); // Gradiente superior do cabe�alho
+        public static readonly Color HeaderBottom = new Color(0.06f, 0.01f, 0.03f, 0.95f); // Gradiente inferior do cabe�alho
+
+        // Cores de Destaque e Acentua��o
+        public static readonly Color Accent = new Color(1f, 0f, 0.2f, 1f); // Vermelho vibrante principal
+        public static readonly Color AccentSoft = new Color(1f, 0.18f, 0.36f, 1f); // Vermelho mais suave
+        public static readonly Color AccentDim = new Color(0.65f, 0f, 0.13f, 1f); // Vermelho mais escuro/usado para bordas inativas
+        public static readonly Color AccentHover = new Color(1f, 0.1f, 0.3f, 1f); // Vermelho para hover
+        public static readonly Color AccentActive = new Color(0.8f, 0f, 0.15f, 1f); // Vermelho para estado ativo/pressionado
+
+        // Cores de Bot�o
+        public static readonly Color ButtonTop = new Color(0.11f, 0.11f, 0.12f, 0.95f); // Gradiente superior do bot�o
+        public static readonly Color ButtonBottom = new Color(0.08f, 0.08f, 0.10f, 0.95f); // Gradiente inferior do bot�o
+        public static readonly Color ButtonHoverTop = new Color(0.13f, 0.13f, 0.16f, 0.95f); // Gradiente superior do bot�o em hover
+        public static readonly Color ButtonHoverBottom = new Color(0.10f, 0.10f, 0.13f, 0.95f); // Gradiente inferior do bot�o em hover
+        public static readonly Color ButtonActiveTop = new Color(0.12f, 0.02f, 0.05f, 0.95f); // Gradiente superior do bot�o ativo
+        public static readonly Color ButtonActiveBottom = new Color(0.09f, 0.02f, 0.04f, 0.95f); // Gradiente inferior do bot�o ativo
+
+        // Cores de Texto
+        public static readonly Color TextPrimary = new Color(0.96f, 0.96f, 0.98f, 1f); // Texto principal claro
+        public static readonly Color TextMuted = new Color(0.78f, 0.78f, 0.82f, 1f); // Texto secund�rio mais claro
+        public static readonly Color TextDisabled = new Color(0.5f, 0.5f, 0.55f, 1f); // Texto para itens desabilitados
+
+        // Cores de Estado e Feedback
+        public static readonly Color Error = new Color(1f, 0.15f, 0.15f, 1f); // Cor para erros
+        public static readonly Color Success = new Color(0.2f, 0.8f, 0.4f, 1f); // Cor para sucesso
+        public static readonly Color Warning = new Color(0.9f, 0.7f, 0.2f, 1f); // Cor para avisos
     }
 
+    #region Textura Helpers (Otimizados)
+    // Texturas s�o geradas uma vez e reutilizadas, ou criadas sob demanda e armazenadas em cache.
+    // Usando HideFlags.HideAndDontSave para evitar que apare�am no Hierarchy/Inspector do Unity.
+    private static Texture2D _cachedPixelTexture;
+    private static Texture2D _cachedPixelDarkTexture;
+    private static Texture2D _cachedPixelAccentTexture;
+    private static Texture2D _cachedPixelErrorTexture;
+
+    /// <summary>
+    /// Cria uma textura vertical gradiente.
+    /// </summary>
     private static Texture2D MakeVerticalGradientTexture(int width, int height, Color top, Color bottom)
     {
         if (width < 1) width = 1;
         if (height < 2) height = 2;
-        var texture = new Texture2D(width, height);
+        var texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
+        texture.wrapMode = TextureWrapMode.Clamp;
+        texture.filterMode = FilterMode.Bilinear;
+        texture.hideFlags = HideFlags.HideAndDontSave;
+
+        Color[] pixels = new Color[width * height];
         for (int y = 0; y < height; y++)
         {
             float t = (float)y / (height - 1);
-            var row = Color.Lerp(top, bottom, t);
-            for (int x = 0; x < width; x++) texture.SetPixel(x, y, row);
+            Color rowColor = Color.Lerp(top, bottom, t);
+            for (int x = 0; x < width; x++)
+            {
+                pixels[y * width + x] = rowColor;
+            }
         }
-        texture.wrapMode = TextureWrapMode.Clamp;
-        texture.filterMode = FilterMode.Bilinear;
-        texture.anisoLevel = 0;
-        texture.hideFlags = HideFlags.HideAndDontSave;
+        texture.SetPixels(pixels);
         texture.Apply();
         return texture;
     }
 
+    /// <summary>
+    /// Cria uma textura com borda.
+    /// </summary>
     private static Texture2D MakeFrameTexture(int width, int height, Color innerTop, Color innerBottom, Color border, int borderThickness)
     {
         if (width < borderThickness * 2 + 1) width = borderThickness * 2 + 1;
         if (height < borderThickness * 2 + 2) height = borderThickness * 2 + 2;
-        var tex = new Texture2D(width, height);
+        var tex = new Texture2D(width, height, TextureFormat.RGBA32, false);
+        tex.wrapMode = TextureWrapMode.Clamp;
+        tex.filterMode = FilterMode.Bilinear;
+        tex.hideFlags = HideFlags.HideAndDontSave;
+
+        Color[] pixels = new Color[width * height];
         for (int y = 0; y < height; y++)
         {
             float t = (float)y / (height - 1);
@@ -56,129 +100,114 @@ public static class GuiStyles
             for (int x = 0; x < width; x++)
             {
                 bool isBorder = x < borderThickness || x >= width - borderThickness || y < borderThickness || y >= height - borderThickness;
-                tex.SetPixel(x, y, isBorder ? border : inner);
+                pixels[y * width + x] = isBorder ? border : inner;
             }
         }
-        tex.wrapMode = TextureWrapMode.Clamp;
-        tex.filterMode = FilterMode.Bilinear;
-        tex.hideFlags = HideFlags.HideAndDontSave;
+        tex.SetPixels(pixels);
         tex.Apply();
         return tex;
     }
 
+    /// <summary>
+    /// Cria uma textura monocrom�tica de tamanho espec�fico.
+    /// </summary>
     private static Texture2D MakeTexture(int width, int height, Color color)
     {
-        var tex = new Texture2D(width, height);
-        for (int y = 0; y < height; y++)
-        {
-            for (int x = 0; x < width; x++) tex.SetPixel(x, y, color);
-        }
+        var tex = new Texture2D(width, height, TextureFormat.RGBA32, false);
         tex.wrapMode = TextureWrapMode.Clamp;
-        tex.filterMode = FilterMode.Bilinear;
+        tex.filterMode = FilterMode.Bilinear; // Bilinear para suavizar levemente bordas se necess�rio
         tex.hideFlags = HideFlags.HideAndDontSave;
+
+        Color[] pixels = new Color[width * height];
+        for (int i = 0; i < pixels.Length; i++)
+        {
+            pixels[i] = color;
+        }
+        tex.SetPixels(pixels);
         tex.Apply();
         return tex;
     }
 
+    /// <summary>
+    /// Cria uma textura monocrom�tica 1x1, reutiliz�vel. Caching para as mais comuns.
+    /// </summary>
     private static Texture2D MakeTexture(Color color)
     {
-        var texture = new Texture2D(1, 1);
+        // Caching para texturas muito comuns para evitar recria��o
+        if (color == Theme.BgDarkA && _cachedPixelTexture != null) return _cachedPixelTexture;
+        if (color == Theme.BgDarkB) { if (_cachedPixelDarkTexture == null) _cachedPixelDarkTexture = MakeTexture(1, 1, color); return _cachedPixelDarkTexture; }
+        if (color == Theme.Accent) { if (_cachedPixelAccentTexture == null) _cachedPixelAccentTexture = MakeTexture(1, 1, color); return _cachedPixelAccentTexture; }
+        if (color == Theme.Error) { if (_cachedPixelErrorTexture == null) _cachedPixelErrorTexture = MakeTexture(1, 1, color); return _cachedPixelErrorTexture; }
+
+        var texture = new Texture2D(1, 1, TextureFormat.RGBA32, false);
         texture.SetPixel(0, 0, color);
-        texture.filterMode = FilterMode.Bilinear;
+        texture.filterMode = FilterMode.Bilinear; // Bilinear para texturas de cor s�lida tamb�m pode suavizar visualmente
         texture.hideFlags = HideFlags.HideAndDontSave;
         texture.Apply();
         return texture;
     }
 
-    private static GUIStyle headerStyle;
-    private static GUIStyle subHeaderStyle;
-    private static GUIStyle buttonStyle;
-    private static GUIStyle toggleStyle;
-    private static GUIStyle sliderStyle;
-    private static GUIStyle labelStyle;
-    private static GUIStyle tabStyle;
-    private static GUIStyle selectedTabStyle;
-    private static GUIStyle containerStyle;
-    private static GUIStyle sectionStyle;
-    private static GUIStyle errorStyle;
-    private static GUIStyle iconStyle;
-    private static GUIStyle tooltipStyle;
-    private static GUIStyle statusIndicatorStyle;
-    private static GUIStyle glowStyle;
-    private static GUIStyle shadowStyle;
-    private static GUIStyle highlightStyle;
-    private static GUIStyle separatorStyle;
-    private static GUIStyle betterToggleStyle;
-    private static GUIStyle windowStyle;
-    private static GUIStyle headerBackgroundStyle;
-    private static GUIStyle titleLabelStyle;
-    private static GUIStyle titleBarButtonStyle;
-    private static GUIStyle textFieldStyle;
+    /// <summary>
+    /// Cria um RectOffset reutiliz�vel.
+    /// </summary>
+    private static RectOffset CreateRectOffset(int left, int right, int top, int bottom)
+    {
+        var offset = new RectOffset();
+        offset.left = left;
+        offset.right = right;
+        offset.top = top;
+        offset.bottom = bottom;
+        return offset;
+    }
+    #endregion
 
+    #region Estilos Privados (Lentamente Inicializados)
+    // Estilos s�o inicializados sob demanda para evitar overhead na inicializa��o do jogo.
+    private static GUIStyle _headerStyle;
+    private static GUIStyle _subHeaderStyle;
+    private static GUIStyle _buttonStyle;
+    private static GUIStyle _toggleStyle;
+    private static GUIStyle _sliderStyle;
+    private static GUIStyle _labelStyle;
+    private static GUIStyle _tabStyle;
+    private static GUIStyle _selectedTabStyle;
+    private static GUIStyle _containerStyle;
+    private static GUIStyle _sectionStyle;
+    private static GUIStyle _errorStyle;
+    private static GUIStyle _iconStyle;
+    private static GUIStyle _tooltipStyle;
+    private static GUIStyle _statusIndicatorStyle;
+    private static GUIStyle _glowStyle;
+    private static GUIStyle _shadowStyle;
+    private static GUIStyle _highlightStyle;
+    private static GUIStyle _separatorStyle;
+    private static GUIStyle _betterToggleStyle;
+    private static GUIStyle _windowStyle;
+    private static GUIStyle _headerBackgroundStyle;
+    private static GUIStyle _titleLabelStyle;
+    private static GUIStyle _titleBarButtonStyle;
+    private static GUIStyle _textFieldStyle;
+    #endregion
+
+    #region Estilos P�blicos (Propriedades com Inicializa��o Pregui�osa)
     public static GUIStyle HeaderStyle
     {
         get
         {
-            if (headerStyle == null)
+            if (_headerStyle == null)
             {
-                headerStyle = new GUIStyle(GUI.skin.label)
+                _headerStyle = new GUIStyle(GUI.skin.label)
                 {
-                    fontSize = 16,
+                    fontSize = 18, // Aumentado
                     fontStyle = FontStyle.Bold,
                     alignment = TextAnchor.MiddleLeft,
-                    normal = { textColor = Theme.Accent },
-                    padding = { left = 8, right = 8, top = 9, bottom = 9 },
-                    margin = { left = 5, right = 5, top = 2, bottom = 7 }
+                    normal = { textColor = Theme.Accent }, // Mantido o acento
+                    padding = CreateRectOffset(12, 12, 10, 10), // Ajustado e usando CreateRectOffset
+                    margin = CreateRectOffset(8, 8, 4, 8) // Ajustado e usando CreateRectOffset
                 };
-                headerStyle.richText = true;
+                _headerStyle.richText = true;
             }
-            return headerStyle;
-        }
-    }
-
-    public static string GetHeaderText(string text)
-    {
-        return $"{text} - {DateTime.Now:HH:mm:ss}";
-    }
-
-    public static GUIStyle GetAnimatedHeaderStyle()
-    {
-        var style = new GUIStyle(HeaderStyle);
-        style.normal.textColor = Color.Lerp(Theme.Accent, Theme.AccentSoft, 0.25f);
-        return style;
-    }
-
-    public static string GetCurrentTime()
-    {
-        return DateTime.Now.ToString("HH:mm:ss");
-    }
-
-    public static GUIStyle TextFieldStyle
-    {
-        get
-        {
-            if (textFieldStyle == null)
-            {
-                textFieldStyle = new GUIStyle(GUI.skin.textField)
-                {
-                    fontSize = 14,
-                    alignment = TextAnchor.MiddleLeft,
-                    padding = { left = 8, right = 8, top = 7, bottom = 7 },
-                    margin = { left = 5, right = 5, top = 4, bottom = 7 }
-                };
-                textFieldStyle.normal.textColor = Theme.TextPrimary;
-                textFieldStyle.normal.background = MakeFrameTexture(16, 48, new Color(0.09f, 0.09f, 0.10f, 0.95f), new Color(0.07f, 0.07f, 0.09f, 0.95f), Theme.AccentDim, 1);
-                textFieldStyle.hover.background = MakeFrameTexture(16, 48, new Color(0.11f, 0.11f, 0.13f, 0.95f), new Color(0.09f, 0.09f, 0.11f, 0.95f), Theme.Accent, 1);
-                textFieldStyle.focused.background = MakeFrameTexture(16, 48, new Color(0.12f, 0.03f, 0.06f, 0.95f), new Color(0.10f, 0.02f, 0.05f, 0.95f), Theme.Accent, 1);
-                textFieldStyle.richText = true;
-            }
-            else if (textFieldStyle.normal?.background == null || textFieldStyle.hover?.background == null || textFieldStyle.focused?.background == null)
-            {
-                textFieldStyle.normal.background = MakeFrameTexture(16, 48, new Color(0.09f, 0.09f, 0.10f, 0.95f), new Color(0.07f, 0.07f, 0.09f, 0.95f), Theme.AccentDim, 1);
-                textFieldStyle.hover.background = MakeFrameTexture(16, 48, new Color(0.11f, 0.11f, 0.13f, 0.95f), new Color(0.09f, 0.09f, 0.11f, 0.95f), Theme.Accent, 1);
-                textFieldStyle.focused.background = MakeFrameTexture(16, 48, new Color(0.12f, 0.03f, 0.06f, 0.95f), new Color(0.10f, 0.02f, 0.05f, 0.95f), Theme.Accent, 1);
-            }
-            return textFieldStyle;
+            return _headerStyle;
         }
     }
 
@@ -186,20 +215,20 @@ public static class GuiStyles
     {
         get
         {
-            if (subHeaderStyle == null)
+            if (_subHeaderStyle == null)
             {
-                subHeaderStyle = new GUIStyle(GUI.skin.label)
+                _subHeaderStyle = new GUIStyle(GUI.skin.label)
                 {
                     fontSize = 14,
                     fontStyle = FontStyle.Bold,
                     alignment = TextAnchor.MiddleLeft,
-                    normal = { textColor = Theme.TextMuted },
-                    padding = { left = 8, right = 8, top = 6, bottom = 6 },
-                    margin = { left = 5, right = 5, top = 0, bottom = 5 }
+                    normal = { textColor = Theme.TextMuted }, // Mantido
+                    padding = CreateRectOffset(10, 10, 7, 7), // Ajustado e usando CreateRectOffset
+                    margin = CreateRectOffset(8, 8, 2, 6) // Ajustado e usando CreateRectOffset
                 };
-                subHeaderStyle.richText = true;
+                _subHeaderStyle.richText = true;
             }
-            return subHeaderStyle;
+            return _subHeaderStyle;
         }
     }
 
@@ -207,31 +236,32 @@ public static class GuiStyles
     {
         get
         {
-            if (buttonStyle == null)
+            if (_buttonStyle == null)
             {
-                buttonStyle = new GUIStyle(GUI.skin.button)
+                _buttonStyle = new GUIStyle(GUI.skin.button)
                 {
                     fontSize = 15,
                     alignment = TextAnchor.MiddleCenter,
                     normal = { textColor = Theme.TextPrimary },
-                    padding = { left = 8, right = 8, top = 5, bottom = 5 },
-                    margin = { left = 3, right = 3, top = 3, bottom = 3 },
-                    fixedHeight = 28
+                    padding = CreateRectOffset(10, 10, 6, 6), // Ajustado e usando CreateRectOffset
+                    margin = CreateRectOffset(4, 4, 4, 4), // Ajustado e usando CreateRectOffset
+                    fixedHeight = 32 // Aumentado
                 };
-                buttonStyle.normal.background = MakeFrameTexture(16, 64, Theme.ButtonTop, Theme.ButtonBottom, Theme.AccentDim, 1);
-                buttonStyle.hover.background = MakeFrameTexture(16, 64, Theme.ButtonHoverTop, Theme.ButtonHoverBottom, Theme.Accent, 1);
-                buttonStyle.active.background = MakeFrameTexture(16, 64, Theme.ButtonActiveTop, Theme.ButtonActiveBottom, Theme.Accent, 1);
-                buttonStyle.focused.background = buttonStyle.hover.background;
-                buttonStyle.richText = true;
+                _buttonStyle.normal.background = MakeFrameTexture(16, 64, Theme.ButtonTop, Theme.ButtonBottom, Theme.AccentDim, 1);
+                _buttonStyle.hover.background = MakeFrameTexture(16, 64, Theme.ButtonHoverTop, Theme.ButtonHoverBottom, Theme.AccentHover, 1);
+                _buttonStyle.active.background = MakeFrameTexture(16, 64, Theme.ButtonActiveTop, Theme.ButtonActiveBottom, Theme.AccentActive, 1);
+                _buttonStyle.focused.background = _buttonStyle.hover.background; // Adicionado
+                _buttonStyle.richText = true;
             }
-            else if (buttonStyle.normal?.background == null || buttonStyle.hover?.background == null || buttonStyle.active?.background == null)
+            else if (_buttonStyle.normal?.background == null || _buttonStyle.hover?.background == null || _buttonStyle.active?.background == null)
             {
-                buttonStyle.normal.background = MakeFrameTexture(16, 64, Theme.ButtonTop, Theme.ButtonBottom, Theme.AccentDim, 1);
-                buttonStyle.hover.background = MakeFrameTexture(16, 64, Theme.ButtonHoverTop, Theme.ButtonHoverBottom, Theme.Accent, 1);
-                buttonStyle.active.background = MakeFrameTexture(16, 64, Theme.ButtonActiveTop, Theme.ButtonActiveBottom, Theme.Accent, 1);
-                buttonStyle.focused.background = buttonStyle.hover.background;
+                // Recupera��o de falha de inicializa��o, se necess�rio
+                _buttonStyle.normal.background = MakeFrameTexture(16, 64, Theme.ButtonTop, Theme.ButtonBottom, Theme.AccentDim, 1);
+                _buttonStyle.hover.background = MakeFrameTexture(16, 64, Theme.ButtonHoverTop, Theme.ButtonHoverBottom, Theme.AccentHover, 1);
+                _buttonStyle.active.background = MakeFrameTexture(16, 64, Theme.ButtonActiveTop, Theme.ButtonActiveBottom, Theme.AccentActive, 1);
+                _buttonStyle.focused.background = _buttonStyle.hover.background;
             }
-            return buttonStyle;
+            return _buttonStyle;
         }
     }
 
@@ -239,36 +269,37 @@ public static class GuiStyles
     {
         get
         {
-            if (toggleStyle == null)
+            if (_toggleStyle == null)
             {
-                toggleStyle = new GUIStyle(GUI.skin.toggle)
+                _toggleStyle = new GUIStyle(GUI.skin.toggle)
                 {
-                    fontSize = 15,
-                    fontStyle = FontStyle.Bold,
+                    fontSize = 14, // Ajustado
+                    fontStyle = FontStyle.Normal, // Removido Bold para consist�ncia visual
                     alignment = TextAnchor.MiddleLeft,
-                    normal = { textColor = Theme.TextPrimary, background = MakeTexture(new Color(0.10f, 0.10f, 0.12f, 0.95f)) },
-                    onNormal = { textColor = Theme.TextPrimary, background = MakeTexture(new Color(0.12f, 0.03f, 0.06f, 0.95f)) },
-                    hover = { textColor = Theme.TextPrimary, background = MakeTexture(new Color(0.13f, 0.13f, 0.16f, 0.95f)) },
-                    onHover = { textColor = Theme.TextPrimary, background = MakeTexture(new Color(0.14f, 0.04f, 0.08f, 0.95f)) },
-                    active = { textColor = Theme.TextPrimary, background = MakeTexture(new Color(0.10f, 0.02f, 0.05f, 0.95f)) },
-                    onActive = { textColor = Theme.TextPrimary, background = MakeTexture(new Color(0.15f, 0.05f, 0.10f, 0.95f)) },
-                    padding = { left = 10, right = 10, top = 6, bottom = 6 },
-                    margin = { left = 4, right = 4, top = 2, bottom = 2 },
-                    fixedHeight = 26,
+                    normal = { textColor = Theme.TextMuted, background = MakeTexture(new Color(0.09f, 0.09f, 0.11f, 0.95f)) }, // Fundo mais escuro
+                    onNormal = { textColor = Theme.TextPrimary, background = MakeTexture(new Color(0.12f, 0.03f, 0.06f, 0.95f)) }, // Destaque quando ligado
+                    hover = { textColor = Theme.TextPrimary, background = MakeTexture(new Color(0.11f, 0.11f, 0.14f, 0.95f)) }, // Fundo hover
+                    onHover = { textColor = Theme.TextPrimary, background = MakeTexture(new Color(0.14f, 0.04f, 0.08f, 0.95f)) }, // Destaque hover
+                    active = { textColor = Theme.TextMuted, background = MakeTexture(new Color(0.09f, 0.09f, 0.11f, 0.95f)) }, // Fundo ativo (ao clicar)
+                    onActive = { textColor = Theme.TextPrimary, background = MakeTexture(new Color(0.15f, 0.05f, 0.10f, 0.95f)) }, // Destaque ativo
+                    padding = CreateRectOffset(12, 12, 7, 7), // Ajustado e usando CreateRectOffset
+                    margin = CreateRectOffset(6, 6, 3, 3), // Ajustado e usando CreateRectOffset
+                    fixedHeight = 30, // Ajustado
                     stretchWidth = true
                 };
-                toggleStyle.richText = true;
+                _toggleStyle.richText = true;
             }
-            else if (toggleStyle.normal?.background == null || toggleStyle.onNormal?.background == null || toggleStyle.hover?.background == null || toggleStyle.onHover?.background == null || toggleStyle.active?.background == null || toggleStyle.onActive?.background == null)
+            else if (_toggleStyle.normal?.background == null || _toggleStyle.onNormal?.background == null || _toggleStyle.hover?.background == null || _toggleStyle.onHover?.background == null || _toggleStyle.active?.background == null || _toggleStyle.onActive?.background == null)
             {
-                toggleStyle.normal.background = MakeTexture(new Color(0.10f, 0.10f, 0.12f, 0.95f));
-                toggleStyle.onNormal.background = MakeTexture(new Color(0.12f, 0.03f, 0.06f, 0.95f));
-                toggleStyle.hover.background = MakeTexture(new Color(0.13f, 0.13f, 0.16f, 0.95f));
-                toggleStyle.onHover.background = MakeTexture(new Color(0.14f, 0.04f, 0.08f, 0.95f));
-                toggleStyle.active.background = MakeTexture(new Color(0.10f, 0.02f, 0.05f, 0.95f));
-                toggleStyle.onActive.background = MakeTexture(new Color(0.15f, 0.05f, 0.10f, 0.95f));
+                // Recupera��o de falha de inicializa��o
+                _toggleStyle.normal.background = MakeTexture(new Color(0.09f, 0.09f, 0.11f, 0.95f));
+                _toggleStyle.onNormal.background = MakeTexture(new Color(0.12f, 0.03f, 0.06f, 0.95f));
+                _toggleStyle.hover.background = MakeTexture(new Color(0.11f, 0.11f, 0.14f, 0.95f));
+                _toggleStyle.onHover.background = MakeTexture(new Color(0.14f, 0.04f, 0.08f, 0.95f));
+                _toggleStyle.active.background = MakeTexture(new Color(0.09f, 0.09f, 0.11f, 0.95f));
+                _toggleStyle.onActive.background = MakeTexture(new Color(0.15f, 0.05f, 0.10f, 0.95f));
             }
-            return toggleStyle;
+            return _toggleStyle;
         }
     }
 
@@ -276,15 +307,15 @@ public static class GuiStyles
     {
         get
         {
-            if (sliderStyle == null)
+            if (_sliderStyle == null)
             {
-                sliderStyle = new GUIStyle(GUI.skin.horizontalSlider)
+                _sliderStyle = new GUIStyle(GUI.skin.horizontalSlider)
                 {
-                    margin = { left = 10, right = 10, top = 9, bottom = 9 },
-                    fixedHeight = 20
+                    margin = CreateRectOffset(12, 12, 10, 10), // Ajustado e usando CreateRectOffset
+                    fixedHeight = 24 // Aumentado
                 };
             }
-            return sliderStyle;
+            return _sliderStyle;
         }
     }
 
@@ -292,18 +323,18 @@ public static class GuiStyles
     {
         get
         {
-            if (labelStyle == null)
+            if (_labelStyle == null)
             {
-                labelStyle = new GUIStyle(GUI.skin.label)
+                _labelStyle = new GUIStyle(GUI.skin.label)
                 {
                     fontSize = 14,
                     normal = { textColor = Theme.TextPrimary },
-                    padding = { left = 8, right = 8, top = 5, bottom = 5 },
-                    margin = { left = 5, right = 5, top = 2, bottom = 4 }
+                    padding = CreateRectOffset(10, 10, 6, 6), // Ajustado e usando CreateRectOffset
+                    margin = CreateRectOffset(6, 6, 3, 5) // Ajustado e usando CreateRectOffset
                 };
-                labelStyle.richText = true;
+                _labelStyle.richText = true;
             }
-            return labelStyle;
+            return _labelStyle;
         }
     }
 
@@ -311,28 +342,28 @@ public static class GuiStyles
     {
         get
         {
-            if (tabStyle == null)
+            if (_tabStyle == null)
             {
-                tabStyle = new GUIStyle(GUI.skin.button)
+                _tabStyle = new GUIStyle(GUI.skin.button)
                 {
                     fontSize = 13,
-                    padding = { left = 8, right = 8, top = 4, bottom = 4 },
-                    margin = { left = 2, right = 2, top = 1, bottom = 1 },
-                    fixedHeight = 24,
-                    normal = { textColor = Theme.TextPrimary }
+                    padding = CreateRectOffset(10, 10, 5, 5), // Ajustado e usando CreateRectOffset
+                    margin = CreateRectOffset(3, 3, 2, 2), // Ajustado e usando CreateRectOffset
+                    fixedHeight = 28, // Ajustado
+                    normal = { textColor = Theme.TextMuted } // Cor mais clara para abas inativas
                 };
-                tabStyle.normal.background = MakeFrameTexture(16, 48, new Color(0.10f, 0.10f, 0.12f, 0.95f), new Color(0.09f, 0.09f, 0.11f, 0.95f), Theme.AccentDim, 1);
-                tabStyle.hover.background = MakeFrameTexture(16, 48, new Color(0.12f, 0.12f, 0.15f, 0.95f), new Color(0.10f, 0.10f, 0.13f, 0.95f), Theme.Accent, 1);
-                tabStyle.active.background = MakeFrameTexture(16, 48, new Color(0.12f, 0.03f, 0.06f, 0.95f), new Color(0.10f, 0.02f, 0.05f, 0.95f), Theme.Accent, 1);
-                tabStyle.richText = true;
+                _tabStyle.normal.background = MakeFrameTexture(16, 48, new Color(0.09f, 0.09f, 0.11f, 0.95f), new Color(0.07f, 0.07f, 0.09f, 0.95f), Theme.AccentDim, 1);
+                _tabStyle.hover.background = MakeFrameTexture(16, 48, new Color(0.11f, 0.11f, 0.14f, 0.95f), new Color(0.09f, 0.09f, 0.12f, 0.95f), Theme.AccentHover, 1);
+                _tabStyle.active.background = MakeFrameTexture(16, 48, new Color(0.12f, 0.03f, 0.06f, 0.95f), new Color(0.10f, 0.02f, 0.05f, 0.95f), Theme.AccentActive, 1);
+                _tabStyle.richText = true;
             }
-            else if (tabStyle.normal?.background == null || tabStyle.hover?.background == null || tabStyle.active?.background == null)
+            else if (_tabStyle.normal?.background == null || _tabStyle.hover?.background == null || _tabStyle.active?.background == null)
             {
-                tabStyle.normal.background = MakeFrameTexture(16, 48, new Color(0.10f, 0.10f, 0.12f, 0.95f), new Color(0.09f, 0.09f, 0.11f, 0.95f), Theme.AccentDim, 1);
-                tabStyle.hover.background = MakeFrameTexture(16, 48, new Color(0.12f, 0.12f, 0.15f, 0.95f), new Color(0.10f, 0.10f, 0.13f, 0.95f), Theme.Accent, 1);
-                tabStyle.active.background = MakeFrameTexture(16, 48, new Color(0.12f, 0.03f, 0.06f, 0.95f), new Color(0.10f, 0.02f, 0.05f, 0.95f), Theme.Accent, 1);
+                _tabStyle.normal.background = MakeFrameTexture(16, 48, new Color(0.09f, 0.09f, 0.11f, 0.95f), new Color(0.07f, 0.07f, 0.09f, 0.95f), Theme.AccentDim, 1);
+                _tabStyle.hover.background = MakeFrameTexture(16, 48, new Color(0.11f, 0.11f, 0.14f, 0.95f), new Color(0.09f, 0.09f, 0.12f, 0.95f), Theme.AccentHover, 1);
+                _tabStyle.active.background = MakeFrameTexture(16, 48, new Color(0.12f, 0.03f, 0.06f, 0.95f), new Color(0.10f, 0.02f, 0.05f, 0.95f), Theme.AccentActive, 1);
             }
-            return tabStyle;
+            return _tabStyle;
         }
     }
 
@@ -340,15 +371,15 @@ public static class GuiStyles
     {
         get
         {
-            if (selectedTabStyle == null)
+            if (_selectedTabStyle == null)
             {
-                selectedTabStyle = new GUIStyle(TabStyle)
+                _selectedTabStyle = new GUIStyle(TabStyle)
                 {
-                    normal = { textColor = Theme.Accent }
+                    normal = { textColor = Theme.Accent } // Cor acentuada para a aba selecionada
                 };
-                selectedTabStyle.normal.background = MakeFrameTexture(16, 48, new Color(0.13f, 0.04f, 0.08f, 0.95f), new Color(0.11f, 0.03f, 0.07f, 0.95f), Theme.Accent, 1);
+                _selectedTabStyle.normal.background = MakeFrameTexture(16, 48, new Color(0.13f, 0.04f, 0.08f, 0.95f), new Color(0.11f, 0.03f, 0.07f, 0.95f), Theme.Accent, 1); // Borda mais forte
             }
-            return selectedTabStyle;
+            return _selectedTabStyle;
         }
     }
 
@@ -356,18 +387,18 @@ public static class GuiStyles
     {
         get
         {
-            if (errorStyle == null)
+            if (_errorStyle == null)
             {
-                errorStyle = new GUIStyle(GUI.skin.label)
+                _errorStyle = new GUIStyle(GUI.skin.label)
                 {
                     fontSize = 14,
                     normal = { textColor = Theme.Error },
-                    padding = { left = 10, right = 10, top = 8, bottom = 8 },
+                    padding = CreateRectOffset(12, 12, 10, 10), // Ajustado e usando CreateRectOffset
                     wordWrap = true
                 };
-                errorStyle.richText = true;
+                _errorStyle.richText = true;
             }
-            return errorStyle;
+            return _errorStyle;
         }
     }
 
@@ -375,20 +406,20 @@ public static class GuiStyles
     {
         get
         {
-            if (containerStyle == null)
+            if (_containerStyle == null)
             {
-                containerStyle = new GUIStyle(GUI.skin.box)
+                _containerStyle = new GUIStyle(GUI.skin.box)
                 {
-                    padding = { left = 11, right = 11, top = 11, bottom = 11 },
-                    margin = { left = 6, right = 6, top = 6, bottom = 6 }
+                    padding = CreateRectOffset(8, 8, 8, 8), // Reduzido de 12 para 8
+                    margin = CreateRectOffset(4, 4, 4, 4) // Reduzido de 8 para 4
                 };
-                containerStyle.normal.background = MakeTexture(2, 2, new Color(0.08f, 0.08f, 0.10f, 0.75f));
+                _containerStyle.normal.background = MakeTexture(2, 2, new Color(0.07f, 0.07f, 0.09f, 0.80f)); // Fundo mais claro e com mais transpar�ncia
             }
-            else if (containerStyle.normal?.background == null)
+            else if (_containerStyle.normal?.background == null)
             {
-                containerStyle.normal.background = MakeTexture(2, 2, new Color(0.08f, 0.08f, 0.10f, 0.75f));
+                _containerStyle.normal.background = MakeTexture(2, 2, new Color(0.07f, 0.07f, 0.09f, 0.80f));
             }
-            return containerStyle;
+            return _containerStyle;
         }
     }
 
@@ -396,20 +427,20 @@ public static class GuiStyles
     {
         get
         {
-            if (sectionStyle == null)
+            if (_sectionStyle == null)
             {
-                sectionStyle = new GUIStyle(GUI.skin.box)
+                _sectionStyle = new GUIStyle(GUI.skin.box)
                 {
-                    padding = { left = 9, right = 9, top = 9, bottom = 9 },
-                    margin = { left = 3, right = 3, top = 4, bottom = 4 }
+                    padding = CreateRectOffset(10, 10, 10, 10), // Ajustado e usando CreateRectOffset
+                    margin = CreateRectOffset(4, 4, 6, 6) // Ajustado e usando CreateRectOffset
                 };
-                sectionStyle.normal.background = MakeTexture(2, 2, new Color(0.06f, 0.06f, 0.08f, 0.75f));
+                _sectionStyle.normal.background = MakeTexture(2, 2, Theme.BgSection); // Usa cor do tema
             }
-            else if (sectionStyle.normal?.background == null)
+            else if (_sectionStyle.normal?.background == null)
             {
-                sectionStyle.normal.background = MakeTexture(2, 2, new Color(0.06f, 0.06f, 0.08f, 0.75f));
+                _sectionStyle.normal.background = MakeTexture(2, 2, Theme.BgSection);
             }
-            return sectionStyle;
+            return _sectionStyle;
         }
     }
 
@@ -417,22 +448,22 @@ public static class GuiStyles
     {
         get
         {
-            if (iconStyle == null)
+            if (_iconStyle == null)
             {
-                iconStyle = new GUIStyle(GUI.skin.box)
+                _iconStyle = new GUIStyle(GUI.skin.box)
                 {
-                    padding = { left = 2, right = 2, top = 2, bottom = 2 },
-                    margin = { left = 2, right = 2, top = 2, bottom = 2 },
-                    fixedWidth = 24,
-                    fixedHeight = 24
+                    padding = CreateRectOffset(3, 3, 3, 3), // Ajustado e usando CreateRectOffset
+                    margin = CreateRectOffset(3, 3, 3, 3), // Ajustado e usando CreateRectOffset
+                    fixedWidth = 28, // Ajustado
+                    fixedHeight = 28 // Ajustado
                 };
-                iconStyle.normal.background = MakeFrameTexture(8, 8, new Color(0.12f, 0.12f, 0.14f, 0.95f), new Color(0.10f, 0.10f, 0.12f, 0.95f), Theme.AccentDim, 1);
+                _iconStyle.normal.background = MakeFrameTexture(8, 8, new Color(0.11f, 0.11f, 0.13f, 0.95f), new Color(0.09f, 0.09f, 0.11f, 0.95f), Theme.AccentDim, 1);
             }
-            else if (iconStyle.normal?.background == null)
+            else if (_iconStyle.normal?.background == null)
             {
-                iconStyle.normal.background = MakeFrameTexture(8, 8, new Color(0.12f, 0.12f, 0.14f, 0.95f), new Color(0.10f, 0.10f, 0.12f, 0.95f), Theme.AccentDim, 1);
+                _iconStyle.normal.background = MakeFrameTexture(8, 8, new Color(0.11f, 0.11f, 0.13f, 0.95f), new Color(0.09f, 0.09f, 0.11f, 0.95f), Theme.AccentDim, 1);
             }
-            return iconStyle;
+            return _iconStyle;
         }
     }
 
@@ -440,23 +471,23 @@ public static class GuiStyles
     {
         get
         {
-            if (tooltipStyle == null)
+            if (_tooltipStyle == null)
             {
-                tooltipStyle = new GUIStyle(GUI.skin.box)
+                _tooltipStyle = new GUIStyle(GUI.skin.box)
                 {
                     fontSize = 12,
-                    normal = { textColor = Theme.TextPrimary, background = MakeFrameTexture(16, 48, new Color(0.06f, 0.06f, 0.08f, 0.95f), new Color(0.05f, 0.05f, 0.07f, 0.95f), Theme.Accent, 1) },
-                    padding = { left = 6, right = 6, top = 6, bottom = 6 },
-                    margin = { left = 4, right = 4, top = 4, bottom = 4 },
+                    normal = { textColor = Theme.TextPrimary, background = MakeFrameTexture(16, 48, new Color(0.07f, 0.07f, 0.09f, 0.98f), new Color(0.05f, 0.05f, 0.07f, 0.98f), Theme.Accent, 1) }, // Fundo mais opaco e com borda acentuada
+                    padding = CreateRectOffset(8, 8, 8, 8), // Ajustado e usando CreateRectOffset
+                    margin = CreateRectOffset(6, 6, 6, 6), // Ajustado e usando CreateRectOffset
                     wordWrap = true
                 };
-                tooltipStyle.richText = true;
+                _tooltipStyle.richText = true;
             }
-            else if (tooltipStyle.normal?.background == null)
+            else if (_tooltipStyle.normal?.background == null)
             {
-                tooltipStyle.normal.background = MakeFrameTexture(16, 48, new Color(0.06f, 0.06f, 0.08f, 0.95f), new Color(0.05f, 0.05f, 0.07f, 0.95f), Theme.Accent, 1);
+                _tooltipStyle.normal.background = MakeFrameTexture(16, 48, new Color(0.07f, 0.07f, 0.09f, 0.98f), new Color(0.05f, 0.05f, 0.07f, 0.98f), Theme.Accent, 1);
             }
-            return tooltipStyle;
+            return _tooltipStyle;
         }
     }
 
@@ -464,16 +495,16 @@ public static class GuiStyles
     {
         get
         {
-            if (statusIndicatorStyle == null)
+            if (_statusIndicatorStyle == null)
             {
-                statusIndicatorStyle = new GUIStyle(GUI.skin.box)
+                _statusIndicatorStyle = new GUIStyle(GUI.skin.box)
                 {
-                    fixedWidth = 10,
-                    fixedHeight = 10,
-                    margin = { left = 5, right = 5 }
+                    fixedWidth = 12, // Ajustado
+                    fixedHeight = 12, // Ajustado
+                    margin = CreateRectOffset(6, 6, 4, 4) // Ajustado e usando CreateRectOffset
                 };
             }
-            return statusIndicatorStyle;
+            return _statusIndicatorStyle;
         }
     }
 
@@ -481,15 +512,15 @@ public static class GuiStyles
     {
         get
         {
-            if (glowStyle == null)
+            if (_glowStyle == null)
             {
-                glowStyle = new GUIStyle(GUI.skin.box)
+                _glowStyle = new GUIStyle(GUI.skin.box)
                 {
-                    normal = { background = MakeTexture(2, 2, new Color(1f, 0f, 0.2f, 0.10f)) },
-                    margin = { left = 2, right = 2, top = 2, bottom = 2 }
+                    normal = { background = MakeTexture(2, 2, new Color(1f, 0f, 0.2f, 0.15f)) }, // Ajustado alpha
+                    margin = CreateRectOffset(3, 3, 3, 3) // Ajustado e usando CreateRectOffset
                 };
             }
-            return glowStyle;
+            return _glowStyle;
         }
     }
 
@@ -497,15 +528,15 @@ public static class GuiStyles
     {
         get
         {
-            if (shadowStyle == null)
+            if (_shadowStyle == null)
             {
-                shadowStyle = new GUIStyle(GUI.skin.box)
+                _shadowStyle = new GUIStyle(GUI.skin.box)
                 {
-                    normal = { background = MakeTexture(2, 2, new Color(0f, 0f, 0f, 0.5f)) },
-                    margin = { left = 2, right = 2, top = 2, bottom = 2 }
+                    normal = { background = MakeTexture(2, 2, new Color(0f, 0f, 0f, 0.6f)) }, // Ajustado alpha
+                    margin = CreateRectOffset(3, 3, 3, 3) // Ajustado e usando CreateRectOffset
                 };
             }
-            return shadowStyle;
+            return _shadowStyle;
         }
     }
 
@@ -513,15 +544,15 @@ public static class GuiStyles
     {
         get
         {
-            if (highlightStyle == null)
+            if (_highlightStyle == null)
             {
-                highlightStyle = new GUIStyle(GUI.skin.box)
+                _highlightStyle = new GUIStyle(GUI.skin.box)
                 {
-                    normal = { background = MakeTexture(2, 2, new Color(1f, 1f, 1f, 0.08f)) },
-                    margin = { left = 2, right = 2, top = 2, bottom = 2 }
+                    normal = { background = MakeTexture(2, 2, new Color(1f, 1f, 1f, 0.12f)) }, // Ajustado alpha
+                    margin = CreateRectOffset(3, 3, 3, 3) // Ajustado e usando CreateRectOffset
                 };
             }
-            return highlightStyle;
+            return _highlightStyle;
         }
     }
 
@@ -529,16 +560,16 @@ public static class GuiStyles
     {
         get
         {
-            if (separatorStyle == null)
+            if (_separatorStyle == null)
             {
-                separatorStyle = new GUIStyle(GUI.skin.box)
+                _separatorStyle = new GUIStyle(GUI.skin.box)
                 {
-                    normal = { background = MakeTexture(1, 1, new Color(1f, 0f, 0.2f, 0.9f)) },
-                    margin = { left = 6, right = 6, top = 4, bottom = 4 },
-                    fixedHeight = 1
+                    normal = { background = MakeTexture(1, 1, Theme.Accent) }, // Usa cor do tema
+                    margin = CreateRectOffset(8, 8, 6, 6), // Ajustado e usando CreateRectOffset
+                    fixedHeight = 2 // Ajustado
                 };
             }
-            return separatorStyle;
+            return _separatorStyle;
         }
     }
 
@@ -546,30 +577,30 @@ public static class GuiStyles
     {
         get
         {
-            if (betterToggleStyle == null)
+            if (_betterToggleStyle == null)
             {
-                betterToggleStyle = new GUIStyle(GUI.skin.toggle)
+                _betterToggleStyle = new GUIStyle(GUI.skin.toggle)
                 {
-                    fontSize = 15,
-                    fontStyle = FontStyle.Bold,
+                    fontSize = 15, // Ajustado
+                    fontStyle = FontStyle.Normal, // Removido Bold
                     alignment = TextAnchor.MiddleLeft,
-                    padding = { left = 16, right = 16, top = 10, bottom = 10 },
-                    margin = { left = 8, right = 8, top = 6, bottom = 6 },
-                    fixedHeight = 36,
+                    padding = CreateRectOffset(18, 18, 11, 11), // Ajustado e usando CreateRectOffset
+                    margin = CreateRectOffset(10, 10, 8, 8), // Ajustado e usando CreateRectOffset
+                    fixedHeight = 40, // Ajustado
                     stretchWidth = true
                 };
-                betterToggleStyle.normal.background = MakeFrameTexture(16, 64, new Color(0.11f, 0.11f, 0.13f, 0.95f), new Color(0.09f, 0.09f, 0.11f, 0.95f), Theme.AccentDim, 1);
-                betterToggleStyle.onNormal.background = MakeFrameTexture(16, 64, new Color(0.16f, 0.04f, 0.08f, 0.95f), new Color(0.13f, 0.03f, 0.06f, 0.95f), Theme.Accent, 1);
-                betterToggleStyle.normal.textColor = Theme.TextPrimary;
-                betterToggleStyle.onNormal.textColor = Theme.TextPrimary;
-                betterToggleStyle.hover.background = MakeFrameTexture(16, 64, new Color(0.13f, 0.13f, 0.16f, 0.95f), new Color(0.11f, 0.11f, 0.14f, 0.95f), Theme.Accent, 1);
-                betterToggleStyle.onHover.background = MakeFrameTexture(16, 64, new Color(0.18f, 0.05f, 0.10f, 0.95f), new Color(0.15f, 0.04f, 0.08f, 0.95f), Theme.Accent, 1);
-                betterToggleStyle.active.background = MakeFrameTexture(16, 64, new Color(0.12f, 0.12f, 0.14f, 0.95f), new Color(0.10f, 0.10f, 0.12f, 0.95f), Theme.Accent, 1);
-                betterToggleStyle.onActive.background = MakeFrameTexture(16, 64, new Color(0.20f, 0.06f, 0.12f, 0.95f), new Color(0.17f, 0.05f, 0.10f, 0.95f), Theme.Accent, 1);
-                betterToggleStyle.active.textColor = Theme.TextPrimary;
-                betterToggleStyle.onActive.textColor = Theme.TextPrimary;
+                _betterToggleStyle.normal.background = MakeFrameTexture(16, 64, new Color(0.10f, 0.10f, 0.12f, 0.95f), new Color(0.08f, 0.08f, 0.10f, 0.95f), Theme.AccentDim, 1);
+                _betterToggleStyle.onNormal.background = MakeFrameTexture(16, 64, new Color(0.15f, 0.03f, 0.07f, 0.95f), new Color(0.12f, 0.02f, 0.05f, 0.95f), Theme.Accent, 1); // Fundo mais escuro, borda acentuada
+                _betterToggleStyle.normal.textColor = Theme.TextMuted; // Cor mais clara quando desligado
+                _betterToggleStyle.onNormal.textColor = Theme.TextPrimary; // Cor principal quando ligado
+                _betterToggleStyle.hover.background = MakeFrameTexture(16, 64, new Color(0.12f, 0.12f, 0.15f, 0.95f), new Color(0.10f, 0.10f, 0.13f, 0.95f), Theme.AccentHover, 1);
+                _betterToggleStyle.onHover.background = MakeFrameTexture(16, 64, new Color(0.17f, 0.04f, 0.09f, 0.95f), new Color(0.14f, 0.03f, 0.07f, 0.95f), Theme.AccentHover, 1);
+                _betterToggleStyle.active.background = MakeFrameTexture(16, 64, new Color(0.11f, 0.11f, 0.13f, 0.95f), new Color(0.09f, 0.09f, 0.11f, 0.95f), Theme.AccentActive, 1);
+                _betterToggleStyle.onActive.background = MakeFrameTexture(16, 64, new Color(0.19f, 0.05f, 0.11f, 0.95f), new Color(0.16f, 0.04f, 0.09f, 0.95f), Theme.AccentActive, 1);
+                _betterToggleStyle.active.textColor = Theme.TextMuted;
+                _betterToggleStyle.onActive.textColor = Theme.TextPrimary;
             }
-            return betterToggleStyle;
+            return _betterToggleStyle;
         }
     }
 
@@ -577,24 +608,24 @@ public static class GuiStyles
     {
         get
         {
-            if (windowStyle == null)
+            if (_windowStyle == null)
             {
-                windowStyle = new GUIStyle(GUI.skin.box)
+                _windowStyle = new GUIStyle(GUI.skin.box)
                 {
-                    padding = { left = 8, right = 8, top = 8, bottom = 8 },
-                    margin = { left = 0, right = 0, top = 0, bottom = 0 }
+                    padding = CreateRectOffset(10, 10, 10, 10), // Ajustado e usando CreateRectOffset
+                    margin = CreateRectOffset(2, 2, 2, 2) // Ajustado e usando CreateRectOffset
                 };
-                var top = new Color(Theme.BgDarkA.r, Theme.BgDarkA.g, Theme.BgDarkA.b, 0.75f);
-                var bottom = new Color(Theme.BgDarkB.r, Theme.BgDarkB.g, Theme.BgDarkB.b, 0.75f);
-                windowStyle.normal.background = MakeVerticalGradientTexture(2, 128, top, bottom);
+                var top = new Color(Theme.BgDarkA.r, Theme.BgDarkA.g, Theme.BgDarkA.b, 0.80f); // Ajustado alpha
+                var bottom = new Color(Theme.BgDarkB.r, Theme.BgDarkB.g, Theme.BgDarkB.b, 0.80f); // Ajustado alpha
+                _windowStyle.normal.background = MakeVerticalGradientTexture(2, 128, top, bottom);
             }
-            else if (windowStyle.normal?.background == null)
+            else if (_windowStyle.normal?.background == null)
             {
-                var top = new Color(Theme.BgDarkA.r, Theme.BgDarkA.g, Theme.BgDarkA.b, 0.75f);
-                var bottom = new Color(Theme.BgDarkB.r, Theme.BgDarkB.g, Theme.BgDarkB.b, 0.75f);
-                windowStyle.normal.background = MakeVerticalGradientTexture(2, 128, top, bottom);
+                var top = new Color(Theme.BgDarkA.r, Theme.BgDarkA.g, Theme.BgDarkA.b, 0.80f);
+                var bottom = new Color(Theme.BgDarkB.r, Theme.BgDarkB.g, Theme.BgDarkB.b, 0.80f);
+                _windowStyle.normal.background = MakeVerticalGradientTexture(2, 128, top, bottom);
             }
-            return windowStyle;
+            return _windowStyle;
         }
     }
 
@@ -602,24 +633,24 @@ public static class GuiStyles
     {
         get
         {
-            if (headerBackgroundStyle == null)
+            if (_headerBackgroundStyle == null)
             {
-                headerBackgroundStyle = new GUIStyle(GUI.skin.box)
+                _headerBackgroundStyle = new GUIStyle(GUI.skin.box)
                 {
-                    padding = { left = 0, right = 0, top = 0, bottom = 0 },
-                    margin = { left = 0, right = 0, top = 0, bottom = 0 }
+                    padding = CreateRectOffset(0, 0, 0, 0), // Ajustado e usando CreateRectOffset
+                    margin = CreateRectOffset(0, 0, 0, 0) // Ajustado e usando CreateRectOffset
                 };
-                var hTop = new Color(Theme.HeaderTop.r, Theme.HeaderTop.g, Theme.HeaderTop.b, 0.75f);
-                var hBottom = new Color(Theme.HeaderBottom.r, Theme.HeaderBottom.g, Theme.HeaderBottom.b, 0.75f);
-                headerBackgroundStyle.normal.background = MakeVerticalGradientTexture(2, 32, hTop, hBottom);
+                var hTop = new Color(Theme.HeaderTop.r, Theme.HeaderTop.g, Theme.HeaderTop.b, 0.80f); // Ajustado alpha
+                var hBottom = new Color(Theme.HeaderBottom.r, Theme.HeaderBottom.g, Theme.HeaderBottom.b, 0.80f); // Ajustado alpha
+                _headerBackgroundStyle.normal.background = MakeVerticalGradientTexture(2, 32, hTop, hBottom);
             }
-            else if (headerBackgroundStyle.normal?.background == null)
+            else if (_headerBackgroundStyle.normal?.background == null)
             {
-                var hTop = new Color(Theme.HeaderTop.r, Theme.HeaderTop.g, Theme.HeaderTop.b, 0.75f);
-                var hBottom = new Color(Theme.HeaderBottom.r, Theme.HeaderBottom.g, Theme.HeaderBottom.b, 0.75f);
-                headerBackgroundStyle.normal.background = MakeVerticalGradientTexture(2, 32, hTop, hBottom);
+                var hTop = new Color(Theme.HeaderTop.r, Theme.HeaderTop.g, Theme.HeaderTop.b, 0.80f);
+                var hBottom = new Color(Theme.HeaderBottom.r, Theme.HeaderBottom.g, Theme.HeaderBottom.b, 0.80f);
+                _headerBackgroundStyle.normal.background = MakeVerticalGradientTexture(2, 32, hTop, hBottom);
             }
-            return headerBackgroundStyle;
+            return _headerBackgroundStyle;
         }
     }
 
@@ -627,17 +658,17 @@ public static class GuiStyles
     {
         get
         {
-            if (titleLabelStyle == null)
+            if (_titleLabelStyle == null)
             {
-                titleLabelStyle = new GUIStyle(GUI.skin.label)
+                _titleLabelStyle = new GUIStyle(GUI.skin.label)
                 {
-                    fontSize = 14,
+                    fontSize = 15, // Ajustado
                     fontStyle = FontStyle.Bold,
                     alignment = TextAnchor.MiddleCenter,
-                    normal = { textColor = new Color(0.98f, 0.98f, 1f, 1f) }
+                    normal = { textColor = Theme.TextPrimary } // Mantido branco
                 };
             }
-            return titleLabelStyle;
+            return _titleLabelStyle;
         }
     }
 
@@ -645,34 +676,69 @@ public static class GuiStyles
     {
         get
         {
-            if (titleBarButtonStyle == null)
+            if (_titleBarButtonStyle == null)
             {
-                titleBarButtonStyle = new GUIStyle(GUI.skin.button)
+                _titleBarButtonStyle = new GUIStyle(GUI.skin.button)
                 {
-                    fontSize = 12,
+                    fontSize = 13, // Ajustado
                     alignment = TextAnchor.MiddleCenter,
-                    padding = { left = 0, right = 0, top = 0, bottom = 0 },
-                    margin = { left = 2, right = 2, top = 2, bottom = 2 },
-                    fixedWidth = 20,
-                    fixedHeight = 16
+                    padding = CreateRectOffset(2, 2, 2, 2), // Ajustado e usando CreateRectOffset
+                    margin = CreateRectOffset(4, 4, 4, 4), // Ajustado e usando CreateRectOffset
+                    fixedWidth = 24, // Ajustado
+                    fixedHeight = 20 // Ajustado
                 };
-                titleBarButtonStyle.normal.textColor = Theme.TextPrimary;
-                titleBarButtonStyle.normal.background = MakeFrameTexture(8, 32, new Color(0.14f, 0.14f, 0.16f, 0.95f), new Color(0.12f, 0.12f, 0.14f, 0.95f), Theme.AccentDim, 1);
-                titleBarButtonStyle.hover.background = MakeFrameTexture(8, 32, new Color(0.16f, 0.05f, 0.10f, 0.95f), new Color(0.14f, 0.04f, 0.08f, 0.95f), Theme.Accent, 1);
-                titleBarButtonStyle.active.background = MakeFrameTexture(8, 32, new Color(0.18f, 0.06f, 0.12f, 0.95f), new Color(0.16f, 0.05f, 0.10f, 0.95f), Theme.Accent, 1);
+                _titleBarButtonStyle.normal.textColor = Theme.TextPrimary;
+                _titleBarButtonStyle.normal.background = MakeFrameTexture(8, 32, new Color(0.13f, 0.13f, 0.15f, 0.95f), new Color(0.11f, 0.11f, 0.13f, 0.95f), Theme.AccentDim, 1);
+                _titleBarButtonStyle.hover.background = MakeFrameTexture(8, 32, new Color(0.15f, 0.05f, 0.10f, 0.95f), new Color(0.13f, 0.04f, 0.08f, 0.95f), Theme.AccentHover, 1);
+                _titleBarButtonStyle.active.background = MakeFrameTexture(8, 32, new Color(0.17f, 0.06f, 0.12f, 0.95f), new Color(0.15f, 0.05f, 0.10f, 0.95f), Theme.AccentActive, 1);
             }
-            else if (titleBarButtonStyle.normal?.background == null || titleBarButtonStyle.hover?.background == null || titleBarButtonStyle.active?.background == null)
+            else if (_titleBarButtonStyle.normal?.background == null || _titleBarButtonStyle.hover?.background == null || _titleBarButtonStyle.active?.background == null)
             {
-                titleBarButtonStyle.normal.background = MakeFrameTexture(8, 32, new Color(0.14f, 0.14f, 0.16f, 0.95f), new Color(0.12f, 0.12f, 0.14f, 0.95f), Theme.AccentDim, 1);
-                titleBarButtonStyle.hover.background = MakeFrameTexture(8, 32, new Color(0.16f, 0.05f, 0.10f, 0.95f), new Color(0.14f, 0.04f, 0.08f, 0.95f), Theme.Accent, 1);
-                titleBarButtonStyle.active.background = MakeFrameTexture(8, 32, new Color(0.18f, 0.06f, 0.12f, 0.95f), new Color(0.16f, 0.05f, 0.10f, 0.95f), Theme.Accent, 1);
+                _titleBarButtonStyle.normal.background = MakeFrameTexture(8, 32, new Color(0.13f, 0.13f, 0.15f, 0.95f), new Color(0.11f, 0.11f, 0.13f, 0.95f), Theme.AccentDim, 1);
+                _titleBarButtonStyle.hover.background = MakeFrameTexture(8, 32, new Color(0.15f, 0.05f, 0.10f, 0.95f), new Color(0.13f, 0.04f, 0.08f, 0.95f), Theme.AccentHover, 1);
+                _titleBarButtonStyle.active.background = MakeFrameTexture(8, 32, new Color(0.17f, 0.06f, 0.12f, 0.95f), new Color(0.15f, 0.05f, 0.10f, 0.95f), Theme.AccentActive, 1);
             }
-            return titleBarButtonStyle;
+            return _titleBarButtonStyle;
         }
     }
 
+    public static GUIStyle TextFieldStyle
+    {
+        get
+        {
+            if (_textFieldStyle == null)
+            {
+                _textFieldStyle = new GUIStyle(GUI.skin.textField)
+                {
+                    fontSize = 14,
+                    alignment = TextAnchor.MiddleLeft,
+                    padding = CreateRectOffset(10, 10, 8, 8), // Ajustado e usando CreateRectOffset
+                    margin = CreateRectOffset(6, 6, 6, 8) // Ajustado e usando CreateRectOffset
+                };
+                _textFieldStyle.normal.textColor = Theme.TextPrimary;
+                _textFieldStyle.normal.background = MakeFrameTexture(16, 48, new Color(0.08f, 0.08f, 0.10f, 0.95f), new Color(0.06f, 0.06f, 0.08f, 0.95f), Theme.AccentDim, 1);
+                _textFieldStyle.hover.background = MakeFrameTexture(16, 48, new Color(0.10f, 0.10f, 0.12f, 0.95f), new Color(0.08f, 0.08f, 0.10f, 0.95f), Theme.AccentHover, 1);
+                _textFieldStyle.focused.background = MakeFrameTexture(16, 48, new Color(0.11f, 0.02f, 0.05f, 0.95f), new Color(0.09f, 0.01f, 0.04f, 0.95f), Theme.Accent, 1);
+                _textFieldStyle.richText = true;
+            }
+            else if (_textFieldStyle.normal?.background == null || _textFieldStyle.hover?.background == null || _textFieldStyle.focused?.background == null)
+            {
+                _textFieldStyle.normal.background = MakeFrameTexture(16, 48, new Color(0.08f, 0.08f, 0.10f, 0.95f), new Color(0.06f, 0.06f, 0.08f, 0.95f), Theme.AccentDim, 1);
+                _textFieldStyle.hover.background = MakeFrameTexture(16, 48, new Color(0.10f, 0.10f, 0.12f, 0.95f), new Color(0.08f, 0.08f, 0.10f, 0.95f), Theme.AccentHover, 1);
+                _textFieldStyle.focused.background = MakeFrameTexture(16, 48, new Color(0.11f, 0.02f, 0.05f, 0.95f), new Color(0.09f, 0.01f, 0.04f, 0.95f), Theme.Accent, 1);
+            }
+            return _textFieldStyle;
+        }
+    }
+    #endregion
+
+    #region Fun��es P�blicas de Utilidade
+    /// <summary>
+    /// Garante que todos os estilos sejam inicializados. Chamado uma vez, idealmente na inicializa��o do mod.
+    /// </summary>
     public static void EnsureInitialized()
     {
+        // Acessa cada estilo uma vez para for�ar a inicializa��o pregui�osa.
         _ = WindowStyle;
         _ = HeaderBackgroundStyle;
         _ = TitleLabelStyle;
@@ -699,34 +765,49 @@ public static class GuiStyles
         _ = TextFieldStyle;
     }
 
+    /// <summary>
+    /// Desenha um tooltip na posi��o do mouse se o ret�ngulo fornecido cont�m o mouse.
+    /// </summary>
     public static void DrawTooltip(string tooltip, Rect rect)
     {
         if (!string.IsNullOrEmpty(tooltip) && rect.Contains(Event.current.mousePosition))
         {
             Vector2 size = GUI.skin.box.CalcSize(new GUIContent(tooltip));
-            Rect tooltipRect = new Rect(Event.current.mousePosition.x + 10, Event.current.mousePosition.y, size.x + 12, size.y + 10);
+            Rect tooltipRect = new Rect(Event.current.mousePosition.x + 15, Event.current.mousePosition.y, size.x + 16, size.y + 12); // Ajustado offset e padding
             GUI.Label(tooltipRect, tooltip, TooltipStyle);
         }
     }
 
+    /// <summary>
+    /// Desenha um indicador de status (c�rculo colorido).
+    /// </summary>
     public static void DrawStatusIndicator(bool isActive)
     {
-        Color color = isActive ? new Color(0.2f, 1f, 0.4f, 1f) : new Color(1f, 0.2f, 0.2f, 1f);
+        Color color = isActive ? Theme.Success : Theme.Error; // Usa cores do tema
         GUIStyle style = new GUIStyle(StatusIndicatorStyle);
         style.normal.background = MakeTexture(1, 1, color);
         GUILayout.Box(GUIContent.none, style);
     }
 
+    /// <summary>
+    /// Desenha um separador horizontal.
+    /// </summary>
     public static void DrawSeparator()
     {
-        GUILayout.Box(GUIContent.none, SeparatorStyle, GUILayout.ExpandWidth(true), GUILayout.Height(1));
+        GUILayout.Box(GUIContent.none, SeparatorStyle, GUILayout.ExpandWidth(true), GUILayout.Height(2)); // Ajustado altura
     }
 
+    /// <summary>
+    /// Desenha um bot�o de aba estilizado.
+    /// </summary>
     public static bool DrawTab(string label, bool selected)
     {
         return GUILayout.Toggle(selected, label, selected ? SelectedTabStyle : TabStyle);
     }
 
+    /// <summary>
+    /// Desenha um toggle com tooltip opcional.
+    /// </summary>
     public static bool DrawBetterToggle(bool value, string label, string tooltip = null)
     {
         bool result = GUILayout.Toggle(value, label, BetterToggleStyle);
@@ -735,4 +816,31 @@ public static class GuiStyles
             DrawTooltip(tooltip, lastRect);
         return result;
     }
+
+    /// <summary>
+    /// Gera o texto do cabe�alho com o sufixo de hora atual.
+    /// </summary>
+    public static string GetHeaderText(string text)
+    {
+        return $"{text} - {DateTime.Now:HH:mm:ss}";
+    }
+
+    /// <summary>
+    /// Retorna um estilo de cabe�alho com cor animada (varia��o do acento).
+    /// </summary>
+    public static GUIStyle GetAnimatedHeaderStyle()
+    {
+        var style = new GUIStyle(HeaderStyle);
+        style.normal.textColor = Color.Lerp(Theme.Accent, Theme.AccentSoft, Mathf.PingPong(Time.time * 2f, 1f)); // Anima��o de cor
+        return style;
+    }
+
+    /// <summary>
+    /// Retorna a hora atual formatada.
+    /// </summary>
+    public static string GetCurrentTime()
+    {
+        return DateTime.Now.ToString("HH:mm:ss");
+    }
+    #endregion
 }

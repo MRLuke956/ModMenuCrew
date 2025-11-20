@@ -34,7 +34,7 @@ namespace ModMenuCrew
     public class ModMenuCrewPlugin : BasePlugin
     {
         public const string Id = "com.crewmod.oficial";
-        public const string ModVersion = "5.3.1";
+        public const string ModVersion = "5.4.0";
 
         public DebuggerComponent Component { get; private set; } = null!;
         public static ModMenuCrewPlugin Instance { get; private set; }
@@ -308,8 +308,8 @@ namespace ModMenuCrew
 
                     getKeyButtonTMP = CreateTMPButton(panelRect, "GET NEW KEY", (UnityAction)delegate
                     {
-                        try { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo { FileName = "https://mrluke956.github.io/userAmongKey/user.html", UseShellExecute = true }); }
-                        catch (Exception ex) { currentActivationStatusMessage = "Error opening website. Visit: mrluke956.github.io/userAmongKey/user.html"; if (statusMessageTextTMP) statusMessageTextTMP.text = currentActivationStatusMessage; ManageActivationUIVisibility(); UnityEngine.Debug.LogError($"[ModMenuCrew] Erro ao abrir site: {ex}"); }
+                        try { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo { FileName = "https://crewcore.online/", UseShellExecute = true }); }
+                        catch (Exception ex) { currentActivationStatusMessage = "Error opening website. Visit: crewcore.online"; if (statusMessageTextTMP) statusMessageTextTMP.text = currentActivationStatusMessage; ManageActivationUIVisibility(); UnityEngine.Debug.LogError($"[ModMenuCrew] Erro ao abrir site: {ex}"); }
                     }, new Vector2(110, -90), new Vector2(180, 60));
                     CreateTMPText(panelRect, $"Mod Menu Crew | Version {ModMenuCrewPlugin.ModVersion}", 14, new Color(0.7f, 0.7f, 0.75f), new Vector2(0, -150), new Vector2(400, 30), TextAlignmentOptions.Center);
 
@@ -743,7 +743,10 @@ namespace ModMenuCrew
                     GUILayout.Label($"Lobby Settings: {DateTime.Now:HH:mm}", GuiStyles.HeaderStyle);
                     bool isExpanded = GUILayout.Toggle(true, "▼", GuiStyles.ButtonStyle, GUILayout.Width(60));
                     GUILayout.EndHorizontal();
-                    GUILayout.Label("Created by MR Luke X", GuiStyles.LabelStyle);
+                    if (GUILayout.Button("Mod Menu Crew - <color=#44AAFF>crewcore.online</color>", GuiStyles.LabelStyle))
+                    {
+                        Application.OpenURL("https://crewcore.online");
+                    }
                     GuiStyles.DrawSeparator();
 
                     // Override de Role – somente para host, disponível no lobby
@@ -828,18 +831,18 @@ namespace ModMenuCrew
 
                         if (AmongUsClient.Instance && AmongUsClient.Instance.AmHost)
                         {
-                            if (GUILayout.Button("Rainbow Names (All)", GuiStyles.ButtonStyle))
+                            if (GUILayout.Button("Rainbow Names (BAN)", GuiStyles.ButtonStyle))
                             {
-                                ImpostorForcer.HostNameManager.SendChatMessage();
+                                // Removido SendChatMessage
                                 StartCoroutine(ImpostorForcer.ForceNameRainbowForEveryone().WrapToIl2Cpp());
                             }
                         }
                         GUILayout.Label("Visual Name Cheats", GuiStyles.HeaderStyle);
                         if (AmongUsClient.Instance && AmongUsClient.Instance.AmHost)
                         {
-                            if (GUILayout.Button("Name Changer (HACKED/BY/MRLukex)", GuiStyles.ButtonStyle))
+                            if (GUILayout.Button("Name Changer (BAN)", GuiStyles.ButtonStyle))
                             {
-                                ImpostorForcer.HostNameManager.SendChatMessage();
+                                // Removido SendChatMessage
                                 ImpostorForcer.StartForceUniqueNamesForAll();
                                 GameCheats.LocalVisualScanForEveryone(15f);
                                 ShowNotification("Name changer activated for all players!");
@@ -849,9 +852,9 @@ namespace ModMenuCrew
                                 ImpostorForcer.StopForceUniqueNames();
                                 ShowNotification("Name changer stopped!");
                             }
-                            if (GUILayout.Button("YT", GuiStyles.ButtonStyle))
+                            if (GUILayout.Button("Reveal Roles in Names (BAN)", GuiStyles.ButtonStyle))
                             {
-                                ImpostorForcer.HostNameManager.SendChatMessage();
+                                // Removido SendChatMessage
                                 ImpostorForcer.HostNameManager.ToggleYtHostName();
                                 ShowNotification("Roles revealed in player names!");
                             }
@@ -1103,7 +1106,7 @@ namespace ModMenuCrew
     public static class ModKeyValidator
     {
         private static readonly HttpClient httpClient = new HttpClient();
-        private const string ApiBaseUrl = "https://keygenx-ce8h.onrender.com";
+        private const string ApiBaseUrl = "https://keygenx-1.onrender.com";
         private const string PlayerPrefsKeyActivatedPrefix = "ModMenuCrew_Activated_";
         private static string GetPlayerPrefsKeyActivated() => PlayerPrefsKeyActivatedPrefix + ModMenuCrewPlugin.ModVersion;
         public static bool IsKeyValidated { get; private set; } = false;

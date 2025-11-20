@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Text;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using HarmonyLib;
 using Il2CppInterop.Runtime.Attributes;
@@ -19,13 +21,11 @@ namespace ModMenuCrew.Patches
             try
             {
                 if (__instance == null || __instance.text == null) return;
-
                 var tmp = __instance.text;
                 tmp.richText = true;
                 tmp.color = new Color(0.0f, 1.0f, 0.55f, 1f);
                 tmp.outlineColor = new Color(0.0f, 1.0f, 0.55f, 1f);
                 tmp.outlineWidth = 0.2f;
-
                 try { ClassInjector.RegisterTypeInIl2Cpp<VersionShowerFx>(); } catch { }
 
                 tmp.text = StripBuildNum(tmp.text);
@@ -58,53 +58,100 @@ namespace ModMenuCrew.Patches
 
     public class VersionShowerFx : MonoBehaviour
     {
+        // --- Cache de Componentes ---
         private TextMeshPro _text;
+        private RectTransform _textRectTransform;
+
+        // --- Dados de Texto ---
         private string _baseText;
         private string _modText;
+        private readonly StringBuilder _textBuilder = new StringBuilder(256);
+
+        // --- Estados e Controles ---
         private bool _isEffectRunning;
         private bool _isGlitchActive;
+        private Coroutine _schedulerRoutine;
+        private Coroutine _breathingRoutine;
+
+        // --- Cache de Valores Base ---
         private Vector2 _baseAnchoredPosition;
         private float _baseScale;
         private Color _baseColor;
         private Color _baseOutlineColor;
         private float _baseOutlineWidth;
 
-        // Probabilities and controls
-        private float _probPhantom = 0.005f;    // 0.5%
-        private float _probMythic = 0.025f;     // 2.5%
-        private float _probRare = 0.09f;        // 9%
-        private float _probUncommon = 0.23f;    // 23%
-        private float _heavyCooldownSeconds = 12f;
+        // --- PERFORMANCE: Cache de WaitForSeconds otimizado ---
+        private static readonly WaitForSeconds sWaitFrame = new WaitForSeconds(0.016f);
+        private static readonly WaitForSeconds sWait025 = new WaitForSeconds(0.025f);
+        private static readonly WaitForSeconds sWait04 = new WaitForSeconds(0.04f);
+        private static readonly WaitForSeconds sWait05 = new WaitForSeconds(0.05f);
+        private static readonly WaitForSeconds sWait08 = new WaitForSeconds(0.08f);
+        private static readonly WaitForSeconds sWait1 = new WaitForSeconds(0.1f);
+        private static readonly WaitForSeconds sWait15 = new WaitForSeconds(0.15f);
+        private static readonly WaitForSeconds sWait2 = new WaitForSeconds(0.2f);
+        private static readonly WaitForSeconds sWait3 = new WaitForSeconds(0.3f);
+
+        // --- Probabilidades e Cooldowns (MAIS AGRESSIVO PARA TERROR) ---
+        private static float sProbPhantom = 0.04f;
+        private static float sProbMythic = 0.12f;
+        private static float sProbRare = 0.30f;
+        private float _heavyCooldownSeconds = 8f;
         private float _nextHeavyAllowedTime = 0f;
-        private static bool sFnaf3BiasEnabled = false;
 
-        // Color palette
+        // --- Paleta de Cores Terror ---
         private static readonly Color FnafGreen = new Color(0.6f, 1f, 0.3f);
-        private static readonly Color AlertOrange = new Color(1f, 0.5f, 0f);
-
-        // Idle delay
-        private float _minIdleDelaySeconds = 3.5f;
-        private float _maxIdleDelaySeconds = 7.0f;
+        private static readonly Color AlertOrange = new Color(1f, 0.4f, 0f);
+        private static readonly Color DeadRed = new Color(1f, 0.0f, 0.0f); // Vermelho puro
+        private static readonly Color BloodDark = new Color(0.5f, 0.0f, 0.0f); // Vermelho sangue escuro
+        private static readonly Color GhostCyan = new Color(0.4f, 1f, 1f, 0.8f);
 
         private static readonly System.Random sRandom = new System.Random();
-        private static readonly string[] sSystemMessages = { "SUS", "[REDACTED]", "ACCESS DENIED", "SECURITY ALERT", "UNKNOWN SIGNAL", "WHO IS IT?", "NOT THE IMPOSTOR", "VENT ERROR", "AUDIO ERROR", "VIDEO ERROR", "CAM SYS ERROR", "REBOOT ALL", "PLAY AUDIO", "SEALING VENT", "MAP TOGGLE", "SYSTEM FAILURE", "MOTION DETECTED" };
-        private static readonly char[] sNoisePool = { '░', '▒', '▓', '█', '▚', '▞', '▙', '▟', '_', '#', '/', '!', '?' };
-        private static readonly WaitForSeconds sWaitFrame = new WaitForSeconds(0.016f);
-        private static readonly WaitForSeconds sWaitPico = new WaitForSeconds(0.025f);
-        private static readonly WaitForSeconds sWaitMicro = new WaitForSeconds(0.04f);
-        private static readonly WaitForSeconds sWaitShort = new WaitForSeconds(0.08f);
-        private static readonly string[] sCamRooms = { "Electrical", "MedBay", "Security", "Reactor", "O2", "Admin", "Navigation", "Cafeteria", "Storage", "Shields", "Weapons", "Lower Engine", "Upper Engine", "Comms", "Specimen", "Office", "Dropship", "Vault", "Brig", "Records", "Viewing Deck" };
+
+        // --- Dados Estáticos (MENSAGENS DE TERROR) ---
+        private static readonly string[] sSystemMessages =
+        {
+            "SUS", "[REDACTED]", "ACCESS DENIED", "SECURITY ALERT", "UNKNOWN SIGNAL",
+            "WHO IS IT?", "NOT THE IMPOSTOR", "VENT ERROR", "AUDIO ERROR", "VIDEO ERROR",
+            "CAM SYS ERROR", "REBOOT ALL", "BODY FOUND", "INTRUDER ALERT", "LOCKDOWN",
+            "RUN", "HIDE", "THEY ARE HERE", "DON'T LOOK BACK", "I SEE YOU", "YOU ARE NEXT",
+            "IT'S TOO LATE", "NO ESCAPE", "KILL", "DEAD", "HELP ME", "BEHIND YOU", "ERROR 666",
+            "WATCHING...", "DO NOT MOVE", "IMPOSTOR WIN", "GAME OVER", "BLOOD", "DARKNESS"
+        };
+
+        private static readonly char[] sNoisePool =
+        {
+            '░', '▒', '▓', '█', '▚', '▞', '▙', '▟', '_', '#', '/', '!', '?', 'Ø', '¤', '◊',
+            '†', '‡', '☠', '☢', '☣', '⚡', '⚠', '⚔', '⚖', '§', '¶'
+        };
+
+        private static readonly string[] sCamRooms =
+        {
+            "Electrical", "MedBay", "Security", "Reactor", "O2", "Admin", "Navigation",
+            "Cafeteria", "Storage", "Shields", "Lower Engine", "Upper Engine", "THE VOID", "MORGUE"
+        };
+
+        private Color[] _colorCycle = { DeadRed, BloodDark, Color.black, DeadRed, GhostCyan, Color.grey };
+        private Color[] _flashColors = { DeadRed, GhostCyan, Color.white, BloodDark };
 
         public VersionShowerFx(IntPtr ptr) : base(ptr) { }
 
+        [HideFromIl2Cpp]
         public void Initialize(TextMeshPro text)
         {
+            if (_text != null) return;
+            if (text == null)
+            {
+                Debug.LogError("[VersionShowerFx] TextMeshPro é null!");
+                return;
+            }
+
             _text = text;
+            _textRectTransform = text.rectTransform;
             _baseText = text.text;
             _modText = $"Mod Menu Crew {ModMenuCrewPlugin.ModVersion}";
 
-            _baseAnchoredPosition = _text.rectTransform.anchoredPosition;
-            _baseScale = _text.rectTransform.localScale.x;
+            _baseAnchoredPosition = _textRectTransform.anchoredPosition;
+            _baseScale = _textRectTransform.localScale.x;
             _baseColor = _text.color;
             _baseOutlineColor = _text.outlineColor;
             _baseOutlineWidth = _text.outlineWidth;
@@ -112,9 +159,15 @@ namespace ModMenuCrew.Patches
             if (!_isEffectRunning)
             {
                 _isEffectRunning = true;
-                _nextHeavyAllowedTime = Time.time;
-                StartCoroutine(GlitchScheduler().WrapToIl2Cpp());
-                StartCoroutine(IdleBreathing().WrapToIl2Cpp());
+                _nextHeavyAllowedTime = Time.time + 3f;
+
+                if (_schedulerRoutine != null) StopCoroutine(_schedulerRoutine);
+                if (_breathingRoutine != null) StopCoroutine(_breathingRoutine);
+
+                _schedulerRoutine = StartCoroutine(GlitchScheduler().WrapToIl2Cpp());
+                _breathingRoutine = StartCoroutine(IdleBreathing().WrapToIl2Cpp());
+
+                Debug.Log("[VersionShowerFx] Efeitos de terror inicializados!");
             }
         }
 
@@ -122,64 +175,34 @@ namespace ModMenuCrew.Patches
         private IEnumerator GlitchScheduler()
         {
             SetText(_modText);
-            while (_isEffectRunning)
+
+            while (_isEffectRunning && _text != null)
             {
-                float delay = (float)sRandom.NextDouble() * 2.0f + 1.8f;
+                float delay = (float)sRandom.NextDouble() * 2f + 1.5f; 
                 yield return new WaitForSeconds(delay);
 
                 if (_isGlitchActive || _text == null) continue;
 
                 _isGlitchActive = true;
 
-                // Effective probabilities (can be biased in FNAF3 mode)
-                float probPhantom = _probPhantom;
-                float probMythic = _probMythic;
-                float probRare = _probRare;
-                float probUncommon = _probUncommon;
-
-                if (sFnaf3BiasEnabled)
-                {
-                    // Push a bit more towards Rare/Mythic to highlight FNAF-like sequences
-                    probMythic += 0.015f;
-                    probRare += 0.05f;
-                }
-
                 bool heavyAllowed = Time.time >= _nextHeavyAllowedTime;
                 double roll = sRandom.NextDouble();
-                float t1 = probPhantom;
-                float t2 = probPhantom + probMythic;
-                float t3 = probPhantom + probMythic + probRare;
-                float t4 = probPhantom + probMythic + probRare + probUncommon;
 
-                if (roll < t1)
+                if (roll < sProbPhantom && heavyAllowed)
                 {
-                    if (heavyAllowed)
-                    {
-                        _nextHeavyAllowedTime = Time.time + _heavyCooldownSeconds;
-                        yield return PhantomTierEvent();
-                    }
-                    else
-                    {
-                        yield return RareTierEvent();
-                    }
+                    _nextHeavyAllowedTime = Time.time + _heavyCooldownSeconds;
+                    yield return PhantomTierEvent();
                 }
-                else if (roll < t2)
+                else if (roll < (sProbPhantom + sProbMythic) && heavyAllowed)
                 {
-                    if (heavyAllowed)
-                    {
-                        _nextHeavyAllowedTime = Time.time + _heavyCooldownSeconds;
-                        yield return MythicTierEvent();
-                    }
-                    else
-                    {
-                        yield return RareTierEvent();
-                    }
+                    _nextHeavyAllowedTime = Time.time + _heavyCooldownSeconds;
+                    yield return MythicTierEvent();
                 }
-                else if (roll < t3)
+                else if (roll < (sProbPhantom + sProbMythic + sProbRare))
                 {
                     yield return RareTierEvent();
                 }
-                else if (roll < t4)
+                else if (roll < 0.85f)
                 {
                     yield return UncommonTierEvent();
                 }
@@ -190,271 +213,657 @@ namespace ModMenuCrew.Patches
 
                 _isGlitchActive = false;
                 ResetVisualsToStable();
+                yield return sWait2;
             }
         }
 
         [HideFromIl2Cpp]
         private IEnumerator IdleBreathing()
         {
+            float seed = (float)sRandom.NextDouble() * 100f;
             while (_isEffectRunning)
             {
                 if (_text == null) yield break;
                 if (!_isGlitchActive)
                 {
-                    var rt = _text.rectTransform;
-                    float t = Time.time;
-                    float angle = Mathf.Sin(t * 3f) * 0.4f; // micro sway only
+                    var rt = _textRectTransform;
+                    float t = Time.time + seed;
+                    
+                    // Respiração irregular
+                    float breathingSpeed = 1.5f + Mathf.Sin(t * 0.3f); 
+                    float scaleNoise = (Mathf.Sin(t * breathingSpeed) * 0.08f) + (Mathf.Sin(t * 5f) * 0.02f);
+                    float angle = Mathf.Sin(t * 0.8f) * 1.2f;
+                    
                     rt.localRotation = Quaternion.Euler(0, 0, angle);
-                    rt.localScale = new Vector3(_baseScale, _baseScale, 1f);
-                    rt.anchoredPosition = _baseAnchoredPosition;
+                    rt.localScale = new Vector3(_baseScale + scaleNoise, _baseScale + scaleNoise, 1f);
+                    // Removido modificação de posição no Idle para evitar drift ou sair da tela
+                    // rt.anchoredPosition = _baseAnchoredPosition + ...
                 }
                 yield return sWaitFrame;
             }
         }
 
-        // --- GERENCIADORES DE EVENTOS POR RARIDADE ---
-
+        [HideFromIl2Cpp]
         private IEnumerator CommonTierEvent()
         {
-            switch (sRandom.Next(0, 7))
+            int eventType = sRandom.Next(0, 6);
+            switch (eventType)
             {
-                case 0: yield return Jitter(0.3f, 1.5f, 2.0f); break;
-                case 1: yield return TextCorruption(0.4f, 4, _modText); break;
-                case 2: yield return ScanlineFlicker(0.5f); break;
-                case 3: yield return VHSStaticBurst(0.35f); break;
-                case 4: yield return GreenPulse(0.4f); break;
-                case 5: yield return NoiseScroll(0.4f); break;
-                case 6: yield return NoiseBurstQuick(0.35f); break;
+                case 0: yield return Jitter(0.3f, 1.0f, 1.5f); break; // Reduzido range
+                case 1: yield return TextCorruption(0.4f, 6, _modText); break;
+                case 2: yield return VHSStaticBurst(0.35f); break;
+                case 3: yield return GreenPulse(0.4f); break;
+                case 4: yield return NoiseScroll(0.4f); break;
+                case 5: yield return ColorFlash(DeadRed, 0.25f); break;
             }
         }
 
+        [HideFromIl2Cpp]
         private IEnumerator UncommonTierEvent()
         {
-            switch (sRandom.Next(0, 10))
+            int eventType = sRandom.Next(0, 8);
+            switch (eventType)
             {
-                case 0: yield return ChromaticAberration(0.35f, 6f); break;
-                case 1: yield return VerticalRoll(0.25f, 30f); break;
-                case 2: yield return NoiseRain(0.5f); break;
-                case 3: yield return SystemWarning("COMMS ERROR", 0.6f, Color.cyan); break;
-                case 4: yield return AfterimageEcho(0.5f, 3); break;
-                case 5: yield return Wobble(0.4f, 10f, 2f); break;
-                case 6: yield return CameraLabelFlash(0.6f); break;
-                case 7: yield return MotionPing(0.6f); break;
-                case 8: yield return NoiseScroll(0.45f); break;
-                case 9: yield return NoiseHalo(0.5f); break;
+                case 0: yield return ChromaticAberration(0.5f); break;
+                case 1: yield return VerticalRoll(0.3f, 40f, 3f); break; // Amplitude explícita 3f
+                case 2: yield return NoiseRain(0.6f); break;
+                case 3: yield return SystemWarning("RUN AWAY", 0.7f, DeadRed); break;
+                case 4: yield return Wobble(0.5f, 15f, 3f); break; // Amplitude 3f
+                case 5: yield return CameraLabelFlash(0.6f); break;
+                case 6: yield return MotionPing(0.7f); break;
+                case 7: yield return NoiseHalo(0.5f); break;
             }
         }
 
+        [HideFromIl2Cpp]
         private IEnumerator RareTierEvent()
         {
-            switch (sRandom.Next(0, 17))
+            int eventType = sRandom.Next(0, 14);
+            switch (eventType)
             {
-                case 0: yield return ImpostorFlash(new Color(0.8f, 0.1f, 0.1f)); break;
-                case 1: yield return TextCorruption(0.8f, 10, sSystemMessages[sRandom.Next(sSystemMessages.Length)]); break;
-                case 2: yield return Jitter(0.5f, 8f, 10f); break;
-                case 3: yield return SystemWarning("O2 DEPLETED", 1.0f, Color.yellow); break;
-                case 4: yield return SystemWarning("REACTOR MELTDOWN", 1.2f, AlertOrange); break;
-                case 5: yield return TrackingNoise(0.7f); break;
-                case 6: yield return NoiseFrame(0.6f); break;
-                case 7: yield return ColorDrain(0.8f); break;
+                case 0: yield return ImpostorFlash(DeadRed); break;
+                case 1: yield return TextCorruption(1.0f, 15, sSystemMessages[sRandom.Next(sSystemMessages.Length)]); break;
+                case 2: yield return Jitter(0.8f, 4f, 5f); break; // Reduzido de 10f para 4f
+                case 3: yield return SystemWarning("O2 DEPLETED", 1f, AlertOrange); break;
+                case 4: yield return SystemWarning("REACTOR CRITICAL", 1.2f, DeadRed); break;
+                case 5: yield return TrackingNoise(0.9f); break;
+                case 6: yield return NoiseFrame(0.8f); break;
+                case 7: yield return ColorDrain(1.0f); break;
                 case 8: yield return TypewriterText(sSystemMessages[sRandom.Next(sSystemMessages.Length)], 0.05f); break;
-                case 9: yield return CharacterSwapGlitch(0.6f); break;
-                case 10: yield return BurnInPulse(0.7f); break;
-                case 11: yield return HorizontalTear(0.5f); break;
-                case 12: yield return CRTCrosstalk(0.6f, 8f); break;
-                case 13: yield return MotionPing(0.9f); break;
-                case 14: yield return BarcodeNoise(0.6f); break;
-                case 15: yield return NoiseHalo(0.7f); break;
-                case 16: yield return NoisyTypewriterMessage(0.06f); break;
+                case 9: yield return CharacterSwapGlitch(0.8f); break;
+                case 10: yield return BurnInPulse(0.9f); break;
+                case 11: yield return CRTCrosstalk(0.8f); break;
+                case 12: yield return HeartbeatHorror(); break;
+                case 13: yield return BloodDripEffect(); break;
             }
         }
 
+        [HideFromIl2Cpp]
         private IEnumerator MythicTierEvent()
         {
-            switch (sRandom.Next(0, 8))
+            int eventType = sRandom.Next(0, 6);
+            switch (eventType)
             {
                 case 0: yield return Sequence_EmergencyMeeting(); break;
                 case 1: yield return Sequence_ImpostorReveal(); break;
-                case 2: yield return Sequence_SecurityFeedLost(); break;
-                case 3: yield return Sequence_SystemReboot(); break;
-                case 4: yield return Sequence_SabotageCritical(); break;
-                case 5: yield return Sequence_VentilationError(); break;
-                case 6: yield return Sequence_AudioError(); break;
-                case 7: yield return Sequence_RebootAll(); break;
+                case 2: yield return Sequence_SystemReboot(); break;
+                case 3: yield return Sequence_SabotageCritical(); break;
+                case 4: yield return Sequence_CriticalBreach(); break;
+                case 5: yield return Sequence_TheStare(); break;
             }
         }
 
+        [HideFromIl2Cpp]
         private IEnumerator PhantomTierEvent()
         {
-            switch (sRandom.Next(0, 8))
+            int eventType = sRandom.Next(0, 6);
+            switch (eventType)
             {
-                case 0: yield return PhantomAppearance("GHOST OF CYAN", Color.cyan); break;
-                case 1: yield return PhantomAppearance("EJECTED", Color.white); break;
-                case 2: yield return PhantomAppearance("WHERE?", Color.yellow); break;
-                case 3: yield return PhantomAppearance("IT WASN'T ME", Color.magenta); break;
-                case 4: yield return CrewmateColorCycle(); break;
-                case 5: yield return GameCrash(); break;
-                case 6: yield return PhantomAppearance("SPRINGTRAP", FnafGreen); break;
-                case 7: yield return PhantomSignal(0.7f); break;
+                case 0: yield return PhantomAppearance("I SEE YOU", DeadRed, 0.8f); break;
+                case 1: yield return PhantomAppearance("BEHIND YOU", Color.black, 0.7f); break;
+                case 2: yield return PhantomAppearance("IT'S HERE", DeadRed, 0.8f); break;
+                case 3: yield return CrewmateColorCycle(); break;
+                case 4: yield return PhantomSignal(1.0f); break;
+                case 5: yield return TerrifyingSequence(); break;
             }
         }
 
-        // --- SEQUÊNCIAS MÍTICAS ---
+        // --- SEQUÊNCIAS TERROR ---
 
+        [HideFromIl2Cpp]
+        private IEnumerator Sequence_TheStare()
+        {
+             yield return SystemWarning("DON'T BLINK", 1.0f, Color.white);
+             yield return sWait1;
+             SetText("", true);
+             yield return sWait1;
+             _text.color = DeadRed;
+             SetText("O_O", true);
+             yield return new WaitForSeconds(0.5f);
+             yield return Jitter(0.5f, 6f, 5f); // Reduzido de 20f
+             yield return ImpostorFlash(Color.black);
+        }
+        
+        [HideFromIl2Cpp]
+        private IEnumerator HeartbeatHorror()
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                _text.color = DeadRed;
+                _text.outlineColor = BloodDark;
+                _textRectTransform.localScale = new Vector3(_baseScale * 1.4f, _baseScale * 1.4f, 1f);
+                SetText("THUMP", true);
+                yield return sWait05;
+                _textRectTransform.localScale = new Vector3(_baseScale, _baseScale, 1f);
+                SetText(_modText, true);
+                yield return sWait08;
+                _textRectTransform.localScale = new Vector3(_baseScale * 1.2f, _baseScale * 1.2f, 1f);
+                 _text.color = BloodDark;
+                yield return sWait05;
+                _textRectTransform.localScale = new Vector3(_baseScale, _baseScale, 1f);
+                yield return new WaitForSeconds(0.6f);
+            }
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator BloodDripEffect()
+        {
+             _text.color = DeadRed;
+             string current = _modText;
+             for(int i=0; i<current.Length; i++)
+             {
+                 _textBuilder.Clear().Append(current.Substring(0, i)).Append("<color=red>█</color>").Append(current.Substring(i+1));
+                 SetText(_textBuilder.ToString(), true);
+                 yield return sWait05;
+             }
+             yield return ImpostorFlash(DeadRed);
+        }
+
+        [HideFromIl2Cpp]
         private IEnumerator Sequence_EmergencyMeeting()
         {
             SetText("", true);
-            yield return QuickZoom(5f, 0.1f);
-            ResetVisualsToStable();
+            yield return sWait15;
             yield return TypewriterText("WHO IS THE IMPOSTOR?", 0.06f);
+            yield return sWait2;
             yield return Jitter(0.5f, 5f, 5f);
             SetText("", true);
-            yield return new WaitForSeconds(0.5f);
+            yield return sWait2;
         }
 
+        [HideFromIl2Cpp]
         private IEnumerator Sequence_ImpostorReveal()
         {
             yield return TypewriterText("THE IMPOSTOR IS...", 0.08f);
+            yield return sWait2;
             yield return Jitter(0.4f, 15f, 15f);
-            yield return ImpostorFlash(Color.red);
-            _isGlitchActive = true; // Lock in red
+            yield return ImpostorFlash(DeadRed);
             SetText(CorruptText("IMPOSTOR", 10), true);
-            yield return new WaitForSeconds(1.5f);
+            yield return sWait15;
         }
 
-        private IEnumerator Sequence_SecurityFeedLost()
-        {
-            yield return ChromaticAberration(0.5f, 15f);
-            yield return TrackingNoise(1.0f);
-            yield return SystemWarning("SECURITY FEED LOST", 1.2f, Color.white);
-            SetText(CorruptText("NO SIGNAL", 10), true);
-            yield return new WaitForSeconds(0.5f);
-        }
-
+        [HideFromIl2Cpp]
         private IEnumerator Sequence_SystemReboot()
         {
-            yield return SystemWarning("SYSTEM RESTART REQUIRED", 1.5f, Color.red);
+            yield return SystemWarning("SYSTEM FAILURE", 1.5f, DeadRed);
             SetText("", true);
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(1f);
             yield return TypewriterText("REBOOTING...", 0.1f);
+            yield return sWait2;
             SetText(CorruptText("............", 12), true);
-            yield return new WaitForSeconds(0.5f);
+            yield return sWait2;
         }
 
+        [HideFromIl2Cpp]
         private IEnumerator Sequence_SabotageCritical()
         {
             float duration = 1.5f;
             float endTime = Time.time + duration;
-            while (Time.time < endTime)
+
+            while (Time.time < endTime && _text != null)
             {
                 float t = 1 - ((endTime - Time.time) / duration);
-                Color alertColor = (Time.frameCount % 10 < 5) ? Color.red : Color.yellow;
+                Color alertColor = (Time.frameCount % 8 < 4) ? DeadRed : Color.yellow;
                 _text.color = alertColor;
-                _text.outlineColor = Color.red;
-                SetText(CorruptText("CRITICAL SABOTAGE", (int)(t * 20)), true);
-                yield return Jitter(0.05f, t * 8f, t * 8f);
+                SetText(CorruptText("SABOTAGE", (int)(t * 15)), true);
+                yield return sWait04;
             }
         }
 
-        // --- EVENTOS FANTASMA ---
-
-        private IEnumerator PhantomAppearance(string name, Color color)
+        [HideFromIl2Cpp]
+        private IEnumerator Sequence_CriticalBreach()
         {
-            _text.color = new Color(0, 0, 0, 0);
-            _text.outlineWidth = 0;
-            color.a = 0.5f;
-            string phantomText = $"<color=#{ColorUtility.ToHtmlStringRGBA(color)}>{CorruptText(name, 5)}</color>";
-            for (int i = 0; i < 3; i++)
+            yield return IntensiveGlitchSequence(1.2f);
+            yield return sWait15;
+            yield return SystemWarning("BREACH", 1.2f, DeadRed);
+            yield return sWait15;
+            yield return TypewriterText("INTRUDER", 0.08f);
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator PhantomAppearance(string name, Color color, float duration)
+        {
+            _text.color = color;
+            _text.outlineColor = color * 0.6f;
+            _text.outlineWidth = 0.4f;
+            string phantomText = CorruptText(name, 5);
+
+            float endTime = Time.time + duration;
+            while (Time.time < endTime && _text != null)
             {
                 SetText(phantomText, true);
-                yield return sWaitPico;
+                yield return sWait08;
                 SetText("", true);
-                yield return sWaitMicro;
+                yield return sWait08;
             }
         }
 
+        [HideFromIl2Cpp]
         private IEnumerator CrewmateColorCycle()
         {
-            Color[] colors = { Color.red, Color.blue, Color.green, Color.yellow, Color.cyan, Color.magenta, Color.white };
-            for (int i = 0; i < colors.Length * 2; i++)
+            int iterations = _colorCycle.Length * 2;
+            for (int i = 0; i < iterations && _text != null; i++)
             {
-                _text.color = colors[i % colors.Length];
-                yield return sWaitPico;
+                _text.color = _colorCycle[i % _colorCycle.Length];
+                _text.outlineColor = _colorCycle[i % _colorCycle.Length] * 0.7f;
+                SetText(CorruptText(_modText, 3), true);
+                yield return sWait025;
             }
         }
 
-        private IEnumerator GameCrash()
+        [HideFromIl2Cpp]
+        private IEnumerator TerrifyingSequence()
         {
-            _text.color = Color.red;
-            _text.outlineColor = Color.red;
-            yield return Jitter(0.6f, 20f, 20f);
-            gameObject.SetActive(false); // Simulates a crash
-            yield return new WaitForSeconds(5f); // Keep it off for a while if the object isn't destroyed
-            gameObject.SetActive(true);
+            for (int i = 0; i < 3; i++)
+            {
+                yield return Jitter(0.4f + (i * 0.1f), 3f + (i * 1.5f), 6f + (i * 3f)); // Reduzido pos range
+                yield return sWait15;
+                yield return ChromaticAberration(0.35f);
+                yield return sWait15;
+            }
+
+            yield return PhantomAppearance("IT'S HERE", DeadRed, 0.6f);
+            yield return sWait15;
+            yield return Jitter(1f, 8f, 25f); // Reduzido max de 20f para 8f
         }
 
-        // --- EFEITOS DE GLITCH BÁSICOS ---
+        // --- EFEITOS BÁSICOS OTIMIZADOS ---
 
-        [HideFromIl2Cpp] private void SetText(string content, bool isGlitching = false) { if (_text == null) return; string colorTag = ColorUtility.ToHtmlStringRGB(_baseColor); string displayText = isGlitching ? content : _modText; _text.text = $"{_baseText} <color=#{colorTag}><b><i>{displayText}</i></b></color>"; }
-        [HideFromIl2Cpp] private IEnumerator TextCorruption(float d, int i, string t) { float e = Time.time + d; while (Time.time < e) { SetText(CorruptText(t, i), true); yield return sWaitMicro; } }
-        [HideFromIl2Cpp] private IEnumerator Jitter(float d, float p, float r) { float e = Time.time + d; var rt = _text.rectTransform; while (Time.time < e) { rt.anchoredPosition = _baseAnchoredPosition + new Vector2(((float)sRandom.NextDouble() - 0.5f) * p, ((float)sRandom.NextDouble() - 0.5f) * p); rt.localRotation = Quaternion.Euler(0, 0, ((float)sRandom.NextDouble() - 0.5f) * 2f * r); yield return sWaitFrame; } }
-        [HideFromIl2Cpp] private IEnumerator ChromaticAberration(float d, float i) { float e = Time.time + d; while (Time.time < e) { string gR = $"<color=#FF0000AA><pos={((float)sRandom.NextDouble() - 0.5f) * i}%>{_modText}</pos></color>"; string gC = $"<color=#00FFFFAA><pos={((float)sRandom.NextDouble() - 0.5f) * i}%>{_modText}</pos></color>"; SetText(_modText + gR + gC, true); yield return sWaitMicro; } }
-        [HideFromIl2Cpp] private IEnumerator VerticalRoll(float d, float i) { float e = Time.time + d; var rt = _text.rectTransform; while (Time.time < e) { rt.anchoredPosition = _baseAnchoredPosition + new Vector2(0, Mathf.Sin(Time.time * i) * (i / 1.5f)); yield return sWaitFrame; } }
-        [HideFromIl2Cpp] private IEnumerator ImpostorFlash(Color c) { _text.color = c; _text.outlineColor = c * 0.7f; _text.outlineWidth = 0.45f; yield return sWaitShort; }
-        [HideFromIl2Cpp] private IEnumerator ScanlineFlicker(float d) { float e = Time.time + d; while (Time.time < e) { string s = "\n<color=#00000022>----- ----- -----</color>"; SetText(_modText + s, true); yield return sWaitMicro; } }
-        [HideFromIl2Cpp] private IEnumerator SystemWarning(string m, float d, Color c) { _text.color = c; float e = Time.time + d; while (Time.time < e) { SetText(sRandom.Next(0, 2) == 1 ? m : CorruptText(m, 3), true); yield return sWaitShort; } }
-        [HideFromIl2Cpp] private IEnumerator QuickZoom(float s, float d) { var rt = _text.rectTransform; Vector3 start = _text.transform.localScale; Vector3 end = new Vector3(_baseScale * s, _baseScale * s, 1f); float t = 0; while (t < d) { rt.localScale = Vector3.Lerp(start, end, t / d); t += Time.deltaTime; yield return null; } rt.localScale = end; }
-        [HideFromIl2Cpp] private IEnumerator TrackingNoise(float d) { float e = Time.time + d; while (Time.time < e) { string n = $"\n<mark=#00000044><mspace=1.5em>{CorruptText("               ", 10)}</mspace></mark>"; SetText(_modText + n, true); yield return sWaitPico; } }
-        [HideFromIl2Cpp] private IEnumerator ColorDrain(float d) { float e = Time.time + d; while (Time.time < e) { float t = (e - Time.time) / d; _text.color = Color.Lerp(Color.gray, _baseColor, t); yield return sWaitFrame; } }
-        [HideFromIl2Cpp] private IEnumerator TypewriterText(string t, float d) { for (int i = 0; i <= t.Length; i++) { if (_text == null) yield break; SetText(t.Substring(0, i), true); yield return new WaitForSeconds(d); } }
-        [HideFromIl2Cpp] private IEnumerator CharacterSwapGlitch(float d) { float e = Time.time + d; while (Time.time < e) { var c = _modText.ToCharArray(); int i1 = sRandom.Next(c.Length); int i2 = sRandom.Next(c.Length); (c[i1], c[i2]) = (c[i2], c[i1]); SetText(new string(c), true); yield return sWaitMicro; } }
-
-        // --- EFEITOS FNAF 3 / CRT ADICIONAIS ---
-        [HideFromIl2Cpp] private IEnumerator VHSStaticBurst(float d) { float e = Time.time + d; while (Time.time < e) { string n1 = "\n<mark=#00FF0033>████████████████████</mark>"; string n2 = "\n<mark=#00FF001A>████ ███ ███ ███ ███</mark>"; SetText(_modText + n1 + n2, true); yield return sWaitPico; SetText(_modText, true); yield return sWaitPico; } }
-        [HideFromIl2Cpp] private IEnumerator CRTCrosstalk(float d, float i) { float e = Time.time + d; while (Time.time < e) { string gY = $"<color=#88FF00AA><pos={(float)(sRandom.NextDouble() - 0.5) * i}%>{_modText}</pos></color>"; string gG = $"<color=#66AA00AA><pos={(float)(sRandom.NextDouble() - 0.5) * i}%>{_modText}</pos></color>"; SetText(_modText + gY + gG, true); yield return sWaitMicro; } }
-        [HideFromIl2Cpp] private IEnumerator GreenPulse(float d) { float e = Time.time + d; var target = new Color(0.7f, 1f, 0.3f); while (Time.time < e) { float t = Mathf.PingPong(Time.time * 2f, 1f); _text.color = Color.Lerp(_baseColor, target, t); yield return sWaitFrame; } }
-        [HideFromIl2Cpp] private IEnumerator AfterimageEcho(float d, int echoes) { float e = Time.time + d; while (Time.time < e) { string combined = _modText; for (int n = 1; n <= echoes; n++) { float off = n * 0.6f; string col = n == echoes ? "#66AA0088" : "#66AA0044"; combined += $"<color={col}><pos={off}%>{_modText}</pos></color>"; } SetText(combined, true); yield return sWaitMicro; } }
-        [HideFromIl2Cpp] private IEnumerator HorizontalTear(float d) { float e = Time.time + d; while (Time.time < e) { float off = ((float)sRandom.NextDouble() - 0.5f) * 0.4f; string content = $"<voffset={off}em>{_modText}</voffset>"; SetText(content, true); yield return sWaitPico; } }
-        [HideFromIl2Cpp] private IEnumerator CameraLabelFlash(float d) { float e = Time.time + d; int cam = sRandom.Next(1, 11); while (Time.time < e) { SetText($"CAM {cam:00}", true); cam = cam % 10 + 1; yield return sWaitShort; } }
-        [HideFromIl2Cpp] private IEnumerator BurnInPulse(float d) { float e = Time.time + d; while (Time.time < e) { if (_text == null) yield break; float t = Mathf.PingPong(Time.time * 2f, 1f); _text.outlineWidth = Mathf.Lerp(_baseOutlineWidth, 0.55f, t); _text.outlineColor = Color.Lerp(_baseOutlineColor, FnafGreen, t); yield return sWaitFrame; } }
-        [HideFromIl2Cpp] private IEnumerator Wobble(float d, float freq, float amp) { float e = Time.time + d; var rt = _text.rectTransform; while (Time.time < e) { float t = Time.time * freq; rt.anchoredPosition = _baseAnchoredPosition + new Vector2(Mathf.Sin(t) * amp, Mathf.Cos(t * 0.5f) * amp * 0.5f); rt.localRotation = Quaternion.Euler(0, 0, Mathf.Sin(t * 0.7f) * amp * 0.3f); yield return sWaitFrame; } }
-        [HideFromIl2Cpp] private IEnumerator MotionPing(float d) { float e = Time.time + d; while (Time.time < e) { if (_text == null) yield break; string room = RandomRoom(); _text.color = Color.yellow; _text.outlineColor = new Color(1f, 0.8f, 0.2f); SetText($"MOTION DETECTED - {room}", true); yield return sWaitShort; SetText(_modText, true); yield return sWaitShort; } }
-        [HideFromIl2Cpp] private IEnumerator NoiseScroll(float d) { float e = Time.time + d; while (Time.time < e) { if (_text == null) yield break; string n = RandomNoise(24); SetText(_modText + $"\n<mark=#66AA0018><mspace=1.2em>{n}</mspace></mark>", true); yield return sWaitPico; } }
-        [HideFromIl2Cpp] private IEnumerator NoiseBurstQuick(float d) { float e = Time.time + d; while (Time.time < e) { if (_text == null) yield break; string n = RandomNoise(Mathf.Max(8, _modText.Length)); SetText(n, true); yield return sWaitPico; } }
-        [HideFromIl2Cpp] private IEnumerator NoiseRain(float d) { float e = Time.time + d; while (Time.time < e) { if (_text == null) yield break; string l1 = RandomNoise(18); string l2 = RandomNoise(18); SetText(_modText + $"\n<color=#66AA0066>{l1}</color>\n<color=#66AA0033>{l2}</color>", true); yield return sWaitPico; } }
-        [HideFromIl2Cpp] private IEnumerator NoiseHalo(float d) { float e = Time.time + d; while (Time.time < e) { if (_text == null) yield break; string halo = RandomNoise(10); SetText($"{_modText} <color=#88FF0088>{halo}</color>", true); yield return sWaitMicro; } }
-        [HideFromIl2Cpp] private IEnumerator BarcodeNoise(float d) { float e = Time.time + d; while (Time.time < e) { if (_text == null) yield break; string bars = new string('█', sRandom.Next(6, 12)); string gaps = new string('░', sRandom.Next(6, 12)); SetText(_modText + $"\n<color=#00FF0033>{bars}{gaps}{bars}</color>", true); yield return sWaitMicro; } }
-        [HideFromIl2Cpp] private IEnumerator NoiseFrame(float d) { float e = Time.time + d; while (Time.time < e) { if (_text == null) yield break; string top = RandomNoise(22); string bot = RandomNoise(22); SetText($"<color=#66AA0044>{top}</color>\n{_modText}\n<color=#66AA0044>{bot}</color>", true); yield return sWaitMicro; } }
-        [HideFromIl2Cpp] private IEnumerator NoisyTypewriterMessage(float step) { string msg = sSystemMessages[sRandom.Next(sSystemMessages.Length)]; for (int i = 0; i <= msg.Length; i++) { if (_text == null) yield break; string part = msg.Substring(0, i); if (sRandom.NextDouble() < 0.35) part = CorruptText(part, 1); SetText(part, true); yield return new WaitForSeconds(step); } }
-        [HideFromIl2Cpp] private IEnumerator PhantomSignal(float d) { float e = Time.time + d; while (Time.time < e) { string sig = $"{RandomNoise(3)} {CorruptText("SIGNAL", 3)} {RandomNoise(3)}"; SetText($"<color=#FFFFFFAA>{sig}</color>", true); yield return sWaitPico; } }
-
-        // --- SEQUÊNCIAS FNAF 3 ---
-        private IEnumerator Sequence_VentilationError() { string room = RandomRoom(); yield return GreenPulse(0.6f); yield return SystemWarning($"VENT ERROR - {room}", 1.0f, AlertOrange); yield return Wobble(0.4f, 12f, 2f); yield return TypewriterText($"SEALING VENT - {room}", 0.06f); yield return TypewriterText("REBOOT VENTILATION", 0.06f); yield return BurnInPulse(0.6f); }
-        private IEnumerator Sequence_AudioError() { string room = RandomRoom(); yield return SystemWarning("AUDIO ERROR", 1.0f, Color.red); yield return VHSStaticBurst(0.7f); yield return TypewriterText($"PLAY AUDIO - {room}", 0.08f); yield return AfterimageEcho(0.4f, 3); }
-        private IEnumerator Sequence_RebootAll() { SetText("", true); yield return SystemWarning("SYSTEM FAILURE", 1.0f, Color.red); yield return CRTCrosstalk(0.6f, 10f); yield return TypewriterText("REBOOT ALL", 0.08f); yield return ChromaticAberration(0.4f, 10f); }
-
-        // --- FUNÇÕES UTILITÁRIAS ---
-
-        private string CorruptText(string input, int passes) { if (string.IsNullOrEmpty(input)) return ""; var c = input.ToCharArray(); for (int k = 0; k < passes; k++) { int i = sRandom.Next(0, c.Length); c[i] = sNoisePool[sRandom.Next(sNoisePool.Length)]; } return new string(c); }
-        private string RandomNoise(int length) { if (length <= 0) return ""; var sb = new System.Text.StringBuilder(length); for (int i = 0; i < length; i++) { sb.Append(sNoisePool[sRandom.Next(sNoisePool.Length)]); } return sb.ToString(); }
-        private string RandomRoom() { if (sCamRooms == null || sCamRooms.Length == 0) return "Unknown"; return sCamRooms[sRandom.Next(sCamRooms.Length)]; }
-
-        // Controls for external toggle/config
         [HideFromIl2Cpp]
-        public static void EnableFnaf3Bias(bool enabled) { sFnaf3BiasEnabled = enabled; }
-        [HideFromIl2Cpp]
-        public void ConfigureHeavyCooldown(float seconds) { _heavyCooldownSeconds = Mathf.Max(0f, seconds); }
-        [HideFromIl2Cpp]
-        public void ConfigureIdleDelays(float minSeconds, float maxSeconds)
+        private void SetText(string content, bool isGlitching = false)
         {
-            _minIdleDelaySeconds = Mathf.Clamp(minSeconds, 0f, 60f);
-            _maxIdleDelaySeconds = Mathf.Clamp(Mathf.Max(maxSeconds, _minIdleDelaySeconds), _minIdleDelaySeconds, 120f);
+            if (_text == null) return;
+            string colorTag = ColorUtility.ToHtmlStringRGB(_baseColor);
+            string displayText = isGlitching ? content : _modText;
+            _textBuilder.Clear().Append(_baseText).Append(" <color=#").Append(colorTag).Append("><b><i>").Append(displayText).Append("</i></b></color>");
+            _text.text = _textBuilder.ToString();
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator TextCorruption(float duration, int intensity, string baseText)
+        {
+            float endTime = Time.time + duration;
+            while (Time.time < endTime && _text != null)
+            {
+                SetText(CorruptText(baseText, intensity), true);
+                yield return sWait04;
+            }
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator Jitter(float duration, float posRange, float rotRange)
+        {
+            float endTime = Time.time + duration;
+            var rt = _textRectTransform;
+
+            while (Time.time < endTime && _text != null)
+            {
+                float jitterX = ((float)sRandom.NextDouble() - 0.5f) * posRange;
+                float jitterY = ((float)sRandom.NextDouble() - 0.5f) * posRange;
+                float jitterRot = ((float)sRandom.NextDouble() - 0.5f) * 2f * rotRange;
+
+                rt.anchoredPosition = new Vector2(_baseAnchoredPosition.x + jitterX, _baseAnchoredPosition.y + jitterY);
+                rt.localRotation = Quaternion.Euler(0, 0, jitterRot);
+                yield return sWaitFrame;
+            }
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator ChromaticAberration(float duration)
+        {
+            float endTime = Time.time + duration;
+            while (Time.time < endTime && _text != null)
+            {
+                _textBuilder.Clear().Append(_modText).Append("\n<color=#FF0000>").Append(_modText).Append("</color>\n<color=#00FF00>").Append(_modText).Append("</color>");
+                SetText(_textBuilder.ToString(), true);
+                yield return sWait04;
+            }
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator VerticalRoll(float duration, float frequency, float amplitude)
+        {
+            float endTime = Time.time + duration;
+            var rt = _textRectTransform;
+
+            while (Time.time < endTime && _text != null)
+            {
+                float offset = Mathf.Sin(Time.time * frequency) * amplitude;
+                rt.anchoredPosition = new Vector2(_baseAnchoredPosition.x, _baseAnchoredPosition.y + offset);
+                yield return sWaitFrame;
+            }
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator ImpostorFlash(Color color)
+        {
+            if (_text == null) yield break;
+            _text.color = color;
+            _text.outlineColor = color * 0.7f;
+            _text.outlineWidth = 0.45f;
+            yield return sWait1;
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator SystemWarning(string message, float duration, Color color)
+        {
+            float endTime = Time.time + duration;
+            while (Time.time < endTime && _text != null)
+            {
+                _text.color = color;
+                _text.outlineColor = color * 0.6f;
+                SetText(sRandom.Next(0, 2) == 1 ? message : CorruptText(message, 3), true);
+                yield return sWait08;
+            }
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator TrackingNoise(float duration)
+        {
+            float endTime = Time.time + duration;
+            while (Time.time < endTime && _text != null)
+            {
+                _textBuilder.Clear().Append(_modText).Append("\n").Append(CorruptText("█ ░ █ ░ █", 6));
+                SetText(_textBuilder.ToString(), true);
+                yield return sWait025;
+            }
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator ColorDrain(float duration)
+        {
+            float endTime = Time.time + duration;
+            while (Time.time < endTime && _text != null)
+            {
+                float progress = (endTime - Time.time) / duration;
+                _text.color = Color.Lerp(new Color(0.1f, 0.1f, 0.1f), _baseColor, progress);
+                yield return sWaitFrame;
+            }
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator TypewriterText(string text, float delayPerChar)
+        {
+            for (int i = 0; i <= text.Length && _text != null; i++)
+            {
+                _textBuilder.Clear().Append(text.Substring(0, i));
+                SetText(_textBuilder.ToString(), true);
+                yield return new WaitForSeconds(delayPerChar);
+            }
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator CharacterSwapGlitch(float duration)
+        {
+            float endTime = Time.time + duration;
+            char[] chars = _modText.ToCharArray();
+            while (Time.time < endTime && _text != null)
+            {
+                int idx1 = sRandom.Next(chars.Length);
+                int idx2 = sRandom.Next(chars.Length);
+                (chars[idx1], chars[idx2]) = (chars[idx2], chars[idx1]);
+                _textBuilder.Clear().Append(chars);
+                SetText(_textBuilder.ToString(), true);
+                yield return sWait04;
+            }
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator VHSStaticBurst(float duration)
+        {
+            float endTime = Time.time + duration;
+            while (Time.time < endTime && _text != null)
+            {
+                _textBuilder.Clear().Append(_modText).Append("\n").Append('█', sRandom.Next(8, 16));
+                SetText(_textBuilder.ToString(), true);
+                yield return sWait025;
+                SetText(_modText, true);
+                yield return sWait025;
+            }
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator CRTCrosstalk(float duration)
+        {
+            float endTime = Time.time + duration;
+            while (Time.time < endTime && _text != null)
+            {
+                _textBuilder.Clear().Append(_modText).Append("\n<color=#FFFF00>").Append(_modText).Append("</color>");
+                SetText(_textBuilder.ToString(), true);
+                yield return sWait04;
+            }
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator GreenPulse(float duration)
+        {
+            float endTime = Time.time + duration;
+            while (Time.time < endTime && _text != null)
+            {
+                float t = Mathf.PingPong(Time.time * 2f, 1f);
+                _text.color = Color.Lerp(_baseColor, FnafGreen, t);
+                yield return sWaitFrame;
+            }
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator NoiseScroll(float duration)
+        {
+            float endTime = Time.time + duration;
+            while (Time.time < endTime && _text != null)
+            {
+                string noise = RandomNoise(20);
+                _textBuilder.Clear().Append(_modText).Append("\n").Append(noise);
+                SetText(_textBuilder.ToString(), true);
+                yield return sWait025;
+            }
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator NoiseRain(float duration)
+        {
+            float endTime = Time.time + duration;
+            while (Time.time < endTime && _text != null)
+            {
+                string line1 = RandomNoise(18);
+                string line2 = RandomNoise(18);
+                _textBuilder.Clear().Append(_modText).Append("\n").Append(line1).Append("\n").Append(line2);
+                SetText(_textBuilder.ToString(), true);
+                yield return sWait025;
+            }
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator NoiseHalo(float duration)
+        {
+            float endTime = Time.time + duration;
+            while (Time.time < endTime && _text != null)
+            {
+                string halo = RandomNoise(10);
+                _textBuilder.Clear().Append(_modText).Append(" ").Append(halo);
+                SetText(_textBuilder.ToString(), true);
+                yield return sWait04;
+            }
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator NoiseFrame(float duration)
+        {
+            float endTime = Time.time + duration;
+            while (Time.time < endTime && _text != null)
+            {
+                string top = RandomNoise(20);
+                string bottom = RandomNoise(20);
+                _textBuilder.Clear().Append(top).Append("\n").Append(_modText).Append("\n").Append(bottom);
+                SetText(_textBuilder.ToString(), true);
+                yield return sWait04;
+            }
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator CameraLabelFlash(float duration)
+        {
+            float endTime = Time.time + duration;
+            int cam = sRandom.Next(1, 9);
+
+            while (Time.time < endTime && _text != null)
+            {
+                _textBuilder.Clear().Append("CAM ").Append(cam.ToString("00"));
+                SetText(_textBuilder.ToString(), true);
+                _text.color = Color.cyan;
+                cam = (cam % 8) + 1;
+                yield return sWait1;
+            }
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator BurnInPulse(float duration)
+        {
+            float endTime = Time.time + duration;
+            while (Time.time < endTime && _text != null)
+            {
+                float t = Mathf.PingPong(Time.time * 2f, 1f);
+                _text.outlineWidth = Mathf.Lerp(_baseOutlineWidth, 0.5f, t);
+                yield return sWaitFrame;
+            }
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator Wobble(float duration, float frequency, float amplitude)
+        {
+            float endTime = Time.time + duration;
+            var rt = _textRectTransform;
+
+            while (Time.time < endTime && _text != null)
+            {
+                float t = Time.time * frequency;
+                float offsetX = Mathf.Sin(t) * amplitude;
+                float offsetY = Mathf.Cos(t * 0.5f) * amplitude * 0.5f;
+
+                rt.anchoredPosition = new Vector2(_baseAnchoredPosition.x + offsetX, _baseAnchoredPosition.y + offsetY);
+                yield return sWaitFrame;
+            }
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator MotionPing(float duration)
+        {
+            float endTime = Time.time + duration;
+            while (Time.time < endTime && _text != null)
+            {
+                string room = RandomRoom();
+                _text.color = Color.yellow;
+                _textBuilder.Clear().Append("MOTION - ").Append(room);
+                SetText(_textBuilder.ToString(), true);
+                yield return sWait1;
+                SetText(_modText, true);
+                yield return sWait1;
+            }
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator PhantomSignal(float duration)
+        {
+            float endTime = Time.time + duration;
+            while (Time.time < endTime && _text != null)
+            {
+                string sig = $"{RandomNoise(3)} SIGNAL {RandomNoise(3)}";
+                SetText(sig, true);
+                _text.color = GhostCyan;
+                yield return sWait025;
+            }
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator ColorFlash(Color color, float duration)
+        {
+            if (_text == null) yield break;
+            _text.color = color;
+            _text.outlineColor = color;
+            yield return new WaitForSeconds(duration);
+        }
+
+        [HideFromIl2Cpp]
+        private IEnumerator IntensiveGlitchSequence(float duration)
+        {
+            float endTime = Time.time + duration;
+            var rt = _textRectTransform;
+
+            while (Time.time < endTime && _text != null)
+            {
+                float progress = 1 - ((endTime - Time.time) / duration);
+                float intensity = Mathf.Lerp(1f, 2.5f, progress);
+
+                SetText(CorruptText(_modText, (int)(intensity * 5)), true);
+
+                float jitterX = ((float)sRandom.NextDouble() - 0.5f) * intensity * 2f; // Reduzido de 6f
+                float jitterY = ((float)sRandom.NextDouble() - 0.5f) * intensity * 2f; // Reduzido de 6f
+
+                rt.anchoredPosition = new Vector2(_baseAnchoredPosition.x + jitterX, _baseAnchoredPosition.y + jitterY);
+
+                _text.color = _flashColors[(int)(progress * 4) % 4];
+                yield return sWait025;
+            }
+        }
+
+        // --- UTILIDADES ---
+
+        [HideFromIl2Cpp]
+        private string CorruptText(string input, int passes)
+        {
+            if (string.IsNullOrEmpty(input)) return "";
+            var chars = input.ToCharArray();
+            for (int k = 0; k < passes && k < chars.Length; k++)
+            {
+                int idx = sRandom.Next(0, chars.Length);
+                chars[idx] = sNoisePool[sRandom.Next(sNoisePool.Length)];
+            }
+            _textBuilder.Clear().Append(chars);
+            return _textBuilder.ToString();
+        }
+
+        [HideFromIl2Cpp]
+        private string RandomNoise(int length)
+        {
+            if (length <= 0) return "";
+            _textBuilder.Clear();
+            for (int i = 0; i < length; i++)
+            {
+                _textBuilder.Append(sNoisePool[sRandom.Next(sNoisePool.Length)]);
+            }
+            return _textBuilder.ToString();
+        }
+
+        [HideFromIl2Cpp]
+        private string RandomRoom()
+        {
+            return sCamRooms[sRandom.Next(sCamRooms.Length)];
         }
 
         private void ResetVisualsToStable()
         {
             if (_text == null) return;
-            var rt = _text.rectTransform;
+            var rt = _textRectTransform;
             rt.anchoredPosition = _baseAnchoredPosition;
             rt.localRotation = Quaternion.identity;
             rt.localScale = new Vector3(_baseScale, _baseScale, 1f);
@@ -467,12 +876,21 @@ namespace ModMenuCrew.Patches
         private void OnDisable()
         {
             _isEffectRunning = false;
-            StopAllCoroutines();
-            if (_text != null && gameObject.activeInHierarchy)
-            {
+
+            if (_schedulerRoutine != null)
+                StopCoroutine(_schedulerRoutine);
+            if (_breathingRoutine != null)
+                StopCoroutine(_breathingRoutine);
+
+            if (_text != null)
                 ResetVisualsToStable();
-            }
         }
-        private void OnDestroy() => OnDisable();
+
+        private void OnDestroy()
+        {
+            OnDisable();
+            _text = null;
+            _textRectTransform = null;
+        }
     }
 }

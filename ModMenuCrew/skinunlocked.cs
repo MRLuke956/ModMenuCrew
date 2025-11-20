@@ -1,21 +1,19 @@
 using System;
 using System.Collections.Generic;
-using System.Linq; // Necessário para ToArray() e Where()
+using System.Linq;
 using System.Reflection;
 using AmongUs.Data;
 using HarmonyLib;
 using UnityEngine;
-using DateTime = Il2CppSystem.DateTime; // Para DateTime no IL2CPP
+using DateTime = Il2CppSystem.DateTime;
 
-namespace UnlockAllCosmeticsMod
+namespace ModMenuCrew.Patches
 {
-  
-
-[HarmonyPatch(typeof(HatManager), nameof(HatManager.Initialize))]
+    [HarmonyPatch(typeof(HatManager), nameof(HatManager.Initialize))]
     public static class CosmeticsUnlockPatch
     {
-        // Cache simples de metadados para reduzir reflexão repetida
-        private static readonly Dictionary<(Type,string), MemberInfo> memberCache = new Dictionary<(Type,string), MemberInfo>();
+        // --- Reflection Cache ---
+        private static readonly Dictionary<(Type, string), MemberInfo> memberCache = new Dictionary<(Type, string), MemberInfo>();
         private static readonly BindingFlags CaseInsensitiveInstanceFlags =
             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.IgnoreCase;
 
@@ -39,14 +37,12 @@ namespace UnlockAllCosmeticsMod
             var key = (type, name.ToLowerInvariant());
             if (memberCache.TryGetValue(key, out var mi)) return mi;
 
-            // tenta propriedade
             var prop = type.GetProperty(name, CaseInsensitiveInstanceFlags);
             if (prop != null)
             {
                 memberCache[key] = prop;
                 return prop;
             }
-            // tenta campo
             var field = type.GetField(name, CaseInsensitiveInstanceFlags);
             if (field != null)
             {
@@ -72,7 +68,7 @@ namespace UnlockAllCosmeticsMod
                         prop.SetValue(target, converted, null);
                         return true;
                     }
-                    catch { /* ignora e tenta o próximo */ }
+                    catch { }
                 }
 
                 if (mi is FieldInfo field && !field.IsInitOnly)
@@ -83,7 +79,7 @@ namespace UnlockAllCosmeticsMod
                         field.SetValue(target, converted);
                         return true;
                     }
-                    catch { /* ignora e tenta o próximo */ }
+                    catch { }
                 }
             }
             return false;
@@ -103,7 +99,7 @@ namespace UnlockAllCosmeticsMod
                         var objVal = prop.GetValue(target, null);
                         if (objVal is string s && !string.IsNullOrEmpty(s)) return s;
                     }
-                    catch { /* tenta próximo */ }
+                    catch { }
                 }
 
                 if (mi is FieldInfo field)
@@ -113,205 +109,149 @@ namespace UnlockAllCosmeticsMod
                         var objVal = field.GetValue(target);
                         if (objVal is string s && !string.IsNullOrEmpty(s)) return s;
                     }
-                    catch { /* tenta próximo */ }
+                    catch { }
                 }
             }
             return defaultValue;
         }
 
-        /// <summary>
-        /// Patch aplicado ao método Initialize do HatManager para desbloquear todos os cosméticos.
-        /// </summary>
-        /// <param name="__instance">Instância do HatManager</param>
         public static void Postfix(HatManager __instance)
         {
             UnlockAllItems(__instance);
         }
 
-        // Função utilitária para desbloquear e registrar como comprado
-        private static void UnlockAndPurchaseAll<T>(T[] items, PlayerPurchasesData purchasesData) where T : class
+        private static void UnlockAndPurchaseAll<T>(IEnumerable<T> items, PlayerPurchasesData purchasesData) where T : class
         {
-            if (items == null || items.Length == 0) return;
+            if (items == null) return;
             foreach (var item in items)
             {
                 if (item == null) continue;
 
-                // Define o item como grátis, tentando diferentes nomes/casos
+                // Define como grátis
                 TrySetPropertyOrField(item, true, "Free");
 
-                // Marca como comprado quando houver ProductId/productId
+                // Registra compra
                 var productId = GetStringPropertyOrFieldOrDefault(item, null, "ProductId", "productId");
                 if (!string.IsNullOrEmpty(productId))
                 {
                     try { purchasesData?.SetPurchased(productId); }
-                    catch (Exception ex)
-                    {
-                        Debug.LogWarning($"[UnlockAllCosmeticsMod] Falha ao registrar compra de '{productId}': {ex.Message}");
-                    }
+                    catch { /* Ignora erros de compra duplicada */ }
                 }
             }
         }
 
-        /// <summary>
-        /// Desbloqueia todos os itens cosméticos.
-        /// </summary>
-        /// <param name="manager">Instância do HatManager contendo as listas de cosméticos</param>
         private static void UnlockAllItems(HatManager manager)
         {
             if (manager == null)
             {
-                Debug.LogError("HatManager é nulo. Não foi possível desbloquear os itens.");
+                Debug.LogError("[ModMenuCrew] HatManager is null.");
                 return;
             }
 
             try
             {
-                Debug.Log("[UnlockAllCosmeticsMod] Iniciando desbloqueio de todos os cosméticos...");
                 var playerData = DataManager.Player;
-                if (playerData == null)
-                {
-                    Debug.LogError("[UnlockAllCosmeticsMod] DataManager.Player é nulo. Abortando.");
-                    return;
-                }
+                if (playerData == null) return;
+                
                 var purchasesData = playerData.Purchases;
 
-                // 1. Filtrando pets válidos
-                Debug.Log("[UnlockAllCosmeticsMod] Validando pets...");
-                var validPets = manager.allPets != null ? manager.allPets.ToArray().Where(p => p != null).ToArray() : Array.Empty<PetData>();
-                for (int i = 0; manager.allPets != null && i < manager.allPets.Count; i++)
-                {
-                    var pet = manager.allPets[i];
-                    if (pet == null)
-                    {
-                        Debug.LogWarning($"[UnlockAllCosmeticsMod] Pet nulo encontrado no índice {i}");
-                    }
-                }
+                // Otimização: Converter para array apenas uma vez e evitar múltiplas alocações LINQ
+                var pets = manager.allPets?.ToArray() ?? Array.Empty<PetData>();
+                var hats = manager.allHats?.ToArray() ?? Array.Empty<HatData>();
+                var skins = manager.allSkins?.ToArray() ?? Array.Empty<SkinData>();
+                var visors = manager.allVisors?.ToArray() ?? Array.Empty<VisorData>();
+                var nameplates = manager.allNamePlates?.ToArray() ?? Array.Empty<NamePlateData>();
+                var bundles = manager.allBundles?.ToArray() ?? Array.Empty<BundleData>();
 
-                // 2. Filtrando hats válidos
-                var validHats = manager.allHats != null ? manager.allHats.ToArray().Where(h => h != null).ToArray() : Array.Empty<HatData>();
+                // Desbloquear categorias individuais
+                UnlockAndPurchaseAll(pets, purchasesData);
+                UnlockAndPurchaseAll(hats, purchasesData);
+                UnlockAndPurchaseAll(skins, purchasesData);
+                UnlockAndPurchaseAll(visors, purchasesData);
+                UnlockAndPurchaseAll(nameplates, purchasesData);
 
-                // 3. Filtrando skins válidas
-                var validSkins = manager.allSkins != null ? manager.allSkins.ToArray().Where(s => s != null).ToArray() : Array.Empty<SkinData>();
-
-                // 4. Filtrando visors válidos
-                var validVisors = manager.allVisors != null ? manager.allVisors.ToArray().Where(v => v != null).ToArray() : Array.Empty<VisorData>();
-
-                // 5. Filtrando nameplates válidos
-                var validNameplates = manager.allNamePlates != null ? manager.allNamePlates.ToArray().Where(n => n != null).ToArray() : Array.Empty<NamePlateData>();
-
-                // 6. Validando bundles
-                Debug.Log("[UnlockAllCosmeticsMod] Validando bundles...");
+                // Validar e desbloquear bundles
                 var validBundles = new List<BundleData>();
-                var bundlesSnapshot = manager.allBundles != null ? manager.allBundles.ToArray() : Array.Empty<BundleData>();
-                foreach (var bundle in bundlesSnapshot)
+                foreach (var bundle in bundles)
                 {
                     if (bundle == null) continue;
-
                     bool isValid = true;
 
-                    // Verificando cosméticos no bundle
                     if (bundle.cosmetics != null)
                     {
                         foreach (var cosmetic in bundle.cosmetics)
                         {
                             if (cosmetic == null)
                             {
-                                Debug.LogWarning($"[UnlockAllCosmeticsMod] Bundle '{bundle.productId}' contém um cosmético nulo. Pulando este bundle.");
                                 isValid = false;
                                 break;
                             }
-
-                            // Verificando pets especificamente
-                            if (cosmetic is PetData)
+                            // Verifica se o bundle contém um pet inválido (que não está na lista carregada)
+                            if (cosmetic is PetData petData && !pets.Any(p => p != null && p.ProductId == petData.ProductId))
                             {
-                                if (!validPets.Any(p => p.ProductId == cosmetic.ProductId))
-                                {
-                                    Debug.LogWarning($"[UnlockAllCosmeticsMod] Bundle '{bundle.productId}' referencia pet ausente '{cosmetic.ProductId}'. Pulando este bundle.");
-                                    isValid = false;
-                                    break;
-                                }
+                                isValid = false;
+                                break;
                             }
                         }
                     }
 
-                    if (isValid)
-                    {
-                        validBundles.Add(bundle);
-                    }
+                    if (isValid) validBundles.Add(bundle);
                 }
+                UnlockAndPurchaseAll(validBundles, purchasesData);
 
-                Debug.Log($"[UnlockAllCosmeticsMod] {validBundles.Count} de {manager.allBundles.Count} bundles são válidos");
-
-                // Desbloqueando apenas os itens válidos
-                UnlockAndPurchaseAll<BundleData>(validBundles.ToArray(), purchasesData);
-                UnlockAndPurchaseAll<HatData>(validHats, purchasesData);
-                UnlockAndPurchaseAll<PetData>(validPets, purchasesData);
-                UnlockAndPurchaseAll<SkinData>(validSkins, purchasesData);
-                UnlockAndPurchaseAll<VisorData>(validVisors, purchasesData);
-                UnlockAndPurchaseAll<NamePlateData>(validNameplates, purchasesData);
-
+                // Desbloquear itens em destaque
                 try
                 {
-                    UnlockAndPurchaseAll<BundleData>(manager.allFeaturedBundles.ToArray().Where(b => b != null).ToArray(), purchasesData);
-                    UnlockAndPurchaseAll<CosmicubeData>(manager.allFeaturedCubes.ToArray().Where(c => c != null).ToArray(), purchasesData);
-                    UnlockAndPurchaseAll<CosmeticData>(manager.allFeaturedItems.ToArray().Where(i => i != null).ToArray(), purchasesData);
+                    UnlockAndPurchaseAll(manager.allFeaturedBundles?.ToArray(), purchasesData);
+                    UnlockAndPurchaseAll(manager.allFeaturedCubes?.ToArray(), purchasesData);
+                    UnlockAndPurchaseAll(manager.allFeaturedItems?.ToArray(), purchasesData);
                 }
-                catch (Exception ex)
-                {
-                    Debug.LogError($"[UnlockAllCosmeticsMod] Erro ao desbloquear itens em destaque: {ex.Message}");
-                }
+                catch (Exception ex) { Debug.LogWarning($"[ModMenuCrew] Featured unlock error: {ex.Message}"); }
 
-                // Definir o preço de todos os pacotes de estrelas como 0
-                Debug.Log("[UnlockAllCosmeticsMod] Definindo preço de pacotes de estrelas como 0...");
-                var starBundles = manager.allStarBundles != null ? manager.allStarBundles.ToArray() : Array.Empty<StarBundle>();
-                foreach (var starBundle in starBundles)
+                // Corrigir preço de StarBundles
+                var starBundles = manager.allStarBundles?.ToArray();
+                if (starBundles != null)
                 {
-                    if (starBundle != null)
+                    foreach (var sb in starBundles)
                     {
-                        if (!TrySetPropertyOrField(starBundle, 0, "price", "Price"))
-                        {
-                            Debug.LogWarning("[UnlockAllCosmeticsMod] Não foi possível definir o preço do pacote de estrelas.");
-                        }
+                        if (sb != null) TrySetPropertyOrField(sb, 0, "price", "Price");
                     }
                 }
 
-                // Atualizar as datas de visualização da loja
-                var storeData = playerData.store;
-                if (storeData != null)
+                // Atualizar visualização da loja para evitar notificações de "novo"
+                if (playerData.store != null)
                 {
-                    storeData.LastBundlesViewDate = DateTime.Now;
-                    storeData.LastHatsViewDate = DateTime.Now;
-                    storeData.LastOutfitsViewDate = DateTime.Now;
-                    storeData.LastVisorsViewDate = DateTime.Now;
-                    storeData.LastPetsViewDate = DateTime.Now;
-                    storeData.LastNameplatesViewDate = DateTime.Now;
-                    storeData.LastCosmicubeViewDate = DateTime.Now;
+                    var now = DateTime.Now;
+                    playerData.store.LastBundlesViewDate = now;
+                    playerData.store.LastHatsViewDate = now;
+                    playerData.store.LastOutfitsViewDate = now;
+                    playerData.store.LastVisorsViewDate = now;
+                    playerData.store.LastPetsViewDate = now;
+                    playerData.store.LastNameplatesViewDate = now;
+                    playerData.store.LastCosmicubeViewDate = now;
                 }
-                // Salvar as alterações
-                playerData.Save();
 
-                Debug.Log("[UnlockAllCosmeticsMod] Todos os cosméticos foram desbloqueados com sucesso!");
+                playerData.Save();
+                Debug.Log("[ModMenuCrew] All cosmetics unlocked and secured.");
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[UnlockAllCosmeticsMod] Erro ao desbloquear cosméticos: {ex.Message}\n{ex.StackTrace}");
+                Debug.LogError($"[ModMenuCrew] UnlockAllItems critical error: {ex}");
             }
         }
     }
-    // Patch para ignorar a verificação de versão modificada
+
     [HarmonyPatch(typeof(Constants), "IsVersionModded")]
     public static class Constants_IsVersionModded_Patch
     {
         [HarmonyPrefix]
         public static bool ForceReturnFalse(ref bool __result)
         {
-           
             __result = false;
             return false;
         }
     }
 
-    // Patch para ignorar blacklist de cosméticos
     [HarmonyPatch(typeof(HatManager), nameof(HatManager.CheckValidCosmetic))]
     public static class Patch_IgnoreBlacklist
     {
@@ -320,26 +260,5 @@ namespace UnlockAllCosmeticsMod
             __result = true;
             return false;
         }
-
-
-        // Método auxiliar para validar um cosmético (verifica se é nulo ou possui propriedades inválidas)
-        private static bool ValidateCosmetic(CosmeticData cosmetic, string itemType)
-        {
-            if (cosmetic == null)
-            {
-                Debug.LogWarning($"[UnlockAllCosmeticsMod] {itemType} nulo encontrado.");
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(cosmetic.ProductId))
-            {
-                Debug.LogWarning($"[UnlockAllCosmeticsMod] {itemType} '{cosmetic.name}' tem ProductId nulo ou vazio.");
-                return false;
-            }
-
-            return true;
-
-        }
     }
-
 }
