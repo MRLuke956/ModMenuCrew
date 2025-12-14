@@ -10,6 +10,9 @@ public static class GuiStyles
     /// </summary>
     public static class Theme
     {
+        // === SHOWCASE VERSION BADGE ===
+        public static readonly Color ShowcaseBadge = new Color(1f, 0.5f, 0f, 1f); // Orange badge
+        public static readonly Color ShowcaseGlow = new Color(1f, 0.6f, 0.1f, 0.3f); // Orange glow
         // Cores de Fundo
         public static readonly Color BgDarkA = new Color(0.07f, 0.07f, 0.07f, 0.92f); // Fundo principal mais escuro
         public static readonly Color BgDarkB = new Color(0.06f, 0.06f, 0.06f, 0.92f); // Fundo principal mais claro
@@ -20,11 +23,11 @@ public static class GuiStyles
         public static readonly Color HeaderBottom = new Color(0.06f, 0.01f, 0.03f, 0.95f); // Gradiente inferior do cabe�alho
 
         // Cores de Destaque e Acentua��o
-        public static readonly Color Accent = new Color(1f, 0f, 0.2f, 1f); // Vermelho vibrante principal
-        public static readonly Color AccentSoft = new Color(1f, 0.18f, 0.36f, 1f); // Vermelho mais suave
-        public static readonly Color AccentDim = new Color(0.65f, 0f, 0.13f, 1f); // Vermelho mais escuro/usado para bordas inativas
-        public static readonly Color AccentHover = new Color(1f, 0.1f, 0.3f, 1f); // Vermelho para hover
-        public static readonly Color AccentActive = new Color(0.8f, 0f, 0.15f, 1f); // Vermelho para estado ativo/pressionado
+        public static readonly Color Accent = new Color(1f, 0.5f, 0f, 1f); // Laranja vitrine
+        public static readonly Color AccentSoft = new Color(1f, 0.6f, 0.2f, 1f); // Laranja suave
+        public static readonly Color AccentDim = new Color(0.7f, 0.35f, 0f, 1f); // Laranja escuro
+        public static readonly Color AccentHover = new Color(1f, 0.55f, 0.1f, 1f); // Laranja hover
+        public static readonly Color AccentActive = new Color(0.85f, 0.42f, 0f, 1f); // Laranja ativo
 
         // Cores de Bot�o
         public static readonly Color ButtonTop = new Color(0.11f, 0.11f, 0.12f, 0.95f); // Gradiente superior do bot�o
@@ -48,7 +51,6 @@ public static class GuiStyles
     #region Textura Helpers (Otimizados)
     // Texturas s�o geradas uma vez e reutilizadas, ou criadas sob demanda e armazenadas em cache.
     // Usando HideFlags.HideAndDontSave para evitar que apare�am no Hierarchy/Inspector do Unity.
-    private static Texture2D _cachedPixelTexture;
     private static Texture2D _cachedPixelDarkTexture;
     private static Texture2D _cachedPixelAccentTexture;
     private static Texture2D _cachedPixelErrorTexture;
@@ -134,7 +136,6 @@ public static class GuiStyles
     private static Texture2D MakeTexture(Color color)
     {
         // Caching para texturas muito comuns para evitar recria��o
-        if (color == Theme.BgDarkA && _cachedPixelTexture != null) return _cachedPixelTexture;
         if (color == Theme.BgDarkB) { if (_cachedPixelDarkTexture == null) _cachedPixelDarkTexture = MakeTexture(1, 1, color); return _cachedPixelDarkTexture; }
         if (color == Theme.Accent) { if (_cachedPixelAccentTexture == null) _cachedPixelAccentTexture = MakeTexture(1, 1, color); return _cachedPixelAccentTexture; }
         if (color == Theme.Error) { if (_cachedPixelErrorTexture == null) _cachedPixelErrorTexture = MakeTexture(1, 1, color); return _cachedPixelErrorTexture; }
@@ -240,12 +241,12 @@ public static class GuiStyles
             {
                 _buttonStyle = new GUIStyle(GUI.skin.button)
                 {
-                    fontSize = 15,
+                    fontSize = 14,
                     alignment = TextAnchor.MiddleCenter,
                     normal = { textColor = Theme.TextPrimary },
-                    padding = CreateRectOffset(10, 10, 6, 6), // Ajustado e usando CreateRectOffset
-                    margin = CreateRectOffset(4, 4, 4, 4), // Ajustado e usando CreateRectOffset
-                    fixedHeight = 32 // Aumentado
+                    padding = CreateRectOffset(14, 14, 8, 8),
+                    margin = CreateRectOffset(6, 6, 3, 3),
+                    fixedHeight = 36
                 };
                 _buttonStyle.normal.background = MakeFrameTexture(16, 64, Theme.ButtonTop, Theme.ButtonBottom, Theme.AccentDim, 1);
                 _buttonStyle.hover.background = MakeFrameTexture(16, 64, Theme.ButtonHoverTop, Theme.ButtonHoverBottom, Theme.AccentHover, 1);
@@ -277,14 +278,14 @@ public static class GuiStyles
                     fontStyle = FontStyle.Normal, // Removido Bold para consist�ncia visual
                     alignment = TextAnchor.MiddleLeft,
                     normal = { textColor = Theme.TextMuted, background = MakeTexture(new Color(0.09f, 0.09f, 0.11f, 0.95f)) }, // Fundo mais escuro
-                    onNormal = { textColor = Theme.TextPrimary, background = MakeTexture(new Color(0.12f, 0.03f, 0.06f, 0.95f)) }, // Destaque quando ligado
+                    onNormal = { textColor = Theme.TextPrimary, background = MakeTexture(new Color(0.18f, 0.09f, 0.02f, 0.95f)) }, // Orange when on
                     hover = { textColor = Theme.TextPrimary, background = MakeTexture(new Color(0.11f, 0.11f, 0.14f, 0.95f)) }, // Fundo hover
-                    onHover = { textColor = Theme.TextPrimary, background = MakeTexture(new Color(0.14f, 0.04f, 0.08f, 0.95f)) }, // Destaque hover
+                    onHover = { textColor = Theme.TextPrimary, background = MakeTexture(new Color(0.22f, 0.11f, 0.03f, 0.95f)) }, // Orange hover
                     active = { textColor = Theme.TextMuted, background = MakeTexture(new Color(0.09f, 0.09f, 0.11f, 0.95f)) }, // Fundo ativo (ao clicar)
-                    onActive = { textColor = Theme.TextPrimary, background = MakeTexture(new Color(0.15f, 0.05f, 0.10f, 0.95f)) }, // Destaque ativo
-                    padding = CreateRectOffset(12, 12, 7, 7), // Ajustado e usando CreateRectOffset
-                    margin = CreateRectOffset(6, 6, 3, 3), // Ajustado e usando CreateRectOffset
-                    fixedHeight = 30, // Ajustado
+                    onActive = { textColor = Theme.TextPrimary, background = MakeTexture(new Color(0.25f, 0.13f, 0.04f, 0.95f)) }, // Orange active
+                    padding = CreateRectOffset(16, 16, 9, 9), // Better padding
+                    margin = CreateRectOffset(6, 6, 4, 4), // Better margin
+                    fixedHeight = 34, // Taller for fluid look
                     stretchWidth = true
                 };
                 _toggleStyle.richText = true;

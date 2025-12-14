@@ -80,8 +80,8 @@ public class MenuSystem
             SendBypassCommand("CallEmergencyMeeting");
         }
 
-        component.ForceImpostor = GUILayout.Toggle(component.ForceImpostor, "Force Impostor Role", GuiStyles.ToggleStyle);
-        RoleManagerPatch.SetForceImpostor(component.ForceImpostor);
+        // Note: ForceImpostor removed in showcase version
+        GUILayout.Label("<color=#FF6600>Showcase Version - Limited Features</color>", GuiStyles.LabelStyle);
     }
 
     private void DrawEnhancedFeatures()

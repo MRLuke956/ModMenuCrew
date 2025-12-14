@@ -12,10 +12,6 @@ namespace ModMenuCrew.UI.Controls
         private int _selectedTab;
         private Vector2 _mousePosition;
         private string _currentTooltip = string.Empty;
-        private Rect _cachedTooltipRect; // Cache para a posição do tooltip
-
-        // --- Cache de Retângulos (Opcional, para evitar alocações em OnGUI se necessário) ---
-        private Rect _cachedContainerRect;
 
         public TabControl()
         {
