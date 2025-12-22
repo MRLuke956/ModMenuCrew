@@ -1,12 +1,12 @@
 <p align="center">
-  <img src="Logo.jpeg" alt="Mod Menu Crew logo" width="640"/>
+  <img src="Logo.jpeg" alt="ModMenuCrew logo" width="640"/>
 </p>
 
-# Mod Menu Crew v5.4.6
+# ModMenuCrew v5.4.7
 
 [![.NET](https://img.shields.io/badge/.NET-6.0-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/) [![BepInEx IL2CPP](https://img.shields.io/badge/BepInEx-IL2CPP%206%20(be.735)-00B4CC?logo=csharp&logoColor=white)](https://builds.bepinex.dev/projects/bepinex_be) [![Among Us](https://img.shields.io/badge/Among__Us-2025.4.x-ff4757?logo=steam&logoColor=white)](https://store.steampowered.com/app/945360/Among_Us/) [![Platform](https://img.shields.io/badge/Platform-Windows-0078D6?logo=windows)](#compatibility-matrix) [![Website](https://img.shields.io/badge/Website-crewcore.online-00d4aa)](https://crewcore.online) [![Discord](https://img.shields.io/badge/Discord-Join%20Server-5865F2?logo=discord&logoColor=white)](https://discord.gg/PwKxjszxaa)
 
-Make your lobbies unforgettable. **Mod Menu Crew** is a BepInEx IL2CPP mod for Among Us that gives hosts and creators precision role control, quality‑of‑life toggles, and a powerful toolbox for private sessions, testing, and content creation.
+Make your lobbies unforgettable. **ModMenuCrew** is a BepInEx IL2CPP plugin for Among Us that gives hosts and content creators precision role control, quality-of-life toggles, and a powerful host toolbox for private sessions, testing, and content creation.
 
 — Built for .NET 6, powered by Harmony. Protected by industry-grade obfuscation.
 
@@ -32,33 +32,33 @@ Make your lobbies unforgettable. **Mod Menu Crew** is a BepInEx IL2CPP mod for A
 | **Live Role Switch** | Change roles mid-match (host privileges) |
 | **Role Desync Fix** | Local fix for Unity role synchronization issues |
 
-### 🎮 Cheat Manager
+### 🎮 Host Toolbox
 | Feature | Description |
 |---------|-------------|
-| **Quick Actions** | Complete all tasks, close meeting, reveal impostors |
-| **Mass Actions** | Kill all, kill crew only, kill impostors only |
+| **Quick Actions** | Complete all tasks, close meeting, reveal roles |
+| **Mass Actions** | Eliminate all, eliminate crew only, eliminate impostors only |
 | **Movement** | Speed multiplier, noclip, teleport to players/cursor |
-| **Vision** | See through walls, increased vision range |
+| **Vision** | Enhanced visibility, increased vision range |
 | **Sabotage** | Instant sabotage controls |
 
-### ⚡ Role-Specific Cheats
-| Role | Boosts |
-|------|--------|
+### ⚡ Role-Specific Enhancements
+| Role | Features |
+|------|----------|
 | **Shapeshifter** | Endless shapeshift, no cooldown |
 | **Engineer** | Unlimited vent time |
 | **Scientist** | Infinite vitals battery |
 | **Tracker** | No tracking cooldown |
-| **Impostor** | No kill cooldown, instant kill |
+| **Impostor** | No cooldown, instant actions |
 
-### 🏠 Lobby/Host Tools
+### 🏠 Lobby & Host Tools
 - Smart lobby insights with player count
 - Auto-extend countdown (configurable)
 - Ban management with timed bans
 - Player kick/ban interface
 
 ### 🎨 UI & Effects
-- Draggable mod menu window (press **F1** to toggle)
-- Clean tabbed interface (Ban Menu, Cheats, Movement, Sabotage, Impostor)
+- Draggable toolbox menu (press **F1** to toggle)
+- Clean tabbed interface (Ban Menu, Tools, Movement, Sabotage, Impostor)
 - Premium status display with remaining time
 - Subtle HUD effects with CRT/glitch flourishes
 
@@ -66,19 +66,19 @@ Make your lobbies unforgettable. **Mod Menu Crew** is a BepInEx IL2CPP mod for A
 
 ## 🔑 Key System
 
-Mod Menu Crew uses a **key-based activation system** for access control.
+ModMenuCrew uses a **key-based activation system** for access control.
 
 ### How It Works:
 1. **Visit** [crewcore.online](https://crewcore.online)
 2. **Login** with Discord (must join our server)
 3. **Generate** your activation key (free or premium)
 4. **Open** Among Us → Press **F1** → Paste key
-5. **Enjoy** the mod!
+5. **Enjoy** the plugin!
 
 ### Key Types:
 | Type | Duration | Features |
 |------|----------|----------|
-| **Standard (Free)** | While game is open | All cheats, single session |
+| **Standard (Free)** | While game is open | All features, single session |
 | **Daily** | 48 hours | All features, reusable, no shortener |
 | **Monthly** | 30 days | All features, reusable, priority support |
 | **Lifetime** | Forever | All features, permanent access |
@@ -97,7 +97,7 @@ Skip the verification and unlock the full potential!
 ### Premium Benefits:
 - ✅ **No shortener verification** - Instant key generation
 - ✅ **Unlimited key uses** - Same key works until expiration
-- ✅ **All features unlocked** - Full access to every cheat
+- ✅ **All features unlocked** - Full access to every tool
 - ✅ **Priority support** - Faster Discord support
 - ✅ **Early access** - New features before public release
 - ✅ **HWID Binding** - Key protected to your hardware
@@ -119,7 +119,7 @@ Skip the verification and unlock the full potential!
 3. **Run** the game once to generate BepInEx folders
 4. **Download** `ModMenuCrew.dll` from our [Discord](https://discord.gg/PwKxjszxaa) or [Website](https://crewcore.online)
 5. **Place** the DLL in: `Among Us\BepInEx\plugins\ModMenuCrew\ModMenuCrew.dll`
-6. **Launch** the game and press **F1** to open the menu
+6. **Launch** the game and press **F1** to open the toolbox
 
 ### Verify Installation:
 Look for this in the BepInEx console:
@@ -131,7 +131,7 @@ Plugin com.crewmod.oficial version 5.4.6 is loading.
 
 ## 🛡️ Security & Protection
 
-Mod Menu Crew uses **17 layers of protection** to prevent piracy and unauthorized access:
+ModMenuCrew uses **17 layers of protection** to prevent piracy and unauthorized access:
 
 ### Server-Side Protection:
 | Layer | Description |
@@ -146,21 +146,21 @@ Mod Menu Crew uses **17 layers of protection** to prevent piracy and unauthorize
 
 ## 🎮 How to Use (In-Game)
 
-1. **Press F1** to open/close the mod menu
+1. **Press F1** to open/close the host toolbox
 2. Navigate using the **tabs**:
    - **Ban Menu** - Lobby management, player bans
-   - **Cheats** - Quick actions, task completion
+   - **Tools** - Quick actions, task completion
    - **Movement** - Speed, teleport, noclip
    - **Sabotage** - Sabotage controls
-   - **Impostor** - Impostor-specific cheats
+   - **Impostor** - Impostor-specific tools
 
 3. **Key Features:**
    - Click players in list to select them
    - Use dropdowns to assign roles
-   - Toggle cheats with checkboxes
+   - Toggle features with checkboxes
    - Adjust sliders for values (speed, vision)
 
-> ⚠️ **Note:** Some cheats require host privileges. Use responsibly in private lobbies only.
+> ⚠️ **Note:** Some features require host privileges. Use responsibly in private lobbies only.
 
 <br/>
 
@@ -201,7 +201,6 @@ Settings stored in: `BepInEx\config\com.crewmod.oficial.cfg`
 
 <br/>
 
-
 ## 📊 Compatibility Matrix
 
 | Component | Version | Status |
@@ -217,7 +216,7 @@ Settings stored in: `BepInEx\config\com.crewmod.oficial.cfg`
 
 ## ❓ FAQ
 
-**Q: The mod doesn't load!**
+**Q: The plugin doesn't load!**
 > Make sure you're using BepInEx 6 IL2CPP, not the older Unity Mono version. Place the DLL in `BepInEx\plugins\`.
 
 **Q: My key says "Invalid format"**
@@ -230,10 +229,10 @@ Settings stored in: `BepInEx\config\com.crewmod.oficial.cfg`
 > Technically yes, but **please don't**. Use only in private lobbies with friends who consent.
 
 **Q: Will I get banned?**
-> InnerSloth doesn't have client-side anti-cheat, but using cheats in public can get you reported and banned from specific lobbies.
+> InnerSloth doesn't have client-side anti-cheat, but using features in public can get you reported and banned from specific lobbies.
 
-**Q: The cheats aren't working!**
-> Some cheats require host privileges. Make sure you're the lobby host.
+**Q: The features aren't working!**
+> Some features require host privileges. Make sure you're the lobby host.
 
 <br/>
 
@@ -259,7 +258,7 @@ We welcome contributions! Please:
 - Respect other players and game developers
 - All rights reserved - redistribution requires permission
 
-By using this mod, you agree to use it responsibly and accept all consequences.
+By using this plugin, you agree to use it responsibly and accept all consequences.
 
 <br/>
 
