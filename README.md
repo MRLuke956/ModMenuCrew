@@ -270,6 +270,35 @@ By using this plugin, you agree to use it responsibly and accept all consequence
 
 ---
 
+<br/>
+
+## 🔍 SEO & Keywords
+
+<details>
+<summary>Click to expand SEO keywords</summary>
+
+### Primary Keywords
+`among us mod` `among us plugin` `among us bepinex` `among us host tools` `among us role control` `among us 2025` `among us pc mod` `among us steam mod`
+
+### Long-tail Keywords
+`among us bepinex il2cpp plugin` `among us role assignment tool` `among us host utilities` `among us private lobby tools` `among us content creator mod` `among us testing tools` `among us developer plugin`
+
+### Feature Keywords
+`among us teleport` `among us speed boost` `among us noclip` `among us vision range` `among us complete tasks` `among us sabotage control` `among us shapeshifter unlimited` `among us engineer vent` `among us scientist vitals`
+
+### Technical Keywords
+`bepinex 6 among us` `harmony among us` `il2cpp among us mod` `net6 among us plugin` `among us dll mod` `among us modding 2025`
+
+### Localized Keywords (Portuguese)
+`among us mod pc` `among us modificado` `among us ferramentas host` `among us controle de cargo` `among us plugin 2025` `among us teleporte` `among us velocidade` `among us visão` `among us tarefas completas`
+
+### Related Searches
+`crewcore` `crewcore online` `modmenucrew` `among us utility mod` `among us qol mod` `among us quality of life` `among us lobby tools` `among us streamer tools`
+
+</details>
+
+---
+
 <p align="center">
   <b>"Stay sus, but keep it classy."</b>
   <br/><br/>
