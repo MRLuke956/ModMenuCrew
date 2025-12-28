@@ -18,7 +18,7 @@
 </p>
 
 <p align="center">
-  <a href="#downloads"><img src="https://img.shields.io/badge/⬇️_DOWNLOAD-CLICK_HERE-success?style=for-the-badge" alt="Download"/></a>
+  <a href="https://crewcore.online"><img src="https://img.shields.io/badge/⬇️_DOWNLOAD-CLICK_HERE-success?style=for-the-badge" alt="Download"/></a>
 </p>
 
 ---
