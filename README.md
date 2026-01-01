@@ -157,17 +157,8 @@ The **complete, fully-functional ModMenuCrew** with all features, updates, and s
 
 ## ⚡ All Features
 
-### 🆕 V6 Exclusive Features
-| Feature | Description |
-|:--------|:------------|
-| **God Mode** | Host immortality with automatic shield reapplication |
-| **Hide MMC Star** | Remove ★ prefix from MMC user names |
-| **Disable Game End** | Prevent match from ending for extended gameplay |
-| **Phantom Mode** | Infinite vanish + kill while invisible (Phantom role) |
-| **System Log** | Real-time event logging (kills, tasks, vents, sabotages) |
-| **Customizable Hotkey** | Change menu toggle key in settings |
-| **MMC User Finder** | Identify other ModMenuCrew users in lobbies |
-| **Radar with Map** | Skeld map background on radar |
+> **💡 Tip:** New V6 features are marked with 🆕
+
 
 ### 🎭 Role Control & Manipulation
 | Feature | Description |
@@ -196,7 +187,8 @@ The **complete, fully-functional ModMenuCrew** with all features, updates, and s
 | **See Ghosts** | See ghosts while alive |
 | **See Dead Chat** | Read dead player chat while alive |
 | **Tracers** | Lines showing player positions |
-| **Radar System** | Mini-map showing all player positions with Skeld map background |
+| 🆕 **Radar with Skeld Map** | Mini-map with real map background (V6) |
+| 🆕 **Satellite View** | Enhanced map vision (V6) |
 
 ### 💀 Impostor Cheats
 | Feature | Description |
@@ -224,7 +216,7 @@ The **complete, fully-functional ModMenuCrew** with all features, updates, and s
 | **Fake Tasks** | Appear to do tasks without completing them |
 | **End Meeting** | Force close meetings instantly |
 | **Skip Vote** | Force skip voting phase |
-| **Disable Game End** | Prevent game from ending |
+| 🆕 **Disable Game End** | Prevent game from ending (V6) |
 
 ### 🔄 Role-Specific Enhancements
 | Role | Cheats Available |
@@ -233,7 +225,7 @@ The **complete, fully-functional ModMenuCrew** with all features, updates, and s
 | **Engineer** | Unlimited vent time, no vent cooldown |
 | **Scientist** | Infinite vitals battery, no vitals cooldown |
 | **Tracker** | No tracking cooldown, endless tracking |
-| **Phantom** | Infinite vanish, kill while invisible |
+| 🆕 **Phantom** | Infinite vanish, kill while invisible (V6 Phantom Mode) |
 | **Guardian Angel** | Instant protect, no cooldown |
 
 ### 🏠 Lobby & Host Tools
@@ -244,18 +236,23 @@ The **complete, fully-functional ModMenuCrew** with all features, updates, and s
 | **Kick/Ban Players** | Remove unwanted players |
 | **Spoof System** | Fake level 999 + fake platform |
 | **Body Changer** | Change body format (including Horse mode 🐴) |
-| **God Mode** | Host immortality |
-| **Same Color Lobby** | Everyone same color in lobby |
+| 🆕 **God Mode** | Host immortality with auto-protection (V6) |
+| 🆕 **Same Color Lobby** | Everyone same color in lobby (V6) |
+| 🆕 **Viper Mode** | Quick kill with body (V6) |
+| 🆕 **MMC User Finder** | Identify other MMC users in lobby (V6) |
 
 ### 🎨 UI & Quality of Life
 | Feature | Description |
 |:--------|:------------|
-| **Customizable Hotkey** | Press configurable key to toggle menu (default: **F1**) |
+| 🆕 **Customizable Hotkey** | Press configurable key to toggle menu (default: **F1**) (V6) |
+| 🆕 **Redesigned UI** | Completely modern visual overhaul (V6) |
 | **Tabbed Interface** | Clean organization of all features |
 | **Premium Status Display** | Shows remaining premium time |
-| **Event Logger** | Real-time game event logging |
+| 🆕 **System Log** | Real-time game event logging (kills, tasks, vents) (V6) |
+| 🆕 **On-screen Messages** | Shows events and location alerts (V6) |
 | **Kill Alerts** | Alert when impostor kills someone |
 | **Settings Persistence** | Your configurations save between sessions |
+| 🆕 **Hide MMC Star** | Option to remove ★ prefix from usernames (V6) |
 
 ---
 
