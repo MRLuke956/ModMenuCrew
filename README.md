@@ -329,10 +329,19 @@ Technically yes, but **please don't use it in public lobbies**. Use only in priv
   <a href="https://discord.gg/PwKxjszxaa">💬 Discord</a>
 </p>
 
+## License
+Apache License 2.0
+
+This project is a showcase mod.
+Any fork or derivative work must retain proper and visible attribution
+to the original author (Luke Dennyel / CrewCore).
 ---
+
+
 
 <p align="center">
   <sub>
     among us mod menu | among us hack | among us cheat | among us hacks 2026 | among us mod menu download | among us hack download | among us cheat download free | among us impostor hack | among us always impostor | among us speed hack | among us teleport | among us noclip | among us god mode | among us wall hack | among us esp hack | crewcore | modmenucrew | among us v6 | among us phantom mode | among us disable game end | unlock all skins
   </sub>
 </p>
+
