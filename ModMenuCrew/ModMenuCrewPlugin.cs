@@ -4,6 +4,7 @@ using AmongUs.Data;
 using AmongUs.Data.Player;
 using AmongUs.GameOptions;
 using BepInEx;
+using BepInEx.Configuration;
 using BepInEx.Unity.IL2CPP;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using HarmonyLib;
@@ -30,10 +31,17 @@ namespace ModMenuCrew
         public static ModMenuCrewPlugin Instance { get; private set; }
         public Harmony Harmony { get; } = new Harmony(Id);
 
+        public static ConfigEntry<float> CfgPlayerSpeed { get; private set; }
+        public static ConfigEntry<bool> CfgInfiniteVision { get; private set; }
+        public static ConfigEntry<bool> CfgIsNoclipping { get; private set; }
+        public static ConfigEntry<bool> CfgTeleportWithCursor { get; private set; }
+        public static ConfigEntry<KeyCode> CfgMenuToggleKey { get; private set; }
+
         public override void Load()
         {
             Instance = this;
             Instance.Log.LogInfo($"Plugin {Id} version {ModVersion} is loading.");
+            InitializeConfig();
             try { ClassInjector.RegisterTypeInIl2Cpp<DebuggerComponent>(); } catch {}
             Component = AddComponent<DebuggerComponent>();
             Harmony.PatchAll();
@@ -50,6 +58,16 @@ namespace ModMenuCrew
             }
             catch (Exception ex) { UnityEngine.Debug.LogError($"[ModMenuCrew] Error during plugin unload: {ex}"); }
             return base.Unload();
+        }
+
+        private void InitializeConfig()
+        {
+            if (Config == null) return;
+            CfgPlayerSpeed = Config.Bind("5. Preferences", "Player Speed", 2.1f, "Default player speed multiplier for the menu.");
+            CfgInfiniteVision = Config.Bind("5. Preferences", "Infinite Vision", false, "Persisted toggle for Infinite Vision.");
+            CfgIsNoclipping = Config.Bind("5. Preferences", "Enable Noclip", false, "Persisted toggle for Noclip.");
+            CfgTeleportWithCursor = Config.Bind("5. Preferences", "Teleport With Cursor", false, "Persisted toggle for teleporting to the cursor.");
+            CfgMenuToggleKey = Config.Bind("5. Preferences", "Menu Toggle Key", KeyCode.F1, "Hotkey to open/close the menu.");
         }
 
         public class DebuggerComponent : MonoBehaviour
@@ -89,6 +107,7 @@ namespace ModMenuCrew
                 try
                 {
                     ModMenuCrewPlugin.Instance.Log.LogInfo("DebuggerComponent: Awake started (SHOWCASE MODE - No activation required).");
+                    LoadConfigValues();
                     InitializeFeatureManagers();
                     InitializeMainWindowIMGUI();
                     InitializeTabsForGameIMGUI();
@@ -253,12 +272,18 @@ namespace ModMenuCrew
                 if (prevInfiniteVision != InfiniteVision && HudManager.Instance?.ShadowQuad != null)
                 {
                     HudManager.Instance.ShadowQuad.gameObject.SetActive(!InfiniteVision);
+                    PersistInfiniteVision();
                 }
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label($"Player Speed: {PlayerSpeed:F2}x", GuiStyles.LabelStyle);
+                float previousSpeed = PlayerSpeed;
                 PlayerSpeed = GUILayout.HorizontalSlider(PlayerSpeed, 0.5f, 6f, GuiStyles.SliderStyle, GUI.skin.horizontalSliderThumb);
                 GUILayout.EndHorizontal();
+                if (Mathf.Abs(previousSpeed - PlayerSpeed) > 0.01f)
+                {
+                    PersistPlayerSpeed();
+                }
 
                 GuiStyles.DrawSeparator();
                 GUILayout.EndVertical();
@@ -280,9 +305,14 @@ namespace ModMenuCrew
 
                 if (PlayerControl.LocalPlayer != null)
                 {
+                    bool previousNoclip = IsNoclipping;
                     IsNoclipping = GuiStyles.DrawBetterToggle(IsNoclipping, "Enable Noclip", "Allows walking through walls");
                     if (PlayerControl.LocalPlayer.Collider != null)
                         PlayerControl.LocalPlayer.Collider.enabled = !IsNoclipping;
+                    if (previousNoclip != IsNoclipping)
+                    {
+                        PersistIsNoclipping();
+                    }
                 }
 
                 if (teleportManager != null)
@@ -360,6 +390,17 @@ namespace ModMenuCrew
                     {
                         PlayerControl.LocalPlayer.MyPhysics.Speed = PlayerSpeed;
                     }
+                    if (PlayerControl.LocalPlayer.Collider != null)
+                    {
+                        if (ShipStatus.Instance == null)
+                        {
+                            PlayerControl.LocalPlayer.Collider.enabled = true;
+                        }
+                        else
+                        {
+                            PlayerControl.LocalPlayer.Collider.enabled = !IsNoclipping;
+                        }
+                    }
                 }
                 catch (Exception ex) { UnityEngine.Debug.LogError($"[ModMenuCrew] Erro em UpdateGameState: {ex}"); }
             }
@@ -388,7 +429,7 @@ namespace ModMenuCrew
                 try
                 {
                     // Toggle menu with F1
-                    if (Input.GetKeyDown(KeyCode.F1))
+                    if (Input.GetKeyDown(ModMenuCrewPlugin.CfgMenuToggleKey?.Value ?? KeyCode.F1))
                     {
                         if (mainWindow != null) mainWindow.Enabled = !mainWindow.Enabled;
                     }
@@ -401,15 +442,6 @@ namespace ModMenuCrew
                     GameCheats.CheckTeleportInput();
                     UpdateGameState();
 
-                    // Reset noclip if player leaves
-                    if (IsNoclipping && PlayerControl.LocalPlayer?.Collider != null)
-                    {
-                        if (ShipStatus.Instance == null)
-                        {
-                            PlayerControl.LocalPlayer.Collider.enabled = true;
-                            IsNoclipping = false;
-                        }
-                    }
                 }
                 catch (Exception ex) { UnityEngine.Debug.LogError($"[ModMenuCrew] Erro DebuggerComponent.Update: {ex}"); }
             }
@@ -418,6 +450,39 @@ namespace ModMenuCrew
             {
                 if (mainWindow != null && mainWindow.Enabled) mainWindow.OnGUI();
             }
+
+            private void LoadConfigValues()
+            {
+                PlayerSpeed = ModMenuCrewPlugin.CfgPlayerSpeed?.Value ?? PlayerSpeed;
+                InfiniteVision = ModMenuCrewPlugin.CfgInfiniteVision?.Value ?? InfiniteVision;
+                IsNoclipping = ModMenuCrewPlugin.CfgIsNoclipping?.Value ?? IsNoclipping;
+                GameCheats.TeleportToCursorEnabled = ModMenuCrewPlugin.CfgTeleportWithCursor?.Value ?? false;
+            }
+
+            private void PersistPlayerSpeed()
+            {
+                if (ModMenuCrewPlugin.CfgPlayerSpeed != null)
+                {
+                    ModMenuCrewPlugin.CfgPlayerSpeed.Value = PlayerSpeed;
+                }
+            }
+
+            private void PersistInfiniteVision()
+            {
+                if (ModMenuCrewPlugin.CfgInfiniteVision != null)
+                {
+                    ModMenuCrewPlugin.CfgInfiniteVision.Value = InfiniteVision;
+                }
+            }
+
+            private void PersistIsNoclipping()
+            {
+                if (ModMenuCrewPlugin.CfgIsNoclipping != null)
+                {
+                    ModMenuCrewPlugin.CfgIsNoclipping.Value = IsNoclipping;
+                }
+            }
+
         }
     }
 }
