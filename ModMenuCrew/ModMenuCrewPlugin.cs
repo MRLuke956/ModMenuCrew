@@ -456,7 +456,6 @@ namespace ModMenuCrew
                 PlayerSpeed = ModMenuCrewPlugin.CfgPlayerSpeed?.Value ?? PlayerSpeed;
                 InfiniteVision = ModMenuCrewPlugin.CfgInfiniteVision?.Value ?? InfiniteVision;
                 IsNoclipping = ModMenuCrewPlugin.CfgIsNoclipping?.Value ?? IsNoclipping;
-                GameCheats.TeleportToCursorEnabled = ModMenuCrewPlugin.CfgTeleportWithCursor?.Value ?? false;
             }
 
             private void PersistPlayerSpeed()
