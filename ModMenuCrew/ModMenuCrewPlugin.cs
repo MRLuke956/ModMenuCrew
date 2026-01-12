@@ -390,6 +390,17 @@ namespace ModMenuCrew
                     {
                         PlayerControl.LocalPlayer.MyPhysics.Speed = PlayerSpeed;
                     }
+                    if (PlayerControl.LocalPlayer.Collider != null)
+                    {
+                        if (ShipStatus.Instance == null)
+                        {
+                            PlayerControl.LocalPlayer.Collider.enabled = true;
+                        }
+                        else
+                        {
+                            PlayerControl.LocalPlayer.Collider.enabled = !IsNoclipping;
+                        }
+                    }
                 }
                 catch (Exception ex) { UnityEngine.Debug.LogError($"[ModMenuCrew] Erro em UpdateGameState: {ex}"); }
             }
@@ -431,15 +442,6 @@ namespace ModMenuCrew
                     GameCheats.CheckTeleportInput();
                     UpdateGameState();
 
-                    // Reset noclip if player leaves
-                    if (IsNoclipping && PlayerControl.LocalPlayer?.Collider != null)
-                    {
-                        if (ShipStatus.Instance == null)
-                        {
-                            PlayerControl.LocalPlayer.Collider.enabled = true;
-                            IsNoclipping = false;
-                        }
-                    }
                 }
                 catch (Exception ex) { UnityEngine.Debug.LogError($"[ModMenuCrew] Erro DebuggerComponent.Update: {ex}"); }
             }
@@ -479,6 +481,7 @@ namespace ModMenuCrew
                     ModMenuCrewPlugin.CfgIsNoclipping.Value = IsNoclipping;
                 }
             }
+
         }
     }
 }
