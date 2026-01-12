@@ -390,6 +390,17 @@ namespace ModMenuCrew
                     {
                         PlayerControl.LocalPlayer.MyPhysics.Speed = PlayerSpeed;
                     }
+                    if (PlayerControl.LocalPlayer.Collider != null)
+                    {
+                        if (ShipStatus.Instance == null)
+                        {
+                            PlayerControl.LocalPlayer.Collider.enabled = true;
+                        }
+                        else
+                        {
+                            PlayerControl.LocalPlayer.Collider.enabled = !IsNoclipping;
+                        }
+                    }
                 }
                 catch (Exception ex) { UnityEngine.Debug.LogError($"[ModMenuCrew] Erro em UpdateGameState: {ex}"); }
             }
@@ -430,7 +441,6 @@ namespace ModMenuCrew
 
                     GameCheats.CheckTeleportInput();
                     UpdateGameState();
-                    ApplyNoclipState();
 
                 }
                 catch (Exception ex) { UnityEngine.Debug.LogError($"[ModMenuCrew] Erro DebuggerComponent.Update: {ex}"); }
@@ -472,17 +482,6 @@ namespace ModMenuCrew
                 }
             }
 
-            private void ApplyNoclipState()
-            {
-                if (PlayerControl.LocalPlayer?.Collider == null) return;
-                if (ShipStatus.Instance == null)
-                {
-                    PlayerControl.LocalPlayer.Collider.enabled = true;
-                    return;
-                }
-
-                PlayerControl.LocalPlayer.Collider.enabled = !IsNoclipping;
-            }
         }
     }
 }
