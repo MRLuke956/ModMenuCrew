@@ -19,6 +19,7 @@ namespace ModMenuCrew.UI.Managers
         public CheatManager()
         {
             Instance = this;
+            TeleportWithCursor = ModMenuCrewPlugin.CfgTeleportWithCursor?.Value ?? false;
         }
 
         public void DrawCheatsTab()
@@ -62,7 +63,12 @@ namespace ModMenuCrew.UI.Managers
 
                 GUILayout.Space(10);
 
+                bool previousTeleport = TeleportWithCursor;
                 TeleportWithCursor = GUILayout.Toggle(TeleportWithCursor, "Teleport With Cursor", GuiStyles.ToggleStyle);
+                if (previousTeleport != TeleportWithCursor && ModMenuCrewPlugin.CfgTeleportWithCursor != null)
+                {
+                    ModMenuCrewPlugin.CfgTeleportWithCursor.Value = TeleportWithCursor;
+                }
 
                 visionMultiplier = GUILayout.HorizontalSlider(visionMultiplier, 0.5f, 15f);
                 GUILayout.Label($"Vision Multiplier: {visionMultiplier:F1}x", GuiStyles.HeaderStyle);
