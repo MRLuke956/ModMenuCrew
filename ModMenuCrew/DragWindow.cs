@@ -107,22 +107,10 @@ namespace ModMenuCrew
             var titleRect = new Rect(
                 _cachedHeaderRect.x + 4, // Margem esquerda
                 _cachedHeaderRect.y,
-                _cachedButtonArea.x - _cachedHeaderRect.x - 80, // Reduzido para caber o badge
+                _cachedButtonArea.x - _cachedHeaderRect.x - 4, // Largura até antes dos botões, com margem
                 _cachedHeaderRect.height
             );
             GUI.Label(titleRect, Title, GuiStyles.TitleLabelStyle);
-
-            // === SHOWCASE BADGE ===
-            var badgeRect = new Rect(
-                titleRect.xMax + 4,
-                _cachedHeaderRect.y + 2,
-                75,
-                _cachedHeaderRect.height - 4
-            );
-            var oldBgColor = GUI.backgroundColor;
-            GUI.backgroundColor = GuiStyles.Theme.ShowcaseBadge;
-            GUI.Box(badgeRect, "SHOWCASE", GuiStyles.TitleBarButtonStyle);
-            GUI.backgroundColor = oldBgColor;
 
             // 3. Conteúdo da janela (se não estiver minimizado)
             if (!_isMinimized)
