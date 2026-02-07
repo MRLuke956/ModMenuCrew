@@ -6,40 +6,40 @@ namespace ModMenuCrew.UI.Styles;
 public static class GuiStyles
 {
     /// <summary>
-    /// Defini��es de cores para o tema visual do mod.
+    /// Color definitions for the mod theme.
     /// </summary>
     public static class Theme
     {
         // === SHOWCASE VERSION BADGE ===
         public static readonly Color ShowcaseBadge = new Color(1f, 0.5f, 0f, 1f); // Orange badge
         public static readonly Color ShowcaseGlow = new Color(1f, 0.6f, 0.1f, 0.3f); // Orange glow
-        // Cores de Fundo
+        // Background colors
         public static readonly Color BgDarkA = new Color(0.07f, 0.07f, 0.07f, 0.92f); // Fundo principal mais escuro
         public static readonly Color BgDarkB = new Color(0.06f, 0.06f, 0.06f, 0.92f); // Fundo principal mais claro
-        public static readonly Color BgSection = new Color(0.05f, 0.05f, 0.06f, 0.85f); // Fundo para se��es
+        public static readonly Color BgSection = new Color(0.05f, 0.05f, 0.06f, 0.85f); // Background for sections
 
-        // Cores de Cabe�alho
-        public static readonly Color HeaderTop = new Color(0.10f, 0.02f, 0.04f, 0.95f); // Gradiente superior do cabe�alho
-        public static readonly Color HeaderBottom = new Color(0.06f, 0.01f, 0.03f, 0.95f); // Gradiente inferior do cabe�alho
+        // Header colors
+        public static readonly Color HeaderTop = new Color(0.10f, 0.02f, 0.04f, 0.95f); // Header top gradient
+        public static readonly Color HeaderBottom = new Color(0.06f, 0.01f, 0.03f, 0.95f); // Header bottom gradient
 
-        // Cores de Destaque e Acentua��o
+        // Highlight/accent colors
         public static readonly Color Accent = new Color(1f, 0.5f, 0f, 1f); // Laranja vitrine
         public static readonly Color AccentSoft = new Color(1f, 0.6f, 0.2f, 1f); // Laranja suave
         public static readonly Color AccentDim = new Color(0.7f, 0.35f, 0f, 1f); // Laranja escuro
         public static readonly Color AccentHover = new Color(1f, 0.55f, 0.1f, 1f); // Laranja hover
         public static readonly Color AccentActive = new Color(0.85f, 0.42f, 0f, 1f); // Laranja ativo
 
-        // Cores de Bot�o
-        public static readonly Color ButtonTop = new Color(0.11f, 0.11f, 0.12f, 0.95f); // Gradiente superior do bot�o
-        public static readonly Color ButtonBottom = new Color(0.08f, 0.08f, 0.10f, 0.95f); // Gradiente inferior do bot�o
-        public static readonly Color ButtonHoverTop = new Color(0.13f, 0.13f, 0.16f, 0.95f); // Gradiente superior do bot�o em hover
-        public static readonly Color ButtonHoverBottom = new Color(0.10f, 0.10f, 0.13f, 0.95f); // Gradiente inferior do bot�o em hover
-        public static readonly Color ButtonActiveTop = new Color(0.12f, 0.02f, 0.05f, 0.95f); // Gradiente superior do bot�o ativo
-        public static readonly Color ButtonActiveBottom = new Color(0.09f, 0.02f, 0.04f, 0.95f); // Gradiente inferior do bot�o ativo
+        // Button colors
+        public static readonly Color ButtonTop = new Color(0.11f, 0.11f, 0.12f, 0.95f); // Button top gradient
+        public static readonly Color ButtonBottom = new Color(0.08f, 0.08f, 0.10f, 0.95f); // Button bottom gradient
+        public static readonly Color ButtonHoverTop = new Color(0.13f, 0.13f, 0.16f, 0.95f); // Button top gradient (hover)
+        public static readonly Color ButtonHoverBottom = new Color(0.10f, 0.10f, 0.13f, 0.95f); // Button bottom gradient (hover)
+        public static readonly Color ButtonActiveTop = new Color(0.12f, 0.02f, 0.05f, 0.95f); // Button top gradient (active)
+        public static readonly Color ButtonActiveBottom = new Color(0.09f, 0.02f, 0.04f, 0.95f); // Button bottom gradient (active)
 
         // Cores de Texto
         public static readonly Color TextPrimary = new Color(0.96f, 0.96f, 0.98f, 1f); // Texto principal claro
-        public static readonly Color TextMuted = new Color(0.78f, 0.78f, 0.82f, 1f); // Texto secund�rio mais claro
+        public static readonly Color TextMuted = new Color(0.78f, 0.78f, 0.82f, 1f); // Secondary text
         public static readonly Color TextDisabled = new Color(0.5f, 0.5f, 0.55f, 1f); // Texto para itens desabilitados
 
         // Cores de Estado e Feedback
@@ -49,8 +49,8 @@ public static class GuiStyles
     }
 
     #region Textura Helpers (Otimizados)
-    // Texturas s�o geradas uma vez e reutilizadas, ou criadas sob demanda e armazenadas em cache.
-    // Usando HideFlags.HideAndDontSave para evitar que apare�am no Hierarchy/Inspector do Unity.
+    // Textures are generated once and reused, or created on demand and cached.
+    // HideFlags.HideAndDontSave prevents them from appearing in the Unity hierarchy/inspector.
     private static Texture2D _cachedPixelDarkTexture;
     private static Texture2D _cachedPixelAccentTexture;
     private static Texture2D _cachedPixelErrorTexture;
@@ -111,13 +111,13 @@ public static class GuiStyles
     }
 
     /// <summary>
-    /// Cria uma textura monocrom�tica de tamanho espec�fico.
+    /// Creates a solid-color texture of a specific size.
     /// </summary>
     private static Texture2D MakeTexture(int width, int height, Color color)
     {
         var tex = new Texture2D(width, height, TextureFormat.RGBA32, false);
         tex.wrapMode = TextureWrapMode.Clamp;
-        tex.filterMode = FilterMode.Bilinear; // Bilinear para suavizar levemente bordas se necess�rio
+        tex.filterMode = FilterMode.Bilinear; // Slightly softens edges if needed
         tex.hideFlags = HideFlags.HideAndDontSave;
 
         Color[] pixels = new Color[width * height];
@@ -131,25 +131,25 @@ public static class GuiStyles
     }
 
     /// <summary>
-    /// Cria uma textura monocrom�tica 1x1, reutiliz�vel. Caching para as mais comuns.
+    /// Creates a reusable 1x1 solid-color texture (with caching for common colors).
     /// </summary>
     private static Texture2D MakeTexture(Color color)
     {
-        // Caching para texturas muito comuns para evitar recria��o
+        // Cache common textures to avoid recreating them
         if (color == Theme.BgDarkB) { if (_cachedPixelDarkTexture == null) _cachedPixelDarkTexture = MakeTexture(1, 1, color); return _cachedPixelDarkTexture; }
         if (color == Theme.Accent) { if (_cachedPixelAccentTexture == null) _cachedPixelAccentTexture = MakeTexture(1, 1, color); return _cachedPixelAccentTexture; }
         if (color == Theme.Error) { if (_cachedPixelErrorTexture == null) _cachedPixelErrorTexture = MakeTexture(1, 1, color); return _cachedPixelErrorTexture; }
 
         var texture = new Texture2D(1, 1, TextureFormat.RGBA32, false);
         texture.SetPixel(0, 0, color);
-        texture.filterMode = FilterMode.Bilinear; // Bilinear para texturas de cor s�lida tamb�m pode suavizar visualmente
+        texture.filterMode = FilterMode.Bilinear; // Can look slightly smoother even for solid colors
         texture.hideFlags = HideFlags.HideAndDontSave;
         texture.Apply();
         return texture;
     }
 
     /// <summary>
-    /// Cria um RectOffset reutiliz�vel.
+    /// Creates a RectOffset instance.
     /// </summary>
     private static RectOffset CreateRectOffset(int left, int right, int top, int bottom)
     {
@@ -163,7 +163,7 @@ public static class GuiStyles
     #endregion
 
     #region Estilos Privados (Lentamente Inicializados)
-    // Estilos s�o inicializados sob demanda para evitar overhead na inicializa��o do jogo.
+    // Styles are lazily initialized to reduce startup overhead.
     private static GUIStyle _headerStyle;
     private static GUIStyle _subHeaderStyle;
     private static GUIStyle _buttonStyle;
@@ -190,7 +190,7 @@ public static class GuiStyles
     private static GUIStyle _textFieldStyle;
     #endregion
 
-    #region Estilos P�blicos (Propriedades com Inicializa��o Pregui�osa)
+    #region Public Styles (Lazy-Initialized Properties)
     public static GUIStyle HeaderStyle
     {
         get
@@ -256,7 +256,7 @@ public static class GuiStyles
             }
             else if (_buttonStyle.normal?.background == null || _buttonStyle.hover?.background == null || _buttonStyle.active?.background == null)
             {
-                // Recupera��o de falha de inicializa��o, se necess�rio
+                // Fallback if initialization failed (e.g., missing textures)
                 _buttonStyle.normal.background = MakeFrameTexture(16, 64, Theme.ButtonTop, Theme.ButtonBottom, Theme.AccentDim, 1);
                 _buttonStyle.hover.background = MakeFrameTexture(16, 64, Theme.ButtonHoverTop, Theme.ButtonHoverBottom, Theme.AccentHover, 1);
                 _buttonStyle.active.background = MakeFrameTexture(16, 64, Theme.ButtonActiveTop, Theme.ButtonActiveBottom, Theme.AccentActive, 1);
@@ -275,7 +275,7 @@ public static class GuiStyles
                 _toggleStyle = new GUIStyle(GUI.skin.toggle)
                 {
                     fontSize = 14, // Ajustado
-                    fontStyle = FontStyle.Normal, // Removido Bold para consist�ncia visual
+                    fontStyle = FontStyle.Normal, // Removed Bold for visual consistency
                     alignment = TextAnchor.MiddleLeft,
                     normal = { textColor = Theme.TextMuted, background = MakeTexture(new Color(0.09f, 0.09f, 0.11f, 0.95f)) }, // Fundo mais escuro
                     onNormal = { textColor = Theme.TextPrimary, background = MakeTexture(new Color(0.18f, 0.09f, 0.02f, 0.95f)) }, // Orange when on
@@ -292,7 +292,7 @@ public static class GuiStyles
             }
             else if (_toggleStyle.normal?.background == null || _toggleStyle.onNormal?.background == null || _toggleStyle.hover?.background == null || _toggleStyle.onHover?.background == null || _toggleStyle.active?.background == null || _toggleStyle.onActive?.background == null)
             {
-                // Recupera��o de falha de inicializa��o
+                // Fallback if initialization failed
                 _toggleStyle.normal.background = MakeTexture(new Color(0.09f, 0.09f, 0.11f, 0.95f));
                 _toggleStyle.onNormal.background = MakeTexture(new Color(0.12f, 0.03f, 0.06f, 0.95f));
                 _toggleStyle.hover.background = MakeTexture(new Color(0.11f, 0.11f, 0.14f, 0.95f));
@@ -414,7 +414,7 @@ public static class GuiStyles
                     padding = CreateRectOffset(8, 8, 8, 8), // Reduzido de 12 para 8
                     margin = CreateRectOffset(4, 4, 4, 4) // Reduzido de 8 para 4
                 };
-                _containerStyle.normal.background = MakeTexture(2, 2, new Color(0.07f, 0.07f, 0.09f, 0.80f)); // Fundo mais claro e com mais transpar�ncia
+                _containerStyle.normal.background = MakeTexture(2, 2, new Color(0.07f, 0.07f, 0.09f, 0.80f)); // Slightly lighter and more transparent background
             }
             else if (_containerStyle.normal?.background == null)
             {
@@ -733,13 +733,13 @@ public static class GuiStyles
     }
     #endregion
 
-    #region Fun��es P�blicas de Utilidade
+    #region Public Utility Functions
     /// <summary>
-    /// Garante que todos os estilos sejam inicializados. Chamado uma vez, idealmente na inicializa��o do mod.
+    /// Ensures all styles are initialized. Ideally called once during startup.
     /// </summary>
     public static void EnsureInitialized()
     {
-        // Acessa cada estilo uma vez para for�ar a inicializa��o pregui�osa.
+        // Touch each style once to force lazy initialization.
         _ = WindowStyle;
         _ = HeaderBackgroundStyle;
         _ = TitleLabelStyle;
@@ -767,7 +767,7 @@ public static class GuiStyles
     }
 
     /// <summary>
-    /// Desenha um tooltip na posi��o do mouse se o ret�ngulo fornecido cont�m o mouse.
+    /// Draws a tooltip at the mouse position if the provided rect contains the mouse.
     /// </summary>
     public static void DrawTooltip(string tooltip, Rect rect)
     {
@@ -780,7 +780,7 @@ public static class GuiStyles
     }
 
     /// <summary>
-    /// Desenha um indicador de status (c�rculo colorido).
+    /// Draws a status indicator (colored circle).
     /// </summary>
     public static void DrawStatusIndicator(bool isActive)
     {
@@ -799,7 +799,7 @@ public static class GuiStyles
     }
 
     /// <summary>
-    /// Desenha um bot�o de aba estilizado.
+    /// Draws a styled tab button.
     /// </summary>
     public static bool DrawTab(string label, bool selected)
     {
@@ -819,7 +819,7 @@ public static class GuiStyles
     }
 
     /// <summary>
-    /// Gera o texto do cabe�alho com o sufixo de hora atual.
+    /// Builds header text with a current time suffix.
     /// </summary>
     public static string GetHeaderText(string text)
     {
@@ -827,12 +827,12 @@ public static class GuiStyles
     }
 
     /// <summary>
-    /// Retorna um estilo de cabe�alho com cor animada (varia��o do acento).
+    /// Returns a header style with an animated accent color.
     /// </summary>
     public static GUIStyle GetAnimatedHeaderStyle()
     {
         var style = new GUIStyle(HeaderStyle);
-        style.normal.textColor = Color.Lerp(Theme.Accent, Theme.AccentSoft, Mathf.PingPong(Time.time * 2f, 1f)); // Anima��o de cor
+        style.normal.textColor = Color.Lerp(Theme.Accent, Theme.AccentSoft, Mathf.PingPong(Time.time * 2f, 1f)); // Color animation
         return style;
     }
 
