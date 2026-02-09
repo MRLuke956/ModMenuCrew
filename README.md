@@ -3,7 +3,7 @@
 </p>
 
 <!-- H1 Optimized for Primary Keywords -->
-<h1 align="center">🚀 ModMenuCrew v6.0.1 - Among Us Mod Menu 2026</h1>
+<h1 align="center">🚀 ModMenuCrew v6.0.6a - Among Us Mod Menu 2026</h1>
 
 <p align="center">
   <b>The #1 Undetected Among Us Hack | God Mode, Always Impostor, Unlock All Skins | 2026</b>
@@ -25,12 +25,30 @@
 
 ---
 
-## 🎆 V6.0.1 - Full Changelog | Happy New Year 2026! 🚀
+## 🎆 V6.0.6a - Full Changelog | Massive Update 2026! 🚀
 
-### ✨ What's New in V6.0.1
+Version 6.0.6a is a massive update bringing critical stability fixes, a revamped Replay System, new features, and major security improvements!
+
+### 🎬 Replay System — Back & Better Than Ever
+ModMenuCrew is the **only** Among Us mod with a built-in Replay System. Record, review and analyze every game:
+- **Full Playback Control:** Play, Pause, and seek through the timeline.
+- **Speed Control:** Easily increase or decrease playback speed.
+- **Zoom Controls:** Zoom In and Zoom Out to catch every detail of the match.
+- Completely revamped interface with a professional look.
+
+<p align="center">
+  <img src="https://i.imgur.com/9Fh2ogk.png" alt="ModMenuCrew Replay System - Among Us Game Recorder" width="90%"/>
+  <br>
+  <b>🎬 Exclusive Replay System — Only in ModMenuCrew</b>
+</p>
+
+### ✨ What's New in V6.0.6a
 
 | Feature | Description |
 |:--------|:------------|
+| **🎬 Replay System** | **Exclusive** — Record, replay & analyze every game with full playback controls |
+| **🎭 New Spoofing** | Enhanced spoofing options + **Detective role override** |
+| **🚪 Door Control** | Close all doors permanently, open them individually |
 | **🔓 Unlock All** | **Unlock EVERYTHING** - Skins, Pets, Hats, Visors & Cosmicubes (Local) |
 | **🎭 Level Spoof** | **Fake Level** - Set your level to any number (0-999) |
 | **🎮 Platform Spoof** | Appear as playing on **Mobile, Xbox, PlayStation, or Switch** |
@@ -43,6 +61,26 @@
 | **👻 Phantom Mode** | **Ghost Mode** - Kill while invisible & vanish |
 | **📋 Event Logger** | Live log of kills, tasks, vents, and sabotages |
 | **⌨️ Custom Hotkey** | Change menu key in settings (default: F1) |
+
+### 🔧 Bug Fixes in V6.0.6a
+
+- **Fixed free key sessions dying mid-game** — token mismatch & timestamp anti-replay false positives resolved (#1 reported issue).
+- **Fixed menu randomly closing** by itself during a session.
+- **Fixed kill cooldown** not resetting properly.
+- **Fixed satellite view** not resetting after game ends — end-game buttons no longer go off-screen.
+- **Fixed satellite view scroll zoom** not updating the value in the UI.
+- **Fixed menu window getting stuck off-screen** on resolution change.
+- **Fixed silent session denial** triggered by internal slider reset on lobby entry.
+- **Fixed radar crash** that could occur after enabling the radar.
+- **Fixed GMT time zone error** which was preventing the menu from opening for some users.
+
+### 🛡️ Security & Performance
+
+- Improved overall security and anti-bypass protections.
+- Patched several security vulnerabilities affecting both the website and the mod.
+- Improved window position clamping — fully customizable placement, error-proof recovery.
+- Full support for all screen resolutions (1080p, 2.5K, 4K, and above).
+- Significant performance optimizations across the board.
 
 ---
 
@@ -101,7 +139,15 @@ The **official, fully-functional ModMenuCrew** is available exclusively at our o
 
 ---
 
-## ⚡ All Features (V6.0.1)
+## 🔗 Fully Independent — No Third-Party APIs
+
+ModMenuCrew is **completely standalone**. Unlike other mods, we do **not** depend on third-party APIs such as Reactor. Our mod runs entirely on its own — no external dependencies that can break, go unsupported, or ban mod creators without reason.
+
+> **We control our own infrastructure** — updates are faster, compatibility is guaranteed, and you're never left waiting on someone else to fix things.
+
+---
+
+## ⚡ All Features (V6.0.6a)
 
 ### 🎭 Role Control & Manipulation
 | Feature | Description |
@@ -175,10 +221,19 @@ The **official, fully-functional ModMenuCrew** is available exclusively at our o
 > [!WARNING]
 > **IMPORTANT:** Download the mod **EXCLUSIVELY** from [crewcore.online](https://crewcore.online). Files from other sources may be outdated, unsafe, or broken.
 
+### 📋 Requirements (Install First!)
+
+| Dependency | Download Link |
+|:-----------|:--------------|
+| **BepInEx 6 IL2CPP 735** | [Download Here](https://builds.bepinex.dev/projects/bepinex_be) |
+| **.NET 6 Runtime** | [Download Here](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) |
+
 ### 🚀 Rapid Install (Recommended)
 1.  **Download:** Go to [crewcore.online](https://crewcore.online) and get the client.
 2.  **Extract:** Unzip files into your `Among Us` game folder.
 3.  **Play:** Launch the game and press **F1**.
+
+> ⚠️ **Note:** Some features are **Host-Only**.
 
 ---
 
@@ -228,7 +283,7 @@ ModMenuCrew uses a **key-based activation system** for access control and premiu
 <summary><b>🔧 The mod doesn't load - what should I do?</b></summary>
 
 - Make sure you're using **BepInEx 6 IL2CPP** (not the Unity Mono version)
-- Verify the DLL is in `BepInEx\plugins\ModMenuCrew\ModMenuCrew.dll`
+- Verify the DLL is in `BepInEx\plugins\ModMenuCrew\ModMenuCrew.dll` 
 - Run the game once with just BepInEx installed first
 - Check BepInEx console for error messages
 
@@ -238,7 +293,7 @@ ModMenuCrew uses a **key-based activation system** for access control and premiu
 <summary><b>🔑 My key says "Invalid format"</b></summary>
 
 - Keys must be 19-23 characters
-- Format: `XXXX-XXXX-XXXX-XXXX` or `P-XXXX-XXXX-XXXX-XXXX`
+- Format: `XXXX-XXXX-XXXX-XXXX` or `P-XXXX-XXXX-XXXX-XXXX` 
 - Make sure you copied the entire key without extra spaces
 
 </details>
@@ -275,53 +330,53 @@ Technically yes, but **please don't use it in public lobbies**. Use only in priv
 <summary>📌 Click to expand all SEO keywords</summary>
 
 ### 🎯 Primary Keywords
-`among us mod menu` `among us hack` `among us cheat` `among us mod` `among us hacks` `among us cheats` `among us mod menu 2026` `among us hack 2026` `among us cheat 2026` `among us hacker` `among us modded` `among us trainer`
+`among us mod menu` `among us hack` `among us cheat` `among us mod` `among us hacks` `among us cheats` `among us mod menu 2026` `among us hack 2026` `among us cheat 2026` `among us hacker` `among us modded` `among us trainer` 
 
 ### 🌍 Multi-Language Keywords
-`among us hack español` `among us hack português` `among us mod русский` `among us hack 日本語` `among us mod français` `among us hack deutsch` `hack para among us` `trucos among us` `trapacear among us`
+`among us hack español` `among us hack português` `among us mod русский` `among us hack 日本語` `among us mod français` `among us hack deutsch` `hack para among us` `trucos among us` `trapacear among us` 
 
 ### 🎮 Feature Keywords
-`among us god mode` `among us speed hack` `among us teleport hack` `among us noclip` `among us wall hack` `among us kill cooldown hack` `among us impostor hack` `among us role hack` `among us always impostor` `among us instant kill` `among us fly hack` `among us esp` `among us radar` `among us see through walls` `among us complete all tasks` `among us task hack` `among us sabotage hack` `among us vent hack` `among us unlimited vision` `among us full brightness` `among us no fog` `among us phantom mode` `among us disable game end` `among us unlock all skins`
+`among us god mode` `among us speed hack` `among us teleport hack` `among us noclip` `among us wall hack` `among us kill cooldown hack` `among us impostor hack` `among us role hack` `among us always impostor` `among us instant kill` `among us fly hack` `among us esp` `among us radar` `among us see through walls` `among us complete all tasks` `among us task hack` `among us sabotage hack` `among us vent hack` `among us unlimited vision` `among us full brightness` `among us no fog` `among us phantom mode` `among us disable game end` `among us unlock all skins` 
 
 ### 💀 Impostor Keywords
-`among us impostor mod menu` `among us force impostor` `among us always be impostor` `among us impostor cheat` `among us impostor hack 2026` `among us kill anyone` `among us mass kill` `among us kill all` `among us no kill cooldown`
+`among us impostor mod menu` `among us force impostor` `among us always be impostor` `among us impostor cheat` `among us impostor hack 2026` `among us kill anyone` `among us mass kill` `among us kill all` `among us no kill cooldown` 
 
 ### 🔧 Technical Keywords
-`among us bepinex mod` `among us il2cpp hack` `among us dll mod` `among us plugin hack` `among us harmony patch` `among us net6 mod` `among us modding 2026` `among us mod loader` `among us injector`
+`among us bepinex mod` `among us il2cpp hack` `among us dll mod` `among us plugin hack` `among us harmony patch` `among us net6 mod` `among us modding 2026` `among us mod loader` `among us injector` 
 
 ### 📥 Download Keywords
-`among us mod menu download` `among us hack download` `among us cheat download` `among us mod download free` `among us hack free download` `download among us mod menu` `baixar mod menu among us` `descargar hack among us` `among us mod menu pc download` `among us hack pc 2026`
+`among us mod menu download` `among us hack download` `among us cheat download` `among us mod download free` `among us hack free download` `download among us mod menu` `baixar mod menu among us` `descargar hack among us` `among us mod menu pc download` `among us hack pc 2026` 
 
 ### 🔑 Access Keywords
-`among us mod menu free` `among us hack free` `among us cheat free` `among us mod menu gratis` `among us hack grátis` `among us free hack 2026` `among us working mod menu` `among us undetected hack` `among us safe cheat` `among us legit hack`
+`among us mod menu free` `among us hack free` `among us cheat free` `among us mod menu gratis` `among us hack grátis` `among us free hack 2026` `among us working mod menu` `among us undetected hack` `among us safe cheat` `among us legit hack` 
 
 ### 🖥️ Platform Keywords
-`among us pc hack` `among us steam hack` `among us pc mod menu` `among us steam mod menu` `among us windows hack` `among us desktop cheat` `among us pc cheat 2026` `among us epic games hack` `among us epic games mod`
+`among us pc hack` `among us steam hack` `among us pc mod menu` `among us steam mod menu` `among us windows hack` `among us desktop cheat` `among us pc cheat 2026` `among us epic games hack` `among us epic games mod` 
 
 ### 🏷️ Alternative Names
-`amog us hack` `amogus mod menu` `amogus hack` `sus mod menu` `among us sus hack` `crewmate hack` `impostor hack among us` `among us external hack` `among us internal hack` `among us menu hack`
+`amog us hack` `amogus mod menu` `amogus hack` `sus mod menu` `among us sus hack` `crewmate hack` `impostor hack among us` `among us external hack` `among us internal hack` `among us menu hack` 
 
-### � Content Creator Keywords
-`among us troll mod` `among us funny mod` `among us streamer mod` `among us youtuber tools` `among us content creator mod` `among us private lobby tools` `among us testing tools` `among us host tools`
+### 📺 Content Creator Keywords
+`among us troll mod` `among us funny mod` `among us streamer mod` `among us youtuber tools` `among us content creator mod` `among us private lobby tools` `among us testing tools` `among us host tools` 
 
 ### 🔥 Trending Keywords 2026
-`among us mod menu 2026 working` `among us hack 2026 updated` `among us cheat 2026 undetected` `among us mod menu january 2026` `among us latest hack` `among us new mod menu` `among us updated hack` `among us working cheat 2026`
+`among us mod menu 2026 working` `among us hack 2026 updated` `among us cheat 2026 undetected` `among us mod menu january 2026` `among us latest hack` `among us new mod menu` `among us updated hack` `among us working cheat 2026` 
 
 ### 🇧🇷 Portuguese (Brazil) Keywords
-`among us hack brasileiro` `among us mod menu brasil` `among us trapaca` `hack among us atualizado` `mod menu among us 2026` `among us cheat pt-br` `among us hack funciona` `baixar hack among us` `among us mod menu grátis` `among us hack sem vírus` `among us impostor hack br` `among us teleporte hack` `among us velocidade hack` `among us visão hack` `among us tarefas completas`
+`among us hack brasileiro` `among us mod menu brasil` `among us trapaca` `hack among us atualizado` `mod menu among us 2026` `among us cheat pt-br` `among us hack funciona` `baixar hack among us` `among us mod menu grátis` `among us hack sem vírus` `among us impostor hack br` `among us teleporte hack` `among us velocidade hack` `among us visão hack` `among us tarefas completas` 
 
 ### 🇪🇸 Spanish Keywords
-`among us hack español` `among us mod menu español` `among us trucos` `hack among us actualizado` `mod menu among us gratis` `among us trampas` `descargar hack among us` `among us hack funcionando` `among us sin hack detectado`
+`among us hack español` `among us mod menu español` `among us trucos` `hack among us actualizado` `mod menu among us gratis` `among us trampas` `descargar hack among us` `among us hack funcionando` `among us sin hack detectado` 
 
 ### 🔗 Related Searches
-`crewcore` `crewcore online` `modmenucrew` `crew mod` `among us utility mod` `among us qol mod` `among us quality of life` `among us lobby tools` `among us admin tools` `among us debug tools`
+`crewcore` `crewcore online` `modmenucrew` `crew mod` `among us utility mod` `among us qol mod` `among us quality of life` `among us lobby tools` `among us admin tools` `among us debug tools` 
 
 </details>
 
 ---
 
 <p align="center">
-  <b>🎆 "Happy New Year, Crewmates! V6.0.1 is here!" 🎆</b>
+  <b>🚀 ModMenuCrew V6.0.6a — The Most Complete Among Us Mod Menu 🚀</b>
   <br/><br/>
   Made with ❤️ by the <b>CrewCore Team</b>
   <br/><br/>
@@ -335,13 +390,11 @@ Apache License 2.0
 This project is a showcase mod.
 Any fork or derivative work must retain proper and visible attribution
 to the original author (Luke Dennyel / CrewCore).
+
 ---
-
-
 
 <p align="center">
   <sub>
     among us mod menu | among us hack | among us cheat | among us hacks 2026 | among us mod menu download | among us hack download | among us cheat download free | among us impostor hack | among us always impostor | among us speed hack | among us teleport | among us noclip | among us god mode | among us wall hack | among us esp hack | crewcore | modmenucrew | among us v6 | among us phantom mode | among us disable game end | unlock all skins
   </sub>
 </p>
-
