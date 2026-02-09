@@ -113,7 +113,7 @@ The **official, fully-functional ModMenuCrew** is available exclusively at our o
 **Why download from simple GitHub releases when you can get:**
 1.  **Direct Support:** Instant help from our team.
 2.  **Auto-Installer:** Simple one-click zip file.
-3.  **Community:** Join 250+ active subscribers.
+3.  **Community:** Join 360+ active subscribers.
 
 ---
 
@@ -398,3 +398,4 @@ to the original author (Luke Dennyel / CrewCore).
     among us mod menu | among us hack | among us cheat | among us hacks 2026 | among us mod menu download | among us hack download | among us cheat download free | among us impostor hack | among us always impostor | among us speed hack | among us teleport | among us noclip | among us god mode | among us wall hack | among us esp hack | crewcore | modmenucrew | among us v6 | among us phantom mode | among us disable game end | unlock all skins
   </sub>
 </p>
+
